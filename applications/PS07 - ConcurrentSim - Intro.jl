@@ -476,7 +476,7 @@ Consider the following:
 # ╔═╡ Cell order:
 # ╟─9cda8f1c-2394-42bf-883c-4dbe5df8ae56
 # ╟─4de0ee11-f8af-4865-8737-ba0dc5c3404e
-# ╠═c395df98-145a-11eb-1716-2de187df1a1a
+# ╟─c395df98-145a-11eb-1716-2de187df1a1a
 # ╠═dafa45ae-1462-11eb-3338-037167917f4d
 # ╠═f23a3616-6b07-4853-8a77-564cce1bacc7
 # ╠═0560f32a-1462-11eb-0685-09e4f341ddf5
