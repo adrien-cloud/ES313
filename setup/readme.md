@@ -18,7 +18,7 @@ from the software center when connected to CDN and then connect to an open netwo
 0. Make sure you have [Git](https://git-scm.com) on your system (you can find this in the software center for a CDN computer).
 1. Install Julia
     * CDN computer: install Julia from the software center. **Note:** this requires you to be connected to CDN. 
-    * Personal computer: download and install the appropriate Julia v1.8.x release from [JuliaLang](https://julialang.org/downloads/oldreleases/). You are free to choose a more recent version of Julia, but for optimal compatibility with the course, we recommend v1.8.x.
+    * Personal computer: download and install the appropriate Julia v1.10.x release from [JuliaLang](https://julialang.org/downloads/). You are free to choose a more recent version of Julia, but for optimal compatibility with the course, we recommend v1.10.x.
 2. Copy the configuration script from [here](https://raw.githubusercontent.com/B4rtDC/ES313/master/setup/config.jl) and store it as a .jl file (e.g. with Notepad++ or VSCode). Things to modify by yourself (if required):
     * For Windows: the path to your `Git` install. The default path is the one that should work for CDN, i.e.
         ```julia
