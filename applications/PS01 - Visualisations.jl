@@ -611,7 +611,11 @@ md"""
 # ╔═╡ 1c2ac5e2-792f-4368-92dd-1e7dab3dd6ad
 md"""
 ## More info
-There is a lot of additional information available on the webpages of the different packages. Another other nice resource is [Interactive Visualization and Plotting with Julia](https://packtpublishing.github.io/Interactive-Visualization-and-Plotting-with-Julia/).
+There is a lot of additional information available on the webpages of the different packages.
+* [Plots](https://docs.juliaplots.org/latest/)
+* [StatsPlots](https://github.com/JuliaPlots/StatsPlots.jl)
+
+Another other nice resource is [Interactive Visualization and Plotting with Julia](https://packtpublishing.github.io/Interactive-Visualization-and-Plotting-with-Julia/).
 
 
 """
@@ -665,6 +669,6 @@ There is a lot of additional information available on the webpages of the differ
 # ╟─7a3fbc40-ec66-11ea-34f3-b3804f016b55
 # ╠═0bfad805-2483-40d9-bd94-c76b2dcb238a
 # ╠═7a269742-ec66-11ea-1b40-9d8cce31f885
-# ╠═7a111b6a-ec66-11ea-3a5a-cd6de910dd00
+# ╟─7a111b6a-ec66-11ea-3a5a-cd6de910dd00
 # ╟─1c2ac5e2-792f-4368-92dd-1e7dab3dd6ad
 # ╠═79faeac0-ec66-11ea-1d6d-318ab749e232
