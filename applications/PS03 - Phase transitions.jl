@@ -47,7 +47,7 @@ The degree of a node $i$ is the number of connections it has. In terms of the ad
 $A$, the degree of node $i$ is the sum of the i$^{\text{th}}$ row of $A$:
 $$k_i = \sum_{j=1}^{N}a_{i,j}$$
 
-The average node degree $\langle k \rangle$ is then given by: $$\langle k \rangle = \sum_{i=1}^{N}k_{i}$$
+The average node degree $\langle k \rangle$ is then given by: $$\langle k \rangle = \frac{1}{N} \sum_{i=1}^{N}k_{i}$$
 
 
 ## Erdös-Rényi random graph model
