@@ -304,9 +304,6 @@ L = Langton("./applications/data/Langtonstart.txt",
 			"./applications/data/Langtonsrules.txt",
 			(40,40))
 
-# ╔═╡ b601d119-71c4-443a-83a4-fb733e299994
-evolve!(L)
-
 # ╔═╡ c6efe180-a58a-420a-a79d-484816ec38ba
 md"""
 ## Visualize the results
@@ -372,7 +369,7 @@ md"""
 md"""
 #  Lava flow
 A vulcano is erupting on an island. We know the island's topology (shown below). We make the following assumptions:
-* all lava that will flow out is initially located on the point of origin.
+* all lava that will flow out is initially located on the highest point.
 * lava moves according to the following rules:
    - if a lower zone is adjacent to the tile with the lava: lava flows from high to low. If multiple lower locations are present, lave moves from high to low, but proportional to the altitude difference.
    - if no adjacent tiles are lower, lava will be distributed across all tiles of the same altitude.
@@ -404,9 +401,6 @@ You should include the following details:
 As an additional question, you might want to think about how you could incorporate the fact that lava hardens as it cools down.
 
 """
-
-# ╔═╡ 2ee542c5-f5e7-478a-8832-92c0f1c41e7a
-
 
 # ╔═╡ 1bf90bd6-3e8c-45ca-9357-ae047cb29f39
 md"""
@@ -453,7 +447,6 @@ As an additional question, you might want to think about how you could incorpora
 # ╠═cc63ab4a-af74-4a78-846f-858e6ade0c1f
 # ╠═d0453bc3-5400-445f-a5d7-e0cb420c2dd3
 # ╠═e840b89c-332f-4b0e-b9d0-bf6863672aca
-# ╠═b601d119-71c4-443a-83a4-fb733e299994
 # ╟─c6efe180-a58a-420a-a79d-484816ec38ba
 # ╠═e4900928-8f04-4882-bcfc-d11d1601729c
 # ╠═c49fe159-299b-42a4-a5d0-e6936e1e8e41
@@ -465,11 +458,10 @@ As an additional question, you might want to think about how you could incorpora
 # ╠═24af7dbf-4c52-4272-83fe-d6605050dd6e
 # ╠═86e89ddf-f74c-434d-9b70-c8bdf2b874ef
 # ╟─4f1ac264-51cf-467e-b336-9c8610dbdb22
-# ╟─8593d576-7d39-4f23-b9cc-f259e74dfc30
+# ╠═8593d576-7d39-4f23-b9cc-f259e74dfc30
 # ╟─4952beb6-bd46-4d4d-ac87-0678f6a240bc
 # ╟─4db8bbe8-845c-4fb9-8faa-749b2d45147b
-# ╟─f80911a5-cf14-4e82-aac2-5aa817deb69a
+# ╠═f80911a5-cf14-4e82-aac2-5aa817deb69a
 # ╟─2d28bb56-019c-4198-bdd5-220f2cbd883e
-# ╠═2ee542c5-f5e7-478a-8832-92c0f1c41e7a
 # ╟─1bf90bd6-3e8c-45ca-9357-ae047cb29f39
 # ╠═b9d4c242-7042-4dad-af25-85101f1060dd
