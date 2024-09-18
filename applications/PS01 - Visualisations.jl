@@ -73,13 +73,13 @@ end
 
 # ╔═╡ a9547c5c-09e4-4336-b3d2-62e93efb15ac
 with_terminal() do
-	for (method, args) in zip(methods(foo), [(1,2,4); ("176","POL"); ("PO",2)])
+	for (method, args) in zip(methods(foo), [(1,2,4); ("177","POL"); ("PO",2)])
 		println(method)
 		println("foo($(join(args,", "))) = $(foo(args...))  (this is a ::$(typeof(foo(args...))))")
 	end
 	println("\nBroadcasting using the dot syntax:")
-	broadcast_result = foo.(["$(i)" for i in 173:178], "POL")
-	println("""\tfoo.(["\$(i)" for i in 173:178], "POL")\n\t = $(broadcast_result) (this is a ::$(typeof(broadcast_result)))""") 
+	broadcast_result = foo.(["$(i)" for i in 174:179], "POL")
+	println("""\tfoo.(["\$(i)" for i in 174:179], "POL")\n\t = $(broadcast_result) (this is a ::$(typeof(broadcast_result)))""") 
 end
 
 # ╔═╡ 3d032a3c-58e0-41ee-b369-4c14b79f2ad2

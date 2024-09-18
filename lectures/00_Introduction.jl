@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.42
+# v0.19.46
 
 using Markdown
 using InteractiveUtils
@@ -50,45 +50,43 @@ All notebooks can be found on [GitHub](https://github.com/B4rtDC/ES313).
 
 ## Schedule (TBC)
 
+
 ### Theory
 
-- 29/08: Cellular Automaton + Game of Life
-- 30/08: Year Coord (TBC)
-- 12/09: Physical Modelling
-- 13/09: Self-Organization
-- 19/09: Optimisation Techniques
-- 20/09: Linear Programming I
-- 03/10: Linear Programming II
-- 04/10: Applications of Linear Programming II
-- 11/10: Introduction to Discrete Event Simulation
-- 17/10: Process Driven DES: SimJulia I
-- 18/10: Process Driven DES II + Applications I
-- 26/10: Applications with SimJulia II
+- 02/09: Introduction, Cellular Automaton + Game of Life
+- 03/09: Physical Modelling
+- 10/09: Physical Modelling (cont.) + Self-Organization
+- 11/09: Optimisation Techniques
+- 24/09: Linear Programming I
+- 25/10: Linear Programming II
+- 02/10: Applications of Linear Programming
+- 22/10: Introduction to Discrete Event Simulation
+- 23/10: Process Driven DES: SimJulia I
+- 29/10: Process Driven DES II + Applications I
+- 30/10: Applications with SimJulia II
 
 ### Practice
 
-- 05/09: Visualisation 
-- 06/09: Cellular Automaton + Game of Life
-- 26/09: Physical Modelling + Self-Organization
-- 27/09: Optimisation Techniques I
-- 10/10: Optimisation Techniques II + Linear Programming I
-- 24/10: Linear Programming II
-- 25/10: Introduction to Discrete Event Simulation
-- 31/10: Process Driven DES: SimJulia I
-- 31/10: Process Driven DES II + Applications with SimJulia I
-- 07/11: Applications with SimJulia II
-- 08/11: Performance
+- 17/09: Julia refresher + visualisations
+- 18/09: Cellular Automaton + Game of Life
+- 01/10: Physical Modelling + Self-Organization
+- 09/10: Optimisation Techniques I
+- 15/10: Linear Programming
+- 05/11: Discrete Event Simulation
+- 06/11: Process Driven DES: broader scope
+- 12/11: DES Applications
+- 13/11: Performance
 
 ### Project
 
-- 08/11: List of projects available
+- 12/11: List of projects available
 - we are available during contact hours
-- 21/11: mandatory meeting: understanding of the problem
-- 05/12: mandatory meeting: progress
+- 03/12: mandatory meeting: understanding of the problem
+- 17/12: mandatory meeting: progress
 
 ## Evaluation
 
-* Test: Oct - 2Hr
+* Test: Oct - 2Hr (date TBC)
   - Cellular Automaton + Game of Life
   - Physical Modelling + Self-Organization
 * Exam: Project with Oral Defense
