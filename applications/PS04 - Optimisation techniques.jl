@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.42
+# v0.19.46
 
 using Markdown
 using InteractiveUtils
@@ -163,7 +163,7 @@ Suppose we want to minimize a function ``\mathbb{R}^3 \mapsto \mathbb{R}``:
 
 Compare the results (computation time) using
 1. a zero order method (i.e. no gradients used)
-2. the function and its gradient (both newton and bfgs method)
+2. the function and its gradient (both [newton](https://www.youtube.com/watch?v=W7S94pq5Xuo) and [BFGS](https://www.youtube.com/watch?v=VIoWzHlz7k8) method)
 3. the function, its gradient and the hessian
 
 You can evaluate the performance using the `@time` macro. For a more detailed and representative analysis, you can use the package [`BenchmarkTools`](https://github.com/JuliaCI/BenchmarkTools.jl) (we will go into detail in the session about performance)
@@ -214,7 +214,7 @@ md"""
 ## Optimize the optimizer
 You could study the influence of the optimization methods and try to optimize them as well (this is sometimes refered to as hyperparameter tuning). 
 
-Try to create a method that minimizes the amount of iterations by modifying the parameter $\eta$ from the `BFGS` method.
+Try to create a method that minimizes the amount of iterations by modifying the parameter $\eta$ from the `BFGS` method, which can be seen as a particular implementation of the `ConjugateGradient` method.
 
 **Note:** 
 * Look at the documentation for possible values of $\eta$.
@@ -303,7 +303,7 @@ Given our unknown vector ``u``, which should be an approximation for ``b_i``, we
 \phi_1 = \frac{h}{2}\sum_{i=1}^{N}\frac{1}{2}\left[ (u_i - b_i)^2 + (u_{i-1} - b_{i-1})^2 \right]+ \frac{\beta h}{2}\sum_{i=1}^{N}\left( \frac{u_i - u_{i-1}}{h}\right) ^2
 ```
 
-Find the optimal fit using `Optim.jl`. Use ``h=\{0.0125; 0.008\}``. Given the following pairs of values for ``(β, noise) = \{(1\text{e-3}; 0.01); (1\text{e-3}; 0.1); (1\text{e-4}; 0.01); (1\text{e-3}; 0.1) \}``. What do you observe and what is the best approximation?
+Find the optimal fit using `Optim.jl`. The noise on the datapoints is normally distributed ``\mathcal{N}(0, \sigma)``. Use ``h=\{0.0125; 0.008\}``. Given the following pairs of values for ``(β, \sigma = noise) = \{(1\text{e-3}; 0.01); (1\text{e-3}; 0.1); (1\text{e-4}; 0.01); (1\text{e-3}; 0.1) \}``. What do you observe and what is the best approximation?
 
 """
 
@@ -380,7 +380,12 @@ end
 
 # ╔═╡ eac72e64-8584-4588-8b0e-03ddb04956f8
 md"""
-From the previous results, you might not be satisfied, so we propose an additional loss function ϕ₂, this time using anouter regularization term. Repeat the exercise, but using ϵ=1e-6, 
+From the previous results, you might not be satisfied, so we propose an additional loss function ϕ₂, this time using another regularization term.
+```math
+\phi_2 = \frac{h}{2}\sum_{i=1}^{N}\frac{1}{2}\left[ (u_i - b_i)^2 + (u_{i-1} - b_{i-1})^2 \right]+ \gamma h \sum_{i=1}^{N} \left( \sqrt{ \left(\frac{u_i - u_{i-1}}{h}\right) ^2 + \epsilon} \right)
+```
+
+Repeat the exercise, but using ϵ=1e-6, 
 ``(γ, noise) = \{(1\text{e-2}; 0.01); (1\text{e-2}; 0.1); (1\text{e-3}; 0.01); (1\text{e-3}; 0.1) \}``. What do you observe and what is the best approximation?
 """
 
@@ -403,9 +408,6 @@ begin
 	T = range(0,1, step=h)
 	B = bₚ.(T) + rand(Normal(),length(T)) * mean(bₚ.(T)) * noise
 end
-
-# ╔═╡ 6ea718f8-7e52-4402-b5eb-7fca1310d796
-
 
 # ╔═╡ 8e3a7568-ae6c-459d-9d95-4f80ca79accf
 md"""
@@ -486,7 +488,6 @@ end
 # ╟─eac72e64-8584-4588-8b0e-03ddb04956f8
 # ╠═128d37f1-f4b0-44f8-8a47-5c75e0c44875
 # ╠═8da27e06-3798-423d-b882-b8c98eb36f6a
-# ╠═6ea718f8-7e52-4402-b5eb-7fca1310d796
 # ╟─8e3a7568-ae6c-459d-9d95-4f80ca79accf
 # ╟─580b7d3b-78c3-4eee-889a-884fc732515a
 # ╠═117d36ab-a6ba-40e0-b5fc-c0209acbfbfd
