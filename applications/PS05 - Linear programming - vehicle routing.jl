@@ -141,7 +141,7 @@ function MTVRP()
     @info "$(V) trucks used, max $(R) trips per truck, total work time $(TH)"
     # Linear programming setup #
     # ------------------------ #
-    model = Model(with_optimizer(GLPK.Optimizer))
+    model = Model(GLPK.Optimizer)
     # Add variables 
     # x_{i,j,v, r}: edge from i > j by truck v on trip r, Boolean valued
     @variable(model, x[1:n+1, 1:n+1, 1:V, 1:R], Bin)
@@ -203,5 +203,5 @@ function MTVRP()
 end
 
 
-MVRP()
-#MTVRP()
+#MVRP()
+MTVRP()
