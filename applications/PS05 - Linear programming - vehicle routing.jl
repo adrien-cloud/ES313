@@ -50,7 +50,7 @@ function MVRP()
 
     # Linear programming setup #
     # ------------------------ #
-    model = Model(with_optimizer(GLPK.Optimizer))
+    model = Model(GLPK.Optimizer)
     # Add variables (x_{i,j,p}: edge from i > j by truck p, Boolean valued)
     @variable(model, x[1:n+1,1:n+1,1:p], Bin)
     # Add objective
