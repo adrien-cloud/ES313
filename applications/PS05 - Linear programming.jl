@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.42
+# v0.19.46
 
 using Markdown
 using InteractiveUtils
@@ -58,7 +58,7 @@ Employees are payed € 96 per day of work. This lead to the current payroll cos
 | Required: | - | - | 22 | 17 | 13 | 14 | 15 | 18 | 24 |
 
 ### Mathematical formulation
-We need do formaly define our decision variables, constraints and objective function.
+We need to formaly define our decision variables, constraints and objective function.
 * decision variables: the amount of persons attributed to each schedule ( ``Y = [y_1,y_2,\dots,y_7]^{\intercal} ``)
 * objective function: the payroll cost
   
@@ -75,7 +75,7 @@ W & W & W & W & O & O & W 	\\
 \end{bmatrix}
 ```
 
-  Now $$Y*A'$$ gives us a vector indicating the amount of employees working on a given day. Suppose we also use the vector $$c$$ to indicate the salary for a given day (in this case $$c = [96,96,96,\dots,96]$$). 
+  Now $$A^\intercal Y$$ gives us a vector indicating the amount of employees working on a given day. Suppose we also use the vector $$c$$ to indicate the salary for a given day (in this case $$c = [96,96,96,\dots,96]$$). 
 
 We are now able to write our objective function:
 ```math
@@ -129,7 +129,7 @@ end
 # ╔═╡ 4bc4c2aa-04b4-11eb-2b6e-452d4ecc258a
 md"""
 ### Adding uncertainty
-Up to now, we have had constant numbers the minimum number of employees needed per day. In reality these quantities are uncertain. The actual number of calls will fluctuate each day. For simplicity's sake will we use a [lognormal distribution](https://en.wikipedia.org/wiki/Log-normal_distribution#Occurrence_and_applications) for the amount of calls (using their initial value as mean and a standard deviation of two). Working this way, we avoid having negative calls.
+Up to now, we have had constant numbers for the minimum number of employees needed per day. In reality these quantities are uncertain. The actual number of calls will fluctuate each day. For simplicity's sake will we use a [lognormal distribution](https://en.wikipedia.org/wiki/Log-normal_distribution#Occurrence_and_applications) for the amount of calls (using their initial value as mean and a standard deviation of two). Working this way, we avoid having negative calls.
 """
 
 # ╔═╡ 6e48e306-04b4-11eb-2561-0151a5e0a908
