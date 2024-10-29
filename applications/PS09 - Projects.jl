@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.42
+# v0.19.46
 
 using Markdown
 using InteractiveUtils
@@ -24,6 +24,86 @@ html"""
     	padding-right: max(160px, 10%);
 	}
 </style>
+"""
+
+# ╔═╡ 69a9e78f-1150-4914-9772-d8feedd13fd0
+md"""
+# 2024 Project Ideas
+
+## Overview
+For this assignment, you’ll select a project to design and develop a model based on one of the provided themes. Each project is outlined in a generic manner, allowing you the flexibility to define the specific focus and scope. Background resources are provided to inspire your approach, though they often extend beyond the level of detail expected here.
+
+### Key Requirements
+
+1. **Problem definition**: Clearly define the context or problem you will study. This should include the problem's practical relevance and any relevant parameters.
+2. **Desired outcome**: Specify what you aim to quantify or measure. This should be an achievable outcome for the model to generate results that inform your understanding of the problem.
+3. **Model construction**: Describe your model’s structure, parameters, and constraints. Discuss any limitations, simplifications, or hypotheses you've accepted in order to make the problem manageable.
+4. **Model analysis**: Carry out a thorough analysis of your model. This may include:
+   - Comparative studies (e.g., comparing with established results or similar models)
+   - Sensitivity analyses to understand how changes in parameters affect results
+   - Optimization of key parameters, if applicable
+5. **Conclusion and Discussion**: Summarize your findings. Reflect on the model's performance, the reliability of its outcomes, and the limitations of your approach.
+
+### Project presentation and evaluation
+
+#### Oral presentation (30 minutes)
+You will present your project, highlighting key aspects without going into extensive code details. However, you should cover:
+- **Essential Data Structures and Algorithms**: Explain the choice and role of key elements.
+- **Model Demonstrations**: Share minimum working examples that showcase model functionality and performance.
+- **Codebase Submission**: Provide your full codebase, as it will be part of the evaluation.
+
+#### Grading criteria
+Your project will be assessed on:
+- **Conceptual Approach**: The originality and clarity of your approach to the problem.
+- **Modeling and Analysis**: The soundness and depth of your modeling and analysis methods.
+- **Model Exploitation**: The quality of results derived from your model and any optimizations or insights you provide.
+- **Conclusions**: The robustness of your conclusions based on the analysis.
+
+Approach each stage with both creativity and rigor!
+
+### Suggested References for Inspiration
+* [Mathematical Modeling and Simulation of Systems](https://link.springer.com/book/10.1007/978-3-031-30251-0)
+* [Modeling and Simulation - An Application-Oriented Introduction](https://link.springer.com/book/10.1007/978-3-642-39524-6)
+* [Modeling and Simulation in Engineering](https://www.mdpi.com/books/book/6451-modeling-and-simulation-in-engineering)
+* [Engineering Principles of Combat Modeling and Distributed Simulation](https://www.wiley.com/en-us/Engineering+Principles+of+Combat+Modeling+and+Distributed+Simulation-p-9781118180310)
+* [Introduction to Transportation Analysis, Modeling and Simulation - Computational Foundations and Multimodal Applications](https://link.springer.com/book/10.1007/978-1-4471-5637-6)
+
+## Wargaming
+Wargaming is a tool for analyzing strategic decision-making in conflict scenarios. By digitizing a wargame model, we can run rapid simulations and perform statistical analysis on various strategies. Several wargames (boardgames) are made available by DefCol. Having this readily available would be very helpful for both educators and trainees. Moreover, when done properly, this could even be combined with reinforcement learning, to obtain the "perfect strategist".
+Analysis could include the use of statistical methods to identify successful strategies under different conditions.
+
+**Note:** multiple projects possible
+
+### Suggested References
+* games available at the department 
+* additional POC: Mr DEPROUW Maxime (MWMW/DefCol)
+
+## Modelling sports races
+Mathematical modelling can used to create digital equivalents of car races of skiing, which in turn can be optimised
+
+### Suggested References
+* [A Mathematical Model for Nordic Skiing](https://arxiv.org/pdf/2410.02767)
+* [Planning Formula One race strategies using discrete-event simulation](https://www.tandfonline.com/doi/full/10.1057/palgrave.jors.2602626)
+* [A mathematical model for simulating cycling: applied to track cycling](https://link.springer.com/article/10.1007/s12283-018-0283-0)
+
+## Computer networks
+Computer networks rely on multiple layers, each with unique protocols and constraints. Modeling and simulating these networks allows us to analyze performance, identify bottlenecks, and optimize communication pathways. Projects in this area may focus on network performance under various conditions or on simulating specific protocols to analyze effectiveness and limitations. 
+
+For example, you can study a specific  network layer or protocol, such as transport layer protocols (TCP, UDP), routing in the network layer, or specific application protocols. You can then focus on practical relevance, such as enhancing data throughput, minimizing latency, or optimizing packet routing. Additionally, load balancing in networks can also be studied.
+
+
+### Suggested References
+* [Computer networking - A top-down Approach](https://github.com/TimorYang/Computer-Networking-Keith-Ross/blob/main/book/Kurose,%20James%20F._Ross,%20Keith%20W%20-%20Computer%20networking_%20a%20top-down%20approach-Pearson%20(2017).pdf)
+* [Load Balancing](https://samwho.dev/load-balancing/)
+
+## Opinion dynamics
+People sometimes change their opinions when they discuss things with each other. Mathematics (including graph theory) can be used to study opinion changes in simplifications of real-life situations, and explore how people influence each other through their social interactions. These models can help us learn how to promote the spread of accurate information and reduce the spread of inaccurate information. 
+
+### Suggested References
+* [Opinion dynamics in social networks: From models to data](https://arxiv.org/pdf/2201.01322)
+* [Using Mathematics to Study How People Influence Each Other’s Opinions](https://kids.frontiersin.org/articles/10.3389/frym.2024.1253153/)
+
+
 """
 
 # ╔═╡ 94c57b2d-24c1-45d6-aba4-77aefd4da9bf
@@ -473,6 +553,7 @@ Managing the electricity grid is a major challenge.
 # ╔═╡ Cell order:
 # ╟─fc0426fc-d2b6-4751-9c48-ecf31a7b5a3b
 # ╟─a795cad3-33a6-4664-a4b4-52b083ed4308
+# ╟─69a9e78f-1150-4914-9772-d8feedd13fd0
 # ╟─94c57b2d-24c1-45d6-aba4-77aefd4da9bf
 # ╟─5126163e-0f60-4712-97fd-5a085af91744
 # ╟─023da279-7a42-4cb1-addb-613d1363a282
