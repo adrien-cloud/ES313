@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.42
+# v0.19.46
 
 using Markdown
 using InteractiveUtils
@@ -449,7 +449,7 @@ We can now study the number of neutrons generated for a specific radius
 # ╔═╡ 4de0404b-f956-4638-a97c-9a6e77f57f2a
 bomb = let
 	Logging.disable_logging(LogLevel(-1000));
-	myradius = 7
+	myradius = 9
 	sim = Simulation()
 	bomb = Bomb(myradius)
 	@callback spontaneousfission(timeout(sim, 0.0), bomb)

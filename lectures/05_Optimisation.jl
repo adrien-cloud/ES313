@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.42
+# v0.19.46
 
 using Markdown
 using InteractiveUtils
@@ -192,7 +192,7 @@ To convert the problem into a standard form, we perform the following steps:
 
 ```math
 \begin{cases}
-- x_2 + y_1 = 2\\
+ x_2 + y_1 = 2\\
 - x_2 + y_2 = 2
 \end{cases}
 ```
@@ -683,6 +683,8 @@ let
 	optimize!(model)
 	# show the solution
 	@info "Solution:\n - x₁ : $(value(x1))\n - x₂ : $(value(x2))	"
+	# show the value
+	@info "Objective function value: $(objective_value(model))"
 end
 
 # ╔═╡ d07169d1-3605-449e-a3fd-c2646e876da9
@@ -950,7 +952,7 @@ can always be found by finding a critical point $\vec{x}^*$, such that (first or
 
 This point can be a local minimum, maximum or a saddle point. If the Hessian, $\mathcal{H}f(\vec{x}^*$), is positive definite, we know it is a minimum local minimum (second order condition). Additionally, if the function is convex, we know that this minimum is a global minimum (cf. ES122 and ES221).
 
-In practice, we choose an initial point and the generate a sequence of iterates. Typically, the best we can hope for is that the sequence converges to a local minimizer. For this reason, it is often desirable for the initial point to be close to a global optimizer. Most numerical require at least first derivatives or an approximation of it (and als second derivatives in the case of Newton's method), which can be limiting. We will discuss a method that is global in nature in the sense that they attempt to search throughout the entire feasible set. 
+In practice, we choose an initial point and the generate a sequence of iterates. Typically, the best we can hope for is that the sequence converges to a local minimizer. For this reason, it is often desirable for the initial point to be close to a global optimizer. Most numerical methods require at least the first derivatives or an approximation of them (and also second derivatives in the case of Newton's method), which can be limiting. We will discuss a method that is global in nature in the sense that they attempt to search throughout the entire feasible set. 
 
 The _Nelder-Mead simplex_ method (detailed below) uses only objective function values and do not require derivatives. Consequently, it is applicable to a much wider class of optimization problems."""
 
