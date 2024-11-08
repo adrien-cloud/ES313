@@ -145,6 +145,16 @@ Take the layout of the subway/tube/undergound public transit system of a major c
 ### Suggested References
 * [Simulation models for public transportation: a state-of-the-art review](https://www.sciencedirect.com/science/article/pii/S1877050922023304)
 
+## Train Station Simulation
+The Brussels North-South connection is the bussiest railroad of the country. Almost 1/3 of all Belgian trains pass through this station on a daily basis. The biggest bottleneck is the station of Brussels-Central, where only 6 tracks are available. Place yourself in the position of a train traffic manager and find a way to run the station as efficiently as possible. For actual data, refer to the website of the NMBS/SNCB. Bear in mind that not all trains are equally important. International trains will have priority over local trains.
+
+As you will have discovered by now, trains often tend to be delayed due to a variety of reasons: persons on the tracks, malfunctions in the signaling, trains broken down, etc. Find a way to model these disturbances and percieve the backlash of such an event. Use this to perform a sensitivity analysis.
+
+### References
+* Question asked for POC at Infrabel
+* [NMBS/SNCB] (https://www.belgiantrain.be/nl)
+* [Infrabel] (https://infrabel.be/nl)
+
 ## Electric Car Charging
 The amount of electric cars in all sorts and sizes is strongly increasing. These cars all need to be charged when not in use, demanding high amounts of power from the grid. Knowing that these cars are usually used for commuting, their battery only needs to be recharged partially or every few days. You will have users who like to always leave the garage with a full charge, others will be less disciplined.
 
@@ -158,11 +168,11 @@ Construct a model indicating the amount of power required by these cars and the 
 * [ETUDE PROSPECTIVE ELECTRICITE] (https://economie.fgov.be/sites/default/files/Files/Energy/Etude-prospective-electricite-rapport-monitoring-securite-approvisionnement-decembre-2019.pdf)
 
 ## Traffic Flow Optimization (Oosterweel)
-*In the list of the 2023 topics, you can find following concept:*
+In the list of the 2023 topics, you can find following concept:
 
-Traffic congestion is a common problem in urban areas. Mathematical modeling and simulation can be used to optimize traffic flow, reduce congestion, and improve overall transportation efficiency. 
+*Traffic congestion is a common problem in urban areas. Mathematical modeling and simulation can be used to optimize traffic flow, reduce congestion, and improve overall transportation efficiency. 
 This project could involve modeling traffic patterns, simulating different traffic management strategies, and identifying the most effective solutions. Additionaly, you might also consider
-the impact of connected and autonomous vehicles on traffic flow.
+the impact of connected and autonomous vehicles on traffic flow.*
 
 **Update:** Revise this idea and apply it to the evolution of the 'Oosterweel' works around Antwerp. E.g. a temporary bridge (the bypass) is currently under construction to be able to bring down the old bridge. Knowing the trafic flows in and around Antwerp, this reduced capacity will have a (near) devastating impact on mobility. Prove this by using simulation. Make predictions of the impact of other stages of the works (the opening of the tunnel) on the overall car/truck mobility in and around Antwerp. Make your study with horizon 2033.
 
@@ -172,6 +182,15 @@ the impact of connected and autonomous vehicles on traffic flow.
 * [Decision making process on the Antwerp Oosterweel link: lessons learnt] (https://biblio.ugent.be/publication/2955629)
 * [OOSTERWEEL CONNECTION] (https://www.eib.org/en/projects/pipelines/all/20160779)
 * [Oosterweelverbinding.be] (https://www.oosterweelverbinding.be)
+
+## Sports Tournament Scheduling and Optimization
+Model the scheduling and logistics of a sports tournament (e.g. the World Cup Football) with multiple teams, venues and constraints (resting days, availability). Optimize the schedule to ensure fairness, minimize travel distance/cost and maximize the audience engagement (i.e. accessibility for a geographically dispersed audience at reasonable timeslots). Also consider constraints such as unexpected delays, possible withdrawals, extra time and broadcasting limitations.
+
+### References:
+* [FIFA Wolrd Cup 26] (https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026)
+* [Scheduling in Sports] (https://www.sciencedirect.com/science/article/abs/pii/S0304020808734789)
+* [Scheduling in sports: An annotated bibliography] (https://www.sciencedirect.com/science/article/abs/pii/S0305054809001543)
+
 """
 
 # ╔═╡ 94c57b2d-24c1-45d6-aba4-77aefd4da9bf
@@ -621,8 +640,8 @@ Managing the electricity grid is a major challenge.
 # ╔═╡ Cell order:
 # ╟─fc0426fc-d2b6-4751-9c48-ecf31a7b5a3b
 # ╟─a795cad3-33a6-4664-a4b4-52b083ed4308
-# ╠═69a9e78f-1150-4914-9772-d8feedd13fd0
-# ╠═94c57b2d-24c1-45d6-aba4-77aefd4da9bf
+# ╟─69a9e78f-1150-4914-9772-d8feedd13fd0
+# ╟─94c57b2d-24c1-45d6-aba4-77aefd4da9bf
 # ╟─5126163e-0f60-4712-97fd-5a085af91744
 # ╟─023da279-7a42-4cb1-addb-613d1363a282
 # ╟─42968b6f-a86f-48dd-b354-d06dfd53624c
