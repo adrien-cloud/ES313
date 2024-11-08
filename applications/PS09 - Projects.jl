@@ -156,6 +156,22 @@ Construct a model indicating the amount of power required by these cars and the 
 * [Analyse van het elektriciteitsverbruik in België/ Consommation d’électricité en Belgique : analyse] (https://nl.wikipower.be/blog/analyse-van-het-elektriciteitsverbruik-in-belgie/)
 * [PROSPECTIEVE STUDIE ELEKTRICITEIT] (https://economie.fgov.be/sites/default/files/Files/Energy/Prospectieve-studie-elektriciteit-Monitoringverslag-over-de-bevoorradingszekerheid-december-2019.pdf)
 * [ETUDE PROSPECTIVE ELECTRICITE] (https://economie.fgov.be/sites/default/files/Files/Energy/Etude-prospective-electricite-rapport-monitoring-securite-approvisionnement-decembre-2019.pdf)
+
+## Traffic Flow Optimization (Oosterweel)
+*In the list of the 2023 topics, you can find following concept:*
+
+Traffic congestion is a common problem in urban areas. Mathematical modeling and simulation can be used to optimize traffic flow, reduce congestion, and improve overall transportation efficiency. 
+This project could involve modeling traffic patterns, simulating different traffic management strategies, and identifying the most effective solutions. Additionaly, you might also consider
+the impact of connected and autonomous vehicles on traffic flow.
+
+**Update:** Revise this idea and apply it to the evolution of the 'Oosterweel' works around Antwerp. E.g. a temporary bridge (the bypass) is currently under construction to be able to bring down the old bridge. Knowing the trafic flows in and around Antwerp, this reduced capacity will have a (near) devastating impact on mobility. Prove this by using simulation. Make predictions of the impact of other stages of the works (the opening of the tunnel) on the overall car/truck mobility in and around Antwerp. Make your study with horizon 2033.
+
+
+### References:
+* [An Introduction to Traffic Flow Theory](https://link.springer.com/book/10.1007/978-1-4614-8435-6)
+* [Decision making process on the Antwerp Oosterweel link: lessons learnt] (https://biblio.ugent.be/publication/2955629)
+* [OOSTERWEEL CONNECTION] (https://www.eib.org/en/projects/pipelines/all/20160779)
+* [Oosterweelverbinding.be] (https://www.oosterweelverbinding.be)
 """
 
 # ╔═╡ 94c57b2d-24c1-45d6-aba4-77aefd4da9bf
@@ -606,7 +622,7 @@ Managing the electricity grid is a major challenge.
 # ╟─fc0426fc-d2b6-4751-9c48-ecf31a7b5a3b
 # ╟─a795cad3-33a6-4664-a4b4-52b083ed4308
 # ╠═69a9e78f-1150-4914-9772-d8feedd13fd0
-# ╟─94c57b2d-24c1-45d6-aba4-77aefd4da9bf
+# ╠═94c57b2d-24c1-45d6-aba4-77aefd4da9bf
 # ╟─5126163e-0f60-4712-97fd-5a085af91744
 # ╟─023da279-7a42-4cb1-addb-613d1363a282
 # ╟─42968b6f-a86f-48dd-b354-d06dfd53624c
