@@ -104,6 +104,47 @@ People sometimes change their opinions when they discuss things with each other.
 * [Using Mathematics to Study How People Influence Each Other’s Opinions](https://kids.frontiersin.org/articles/10.3389/frym.2024.1253153/)
 
 
+## Mission planning of a CubeSat
+The KU Leuven is building a Small modular satellite (this type is also known as a CubeSat) named CubeSpec to perform asteroseismology of massive stars from a low earth orbit (a satellite circling the earth at an altitude of roughly 500 km). For this purpose the spectrograph must be pointed accurately at these massive stars given a minimal exposure time and an appurtenant revisit frequency. Knowing the mission priorities, an ordered target list is provided. In an ICRF (inertial celestial reference frame) system, these targets remain fixed in position. Using the available packages for orbit propagation, use discrete event simulation and optimisation to find if the minimal mission criteria are respected.
+
+### Suggested References
+* [SatelliteToolbox.jl] (https://github.com/JuliaSpace/SatelliteToolbox.jl)
+* [CubeSpec] (https://fys.kuleuven.be/ster/instruments/cubespec) and all references at the bottom of the page, in particular the following:
+* [The CubeSpec space mission. I. Asteroseismology of massive stars from time-series optical spectroscopy: Science requirements and target list prioritisation] (https://ui.adsabs.harvard.edu/abs/2022A%26A...658A..96B/abstract)
+
+## Downlinking Geo Intelligence Data
+An Earth sensing satellite such as CSO (Composante Spatiale Optique) collects geo-intelligence images over areas of interest to the intelligence services. When it overflies a region of interest, it captures images. As soon as the satellite has collected this information, it must be downlinked to a ground-station in allied territory. This can be done when the satellite overflies a region within sight of the station.
+
+Satellite properties: You can find or estimate the image processing time, the maximal on-board memory, the required downlink time and bandwith and the orbit characteristics of such a satellite.
+
+Use this information to answer the question related to a (semi-) realistic scenario: Imagine we wish to gain information related to the activities of a given dictator in a given Corean country (e.g. when he takes his train). Imagine the only ground station is located in France (Toulouse). When would we be able to acquire this information in Belgium? What would be the amount of images we can downlink? Would one ground station suffice? Is it interesting to use one of France's oversea territories to place a second ground station? What would be the impact? Perform a sensitivity analysis to demonstrate these impacts.
+
+### Suggested References
+* [SatelliteToolbox.jl] (https://github.com/JuliaSpace/SatelliteToolbox.jl)
+* [CSO] (https://space.skyrocket.de/doc_sdat/cso-1.htm)
+* [Mathematical Programming for Earth Observation Satellite Mission Planning] (https://link.springer.com/chapter/10.1007/978-1-4757-3752-3_7)
+* [Three Scheduling Algorithms Applied to the Earth Observing Systems Domain] (https://www.researchgate.net/publication/227447254_Three_Scheduling_Algorithms_Applied_to_the_Earth_Observing_Systems_Domain)
+
+## Airport Ground Handling
+Simulate the turnaround process for airplanes at an airport (unloading and loading passengers, refueling, baggage handling, etc.) Minimize the total turnover time while making sure that all conditions are met. Introduce disturbances such as random delays (e.g. mechanical issues). Once the individual plane process is in place, zoom out to a small scale airport and cover the overall process.
+
+### Suggested References
+* [Modelling of Ground Handling Operations at Airport](https://ilot.lukasiewicz.gov.pl/kones/2010/3_2010/2010_kwasiborska_modelling_of_ground.pdf)
+
+## Supermarket Checkout Simulation
+You have witnessed the tendency to start placing self-checkouts at supermarkets to increase efficiency and reduce the needed staff. Whilst they do not need a dedicated employee per register, they do need one for oversight, in aiding the client in case of problems or to perform random checks. You also have shops where you can scan your items whilst doing shopping.
+
+Construct a model for this purpose that represents as closely as possible a real-life scenario with conventional registers and self checkouts. Use e.g. a nearby shop for inspiration. Try to maximise efficiency and reduce the total cost, whilst keeping track of customer satisfaction.
+
+### Suggested References
+* [Data-Driven Simulation Modeling of the Checkout Process in Supermarkets: Insights for Decision Support in Retail Operations] (https://www.researchgate.net/publication/347806816_Data-Driven_Simulation_Modeling_of_the_Checkout_Process_in_Supermarkets_Insights_for_Decision_Support_in_Retail_Operations)
+
+## Public Transit System Simulation
+Take the layout of the subway/tube/undergound public transit system of a major city of your liking. Choose a city of which there is reference to this information. Try to find, using a given number of stops and crowd density (in function of a timetable) an optimal schedule to limit passenger waiting times and overcrowding.
+
+### Suggested References
+* [Simulation models for public transportation: a state-of-the-art review](https://www.sciencedirect.com/science/article/pii/S1877050922023304)
+
 """
 
 # ╔═╡ 94c57b2d-24c1-45d6-aba4-77aefd4da9bf
@@ -553,7 +594,7 @@ Managing the electricity grid is a major challenge.
 # ╔═╡ Cell order:
 # ╟─fc0426fc-d2b6-4751-9c48-ecf31a7b5a3b
 # ╟─a795cad3-33a6-4664-a4b4-52b083ed4308
-# ╟─69a9e78f-1150-4914-9772-d8feedd13fd0
+# ╠═69a9e78f-1150-4914-9772-d8feedd13fd0
 # ╟─94c57b2d-24c1-45d6-aba4-77aefd4da9bf
 # ╟─5126163e-0f60-4712-97fd-5a085af91744
 # ╟─023da279-7a42-4cb1-addb-613d1363a282
