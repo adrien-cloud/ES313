@@ -145,6 +145,17 @@ Take the layout of the subway/tube/undergound public transit system of a major c
 ### Suggested References
 * [Simulation models for public transportation: a state-of-the-art review](https://www.sciencedirect.com/science/article/pii/S1877050922023304)
 
+## Electric Car Charging
+The amount of electric cars in all sorts and sizes is strongly increasing. These cars all need to be charged when not in use, demanding high amounts of power from the grid. Knowing that these cars are usually used for commuting, their battery only needs to be recharged partially or every few days. You will have users who like to always leave the garage with a full charge, others will be less disciplined.
+
+Construct a model indicating the amount of power required by these cars and the strain it puts on the electricity grid. Consider the case of a brown out (almost no electricity produced by neither wind nor solar (cloudy and windless day)) where still the cars need to be recharged. Make predictions pertaining to the evolution of the amount of cars in the coming years and the addition of solar arrays. Is our current supply equipped to deal with this evolution?
+
+### Suggested References
+* [Electric vehicle charging stations: Model, algorithm, simulation, location, and capacity planning] (https://www.sciencedirect.com/science/article/pii/S2405844024051843)
+* [Dynamic modeling and real-time management of a system of EV fast-charging stations] (https://www.sciencedirect.com/science/article/abs/pii/S0968090X21002023)
+* [Analyse van het elektriciteitsverbruik in België/ Consommation d’électricité en Belgique : analyse] (https://nl.wikipower.be/blog/analyse-van-het-elektriciteitsverbruik-in-belgie/)
+* [PROSPECTIEVE STUDIE ELEKTRICITEIT] (https://economie.fgov.be/sites/default/files/Files/Energy/Prospectieve-studie-elektriciteit-Monitoringverslag-over-de-bevoorradingszekerheid-december-2019.pdf)
+* [ETUDE PROSPECTIVE ELECTRICITE] (https://economie.fgov.be/sites/default/files/Files/Energy/Etude-prospective-electricite-rapport-monitoring-securite-approvisionnement-decembre-2019.pdf)
 """
 
 # ╔═╡ 94c57b2d-24c1-45d6-aba4-77aefd4da9bf
