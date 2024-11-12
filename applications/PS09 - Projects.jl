@@ -191,7 +191,36 @@ Model the scheduling and logistics of a sports tournament (e.g. the World Cup Fo
 * [Scheduling in Sports] (https://www.sciencedirect.com/science/article/abs/pii/S0304020808734789)
 * [Scheduling in sports: An annotated bibliography] (https://www.sciencedirect.com/science/article/abs/pii/S0305054809001543)
 
+
+
+## Virtual Machine Design and Hardware Simulation
+
+Virtual machines (VMs) simulate computer systems, allowing us to explore core concepts of computer architecture and software portability. In this project, you’ll design a VM capable of running assembly programs, and extend it with features that allow comparisons of different hardware architectures, simulation of peripheral devices, and testing frameworks.
+
+**Potiential objectives**:
+1. **Hardware Emulation**: Implement VM versions with different architectural features (e.g., RISC vs. CISC, variations in cache sizes and clock speeds). Study how these factors influence program efficiency, memory use, and overall performance.
+   
+2. **Performance Testing and Benchmarking**: Develop unit tests for instruction implementations and build performance benchmarks for common tasks to evaluate VM speed and efficiency under various configurations. Conduct stress tests by running complex or recursive programs and analyze memory usage, register values, and response times.
+
+3. **Simulation of Peripheral Devices**: Integrate simulated peripherals like disk storage, network interfaces, and graphical outputs. Test how these devices interact with the VM's core and optimize the model to support direct memory access (DMA) and interrupt handling.
+
+4. **Hardware vs. Virtual Comparison**: Compare the VM’s performance to that of physical hardware (if accessible), analyzing differences in execution time, efficiency, and system requirements. This may involve observing how identical tasks perform on different architectures.
+
+5. **Testing Framework Development**: Construct a framework for running and debugging LC-3 assembly programs on your VM. Include debugging features such as step-through execution and logging to help identify performance bottlenecks or coding issues.
+
+6. **Visualization Tools**: Implement visualization tools that provide real-time insights into memory allocation, register values, and instruction flow, aiding in model debugging and optimization.
+
+### Suggested References
+* [Write your Own Virtual Machine](https://www.jmeiners.com/lc3-vm/)
+* [Virtual Machines: Architectures, Implementations, and Applications](https://old.hotchips.org/wp-content/uploads/hc_archives/hc17/1_Sun/HC17.T1P1.pdf)
+* [Computer Systems: A Programmer’s Perspective](https://csapp.cs.cmu.edu/)
+* [An Overview of Virtual Machine Architectures](https://personal.utdallas.edu/~mxk055100/courses/cloud11f_files/smith-vm-overview.pdf)
+
+
 """
+
+# ╔═╡ a31945c3-9701-4157-bc0b-cf970592aabe
+
 
 # ╔═╡ 94c57b2d-24c1-45d6-aba4-77aefd4da9bf
 md"""
@@ -641,6 +670,7 @@ Managing the electricity grid is a major challenge.
 # ╟─fc0426fc-d2b6-4751-9c48-ecf31a7b5a3b
 # ╟─a795cad3-33a6-4664-a4b4-52b083ed4308
 # ╟─69a9e78f-1150-4914-9772-d8feedd13fd0
+# ╠═a31945c3-9701-4157-bc0b-cf970592aabe
 # ╟─94c57b2d-24c1-45d6-aba4-77aefd4da9bf
 # ╟─5126163e-0f60-4712-97fd-5a085af91744
 # ╟─023da279-7a42-4cb1-addb-613d1363a282
