@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.42
+# v0.20.5
 
 using Markdown
 using InteractiveUtils
@@ -72,8 +72,10 @@ In Julia, the building block for discrete event simulations are resumable functi
 
 **Note**: Defining the `@resumable` functions in a notebook can often lead to issues, which is why we rely on a separate file to define the relevant funcions that will be used.
 
-### Example
-Consider the fibonacci sequence. We can implement a `@resumable` function that gives us the next number in the sequence (until a predefined end) each time we call it:
+!!! tip "Example - Fibonacci sequence"
+	You can think of resumable functions as a way to create generators. They allow you to pause the execution of a function and resume it later, which is useful for generating sequences or iterators.
+	
+	Consider the fibonacci sequence. We can implement a `@resumable` function that gives us the next number in the sequence (until a predefined end) each time we call it:
 
 $(Markdown.parse(function_source_extractor(txt, "fibonacci")))
 
