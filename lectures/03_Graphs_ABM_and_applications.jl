@@ -330,7 +330,7 @@ There even exists an entire Julia package focussing entirely on Agent Based Mode
 
 # ╔═╡ 42bc0402-149f-11f0-22d3-295f5dfa2ca9
 md"""# Networks and graphs
-Many real-world systems can be represented as (potentially different) entities that are connected in some way to one another. We often call this a network. Examples incude social networks, transportation networks, computer networks, biological networks.
+Many real-world systems can be represented as (potentially different) entities that are connected in some way to one another. We often call this a network. Examples include social networks, transportation networks, computer networks, biological networks.
 
 !!! info "Network"
 	While often used interchangeably with "graph", it typically refers to a real-world system of interacting entities
@@ -342,7 +342,7 @@ Many real-world systems can be represented as (potentially different) entities t
 	Notation: ``G = (V, E)`` where ``V`` is the set of vertices and ``E`` is the set of edges.
 
 Graphs basics:
-* A graph can also be represented by its adjacency matrix ``A``, where a non-zero value ``a_{ij}`` represents that a connection from node ``ì`` to ``j`` is present (note how this implies that a graph can be directional). 
+* A graph can also be represented by its adjacency matrix ``A``, where a non-zero value ``a_{ij}`` represents that a connection from node ``i`` to ``j`` is present (note how this implies that a graph can be directional). 
 * Edges can also have weights (typically positive weights, altough negative weighted graphs are definined, but handling these is not straightforward)
 
 Some examples:
@@ -384,7 +384,7 @@ end
 # ╔═╡ 1b303b0a-b9e7-453f-b2aa-2e395fd37619
 md"""
 ## Graph metrics
-Graph metrics are value we can compute on node, meso, or graph level that allow us to describe a graph and and its nodes. 
+Graph metrics are values we can compute on node, meso, or graph level that allow us to describe a graph and and its nodes. 
 
 !!! note "Degree"
 	Quantifies the connectivity of individual nodes
@@ -824,7 +824,7 @@ end
 # ╟─590d74fd-3143-4676-92e8-5e9a24092c29
 # ╟─c6fed3f2-dd79-4dcc-bce8-5c61b3dc9be4
 # ╠═85e6ee4c-db6e-45dd-a33f-30cd3c9c51e2
-# ╠═1b54ae03-10ec-44c7-bcee-99cceee0b1fc
+# ╟─1b54ae03-10ec-44c7-bcee-99cceee0b1fc
 # ╟─62d79d46-149f-4261-9b5e-44deaee68828
 # ╟─9905781e-6096-4a38-9923-96f027ec04e5
 # ╟─417abab7-568c-466a-a4f0-a69e03da1ace

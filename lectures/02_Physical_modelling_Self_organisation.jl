@@ -545,6 +545,10 @@ Most of the time, dropping a single grain causes no cells to topple, so `T=1` an
 
 	Mathematically, the tail (i.e. ``x \rightarrow \infty``) satisfies ``P(X>x) \propto x^{-\alpha} (\alpha > 0)``
 
+Visualisation of a heavy-tailed distribution:
+
+$(LocalResource("./lectures/img/heavy_tail.png", :width => 400))
+
 The sand pile model exhibits “self-organized criticality”, which means that it evolves toward a critical state without the need for external control or for “fine tuning” of any parameters. The model stays in a critical state as more grains are added.
 """
 
@@ -1162,7 +1166,7 @@ end
 # ╟─a62f8ca0-4680-4a73-8333-8c56b385839f
 # ╠═f231418d-4bbc-46a1-bb65-5b1d14141b31
 # ╟─e6ff0e98-f662-11ea-03a7-e3d09e6272a6
-# ╠═2abf49e0-f663-11ea-25f3-2f9229de732e
+# ╟─2abf49e0-f663-11ea-25f3-2f9229de732e
 # ╠═40373f12-f663-11ea-256c-abd1458a8e85
 # ╟─52f4e280-f663-11ea-38a4-c52a7b06b564
 # ╠═61437b46-f663-11ea-12c6-2ff992812dca
@@ -1188,7 +1192,7 @@ end
 # ╠═d9ccf8f8-f66b-11ea-2c81-0d771c2e900e
 # ╠═e492630e-f66b-11ea-3aed-f37a400243be
 # ╟─e048231c-f66b-11ea-191d-8517a6c65bc5
-# ╠═11847488-f66c-11ea-1aca-4b1613dbfb8e
+# ╟─11847488-f66c-11ea-1aca-4b1613dbfb8e
 # ╟─e51771ec-f66c-11ea-1606-fd159b8d216f
 # ╠═2b9c8a86-f66c-11ea-0447-1fb7ba83d3a1
 # ╟─9fe496ab-7277-4c99-8533-6c329b82b563
@@ -1216,12 +1220,12 @@ end
 # ╠═26a1ddd2-67a3-498e-b653-43af7c9aeace
 # ╟─bcaf050a-8da2-4dc1-99eb-90bc05f61386
 # ╠═9e666fb4-f6da-426b-b35f-587014f79814
-# ╠═874cacb5-332e-4672-beca-b58f260e0f73
+# ╟─874cacb5-332e-4672-beca-b58f260e0f73
 # ╠═ade0a573-059f-4f12-8627-45ea734c65a2
 # ╟─b3505179-3861-46fc-b0fb-7fac96c95dd2
 # ╟─da9e17e4-9490-4927-87bc-99dce93b15aa
 # ╠═c7872f6b-9c9f-4b2c-9dda-531c6edf5501
-# ╟─9299334a-935e-461b-afea-5b6c3d094a46
+# ╠═9299334a-935e-461b-afea-5b6c3d094a46
 # ╟─87c7816a-f66e-11ea-02fe-1752fee2c7eb
 # ╟─862b7efd-3b8b-4f7b-921e-a5b43114f991
 # ╟─48f6cfc2-0659-45e9-ad44-bb87ec4024a9

@@ -60,7 +60,7 @@ begin
 	# Problem definition
 	problem_content = md"""!!! tip "Problem definition"
 			* What is the system or process to be studied? 
-			* What specific question(s) need to be answered
+			* What specific question(s) need to be answered?
 			* What problem(s) need to be solved?
 
 		!!! tip "Objective setting"
