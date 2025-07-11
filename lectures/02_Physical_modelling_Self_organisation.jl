@@ -21,7 +21,9 @@ begin
 	# Pkg needs to be used to force Pluto to use the current project instead of making an environment for each notebook
 	using Pkg
 	# this is redundant if you run it through start.jl, but to make sure...
-	cd(joinpath(dirname(@__FILE__),".."))
+	while !isfile("Project.toml") && !isdir("Project.toml")
+        cd("..")
+    end
     Pkg.activate(pwd())
 	using PlutoUI
 	PlutoUI.TableOfContents()
