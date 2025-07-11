@@ -1,17 +1,19 @@
 ### A Pluto.jl notebook ###
-# v0.19.46
+# v0.20.5
 
 using Markdown
 using InteractiveUtils
 
 # This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
 macro bind(def, element)
-    quote
+    #! format: off
+    return quote
         local iv = try Base.loaded_modules[Base.PkgId(Base.UUID("6e696c72-6542-2067-7265-42206c756150"), "AbstractPlutoDingetjes")].Bonds.initial_value catch; b -> missing; end
         local el = $(esc(element))
         global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : iv(el)
         el
     end
+    #! format: on
 end
 
 # ╔═╡ 5312be7e-edd8-11ea-34b0-7581fc4b7126
@@ -24,6 +26,7 @@ begin
 	using Distributions, LinearAlgebra, InteractiveUtils
 	using PlutoUI
 	using Plots
+	using FileIO
 	PlutoUI.TableOfContents()
 end
 
@@ -59,20 +62,21 @@ end
 md"""
 # Cellular Automaton - Langton's Loops
 ## General description
-Langton's loops are a particular "species" of artificial life in a 2D cellular automaton created in 1984 by Christopher Langton. They consist of a loop of cells containing genetic information, which flows continuously around the loop and out along an "arm" (or pseudopod), which will become the daughter loop. The "genes" instruct it to make three left turns, completing the loop, which then disconnects from its parent.
-
-A single cell has 8 possible states (0,1,...,7). Each of these values can be interpreted a shown below:
-
-|state|role|color|description|
-|-----|----|-----|-----------|
-| 0 | background | black | empty state |
-| 1 | core | blue | fill tube & 'conduct' |
-| 2 | sheat | red | boundary container of the gene in the loop |
-| 3 | - | green | support left turning; bonding two arms; generating new off-shoot; cap off-shoot |
-| 4 | - | yellow | control left-turning & finishing a sprouted loop |
-| 5 | - | pink| Disconnect parent from offspring |
-| 6 | - | white | Point to where new sprout should start; guide sprout; finish sprout growth |
-| 7 | - | cyan| Hold info. on straight growth of arm & offspring |
+!!! tip "Langton's Loops"
+	Langton's loops are a particular "species" of artificial life in a 2D cellular automaton created in 1984 by Christopher Langton. They consist of a loop of cells containing genetic information, which flows continuously around the loop and out along an "arm" (or pseudopod), which will become the daughter loop. The "genes" instruct it to make three left turns, completing the loop, which then disconnects from its parent.
+	
+	A single cell has 8 possible states (0,1,...,7). Each of these values can be interpreted a shown below:
+	
+	|state|role|color|description|
+	|-----|----|-----|-----------|
+	| 0 | background | black | empty state |
+	| 1 | core | blue | fill tube & 'conduct' |
+	| 2 | sheat | red | boundary container of the gene in the loop |
+	| 3 | - | green | support left turning; bonding two arms; generating new off-shoot; cap off-shoot |
+	| 4 | - | yellow | control left-turning & finishing a sprouted loop |
+	| 5 | - | pink| Disconnect parent from offspring |
+	| 6 | - | white | Point to where new sprout should start; guide sprout; finish sprout growth |
+	| 7 | - | cyan| Hold info. on straight growth of arm & offspring |
 
 
 All cells update synchronously to a new set in function of their own present state and their symmetrical [von Neumann neighborhood](https://en.wikipedia.org/wiki/Von_Neumann_neighborhood) (using a rule table cf. rules.txt).
@@ -338,8 +342,9 @@ end
 
 # ╔═╡ f2b803fd-bd73-4bef-a6b1-a24e02bd545b
 # make an animation (can take some time)
-if false
+if !isfile("./applications/img/mylangton.gif")
 	begin
+		print("Producing the animation")
 		K = Langton("./applications/data/Langtonstart.txt",
 					"./applications/data/Langtonsrules.txt",
 					(250,250))
@@ -349,14 +354,16 @@ if false
 				heatmap(K.state; heatmapsettings...)
 			end
 		end
+		gif(anim, "./applications/img/mylangton.gif", fps=30)
 	end
 end
 
-# ╔═╡ 24af7dbf-4c52-4272-83fe-d6605050dd6e
-	gif(anim, "./applications/img/mylangton.gif", fps=30)
+# ╔═╡ ef2d1c82-f61b-41f0-b999-a693682e9d64
+md"""
+If the animation has been created and saved, it will be displayed here:
 
-# ╔═╡ 86e89ddf-f74c-434d-9b70-c8bdf2b874ef
-gif(anim)
+$(PlutoUI.LocalResource("./applications/img/mylangton.gif"))
+"""
 
 # ╔═╡ 4f1ac264-51cf-467e-b336-9c8610dbdb22
 md"""
@@ -368,11 +375,12 @@ md"""
 # ╔═╡ 8593d576-7d39-4f23-b9cc-f259e74dfc30
 md"""
 #  Lava flow
-A vulcano is erupting on an island. We know the island's topology (shown below). We make the following assumptions:
-* all lava that will flow out is initially located on the highest point.
-* lava moves according to the following rules:
-   - if a lower zone is adjacent to the tile with the lava: lava flows from high to low. If multiple lower locations are present, lave moves from high to low, but proportional to the altitude difference.
-   - if no adjacent tiles are lower, lava will be distributed across all tiles of the same altitude.
+!!! tip "Lava Flow"
+	A vulcano is erupting on an island. We know the island's topology (shown below). We make the following assumptions:
+	* all lava that will flow out is initially located on the highest point.
+	* lava moves according to the following rules:
+	   - if a lower zone is adjacent to the tile with the lava: lava flows from high to low. If multiple lower locations are present, lave moves from high to low, but proportional to the altitude difference.
+	   - if no adjacent tiles are lower, lava will be distributed across all tiles of the same altitude.
 
 We try to determine how the lava will flow across the island.
 
@@ -384,7 +392,10 @@ const W = [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
 # ╔═╡ 4db8bbe8-845c-4fb9-8faa-749b2d45147b
 md"""
-The matrix W holds the altitude data. An illustration is provided to show you the topological map.
+The matrix ``W`` holds the altitude data. An illustration is provided to show you the topological map.
+
+!!! warning "For your information"
+	``W`` is defined in a hidden cell above
 """
 
 # ╔═╡ f80911a5-cf14-4e82-aac2-5aa817deb69a
@@ -393,31 +404,190 @@ heatmap(W, c=:gist_earth, clims=(0,150), title="Altitude map [m]", size=(400,400
 # ╔═╡ 2d28bb56-019c-4198-bdd5-220f2cbd883e
 md"""
 ## Your solution
-You should include the following details:
-- how will you do this
-- some tests to assert everything works as intended
-- be aware of the limitations
+!!! info "Assignment"
+	Your solution should include the following details:
+	- how will you do this
+	- some tests to assert everything works as intended
+	- be aware of the limitations
 
-As an additional question, you might want to think about how you could incorporate the fact that lava hardens as it cools down.
+As an additional question, you might want to think about how you could incorporate the fact that lava **hardens** as it cools down.
 
 """
 
 # ╔═╡ 1bf90bd6-3e8c-45ca-9357-ae047cb29f39
 md"""
 # Ant world
-Consider a world with food at some locations. At the center of the world there is a nest of ants. At a certain frequency, an ant climnbs out of the nest and goes looking for food. While searching for food, the ant can go forwards, forwards-left and forwards-right. The ant also leaves a trace of pheromones behind so it can find its way back should it encounter food. After having discovered food, the ant turns around and tries to go back home, while leaving another pheromone to indicate that food was found. The more pheromone a specific location has, the more likely it is to be selected. Try to implement and visualize this process. You should observe the emergence of "ant highways" after a number of iterations.
+!!! tip "Ant World"
+	Consider a world with food at some locations. At the center of the world there is a nest of ants. At a certain frequency, an ant climbs out of the nest and goes looking for food. While searching for food, the ant can go forwards, forwards-left and forwards-right. The ant also leaves a trace of pheromones behind so it can find its way back should it encounter food. After having discovered food, the ant turns around and tries to go back home, while leaving another pheromone to indicate that food was found. The more pheromone a specific location has, the more likely it is to be selected. Try to implement and visualize this process. You should observe the emergence of "ant highways" after a number of iterations.
 
 ## Your solution
-You should include the following details:
-- how will you do this
-- some tests to assert everything works as intended
-- be aware of the limitations
+!!! info "Assignment"
+	You should include the following details:
+	- how will you do this
+	- some tests to assert everything works as intended
+	- be aware of the limitations
 
 As an additional question, you might want to think about how you could incorporate the fact pheromones are volatile, and thus the concentration evolves over time.
 """
 
-# ╔═╡ b9d4c242-7042-4dad-af25-85101f1060dd
+# ╔═╡ 8cfd0097-584e-49bb-93c6-9124093f038a
+md"""
+# Turing Machine - Palindrome Checker
+Another of the many possible implementations of the Turing Machine is a palindrome checker.
+!!! info "Palindrome"
+	A palindrome is a word which, read backwards, returns the exact same word.
 
+For the sake of this exercise, we will work with integers. E.g. [1, 2, 3, 2, 1] is a palindrome, whereas [1, 1, 3, 2, 1] is not.
+"""
+
+# ╔═╡ 785790f1-e2e4-4c21-97ae-ed36e598149d
+md"""
+## General description
+Based on the [turing machines palindromes](https://github.com/smrfeld/turing_machines_palindromes/tree/master) (python) implementation
+"""
+
+# ╔═╡ d5d1488e-9b2d-4bd6-a2bd-c796e9987ff2
+md"""
+!!! info "The Rules"
+	| Curr. State | Curr. Char.          | →   | New State | New Char. | Move Write Head |
+	|-------------|----------------------|-----|-----------|-----------|-----------------|
+	| q1          | ≠ 0                  |     | pn        | 0         | Right           |
+	| q1          | 0                    |     | qy        | 0         | Right           |
+	| pn          | ≠ 0                  |     | pn        | unchanged | Right           |
+	| pn          | 0                    |     | rn        | 0         | Left            |
+	| rn          | (≠ char. "n") AND (≠ 0)* | | qn        | unchanged | Left            |
+	| rn          | 0                    |     | q2        | 0         | Left            |
+	| q2          | ≠ 0                  |     | q2        | unchanged | Left            |
+	| q2          | 0                    |     | q1        | 0         | Right           |
+	
+	**Legend:**  
+	- "≠ 0" means any character other than 0.  
+	- "unchanged" means the character is not modified.  
+	- "Right"/"Left" indicates the direction in which the write head moves.
+
+	*There's a good reason for this that has to do with the length of the string (even number vs odd),
+
+!!! tip "States"
+	* **q1** - the initial state. Here, we read in a character n that corresponds to the nth character in the character list (provided it is not zero). This information is "stored" in the state by going in the corresponding state pn.
+	* **pn** - state after reading the nth character initially - now go right and search for the end of the string, marked by a zero.
+	* **rn** - state after finding zero on the end of the string - now compare the last character of the string. If it's a palindrome, it should be the same as the nth character that we read at the beginning, and we go into state q2. else, go to state qn, meaning "no, its not a palindrome."
+	* **q2** - state after sucessful comparison of last character in string - now go left and search for the beginning of the string, marked by a zero. Restart the loop by going to q1.
+"""
+
+# ╔═╡ 43421788-e6f4-4a6b-ae64-93a04050954e
+md"""
+## Implementation
+!!! warning "For your information"
+	The following implementation is similar to the one in the course notes, yet has slight differences in implementation.
+"""
+
+# ╔═╡ 00747d0d-ed30-42b1-ab54-60910ec4b129
+"""
+	TuringMachine
+
+A struct to represent the Turing state-machine.
+"""
+mutable struct TuringMachine
+	tape::Vector{Int}
+	position::Int
+	state::String
+end
+
+# ╔═╡ ce1b39bb-81c6-46e6-a43e-e92c52a170b4
+# Extend the Base.show function to represent the Turing state-machine.
+function Base.show(io::IO, turing::TuringMachine)
+	print(io, turing.position, " - ", turing.state, ": ", turing.tape)
+end
+
+# ╔═╡ 4d054954-4879-49a4-aadd-ac87fb7e9e2e
+"""
+    update_machine!(tm::TuringMachine)
+
+Update the TuringMachine `tm` by applying one transition step according to the palindrome checking rules.
+"""
+function update_machine!(tm::TuringMachine)
+    # State: q1
+    if tm.state == "q1"
+        if tm.tape[tm.position] != 0
+            # Remember the symbol by encoding the state
+            symbol = tm.tape[tm.position]
+            tm.state = "p" * string(symbol)
+            tm.tape[tm.position] = 0  # Write 0 to the tape
+            tm.position += 1  # Move right
+        else
+            tm.state = "qy"  # Move to the accepting state
+            tm.tape[tm.position] = 0  # Write 0 to the tape
+            tm.position += 1  # Move right
+        end
+
+    # State: pX (move right to end)
+    elseif startswith(tm.state, "p")
+        if tm.tape[tm.position] != 0
+            # Continue moving right
+            tm.position += 1
+        else
+            # At rightmost 0, switch to rX state
+            tm.state = "r" * tm.state[2:end]  # Keep the symbol
+            tm.tape[tm.position] = 0  # Write 0 to the tape
+            tm.position -= 1  # Move left
+        end
+
+    # State: rX (compare and move left)
+    elseif startswith(tm.state, "r")
+        remembered_symbol = parse(Int, tm.state[2:end])
+        if tm.tape[tm.position] != remembered_symbol && tm.tape[tm.position] != 0
+            # Mismatch, go to rejecting state
+            tm.state = "qn"
+            tm.position -= 1  # Move left
+        else
+            tm.state = "q2"  # Move to accepting state
+            tm.tape[tm.position] = 0  # Write 0 to the tape
+            tm.position -= 1  # Move left
+        end
+
+    # State: q2 (final state)
+    elseif tm.state == "q2"
+        if tm.tape[tm.position] != 0
+            tm.state = "q2"  # Stay in accepting state
+            tm.position -= 1  # Move left
+        else
+            tm.state = "q1"  # Reset to initial state
+            tm.tape[tm.position] = 0  # Write 0 to the tape
+            tm.position += 1  # Move right
+        end
+    end
+end
+
+# ╔═╡ f39ad815-e838-48bb-9d93-8895c329ce4f
+"""
+    run_turing_machine!(tm::TuringMachine)
+
+Run the Turing machine on the tape until it reaches an accepting or rejecting state.
+Prints the result and logs each step.
+"""
+function run_turing_machine!(tm::TuringMachine)
+    while !(tm.state in ["qy", "qn"])
+        update_machine!(tm)
+        @info tm
+    end
+    if tm.state == "qy"
+        println("Accepted: The input is a palindrome.")
+    else
+        println("Rejected: The input is not a palindrome.")
+    end
+end
+
+# ╔═╡ 8d2dc83a-6204-49bc-9a67-1d23eb1651b0
+md"""
+## Test the implementation
+"""
+
+# ╔═╡ 865db30c-24bc-4ee5-86e2-107f59b4f139
+let
+	tape = vcat([0], [1,2,3,2,1], [0])  # Initialize tape with 0s as boundaries
+	tm = TuringMachine(tape, 2, "q1")
+	run_turing_machine!(tm)
+end
 
 # ╔═╡ Cell order:
 # ╟─1e9ecd99-5a36-448f-9b07-71a070655c0f
@@ -455,8 +625,7 @@ As an additional question, you might want to think about how you could incorpora
 # ╟─e4422479-4a62-44c3-b981-14dd3df40d3b
 # ╟─1ef554e1-25fd-4bb7-839d-dfc36388aece
 # ╠═f2b803fd-bd73-4bef-a6b1-a24e02bd545b
-# ╠═24af7dbf-4c52-4272-83fe-d6605050dd6e
-# ╠═86e89ddf-f74c-434d-9b70-c8bdf2b874ef
+# ╟─ef2d1c82-f61b-41f0-b999-a693682e9d64
 # ╟─4f1ac264-51cf-467e-b336-9c8610dbdb22
 # ╟─8593d576-7d39-4f23-b9cc-f259e74dfc30
 # ╟─4952beb6-bd46-4d4d-ac87-0678f6a240bc
@@ -464,4 +633,13 @@ As an additional question, you might want to think about how you could incorpora
 # ╠═f80911a5-cf14-4e82-aac2-5aa817deb69a
 # ╟─2d28bb56-019c-4198-bdd5-220f2cbd883e
 # ╟─1bf90bd6-3e8c-45ca-9357-ae047cb29f39
-# ╠═b9d4c242-7042-4dad-af25-85101f1060dd
+# ╟─8cfd0097-584e-49bb-93c6-9124093f038a
+# ╟─785790f1-e2e4-4c21-97ae-ed36e598149d
+# ╟─d5d1488e-9b2d-4bd6-a2bd-c796e9987ff2
+# ╟─43421788-e6f4-4a6b-ae64-93a04050954e
+# ╠═00747d0d-ed30-42b1-ab54-60910ec4b129
+# ╠═ce1b39bb-81c6-46e6-a43e-e92c52a170b4
+# ╠═4d054954-4879-49a4-aadd-ac87fb7e9e2e
+# ╠═f39ad815-e838-48bb-9d93-8895c329ce4f
+# ╟─8d2dc83a-6204-49bc-9a67-1d23eb1651b0
+# ╠═865db30c-24bc-4ee5-86e2-107f59b4f139
