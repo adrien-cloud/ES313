@@ -523,14 +523,14 @@ end
 # ╔═╡ 556daa75-47ca-4e71-abac-4610ec9cf8b8
 md"""
 ## Graph models
-There are many approach to building a network, and some of these models are detailed below
+There are many approaches to building a network, and some of these models are detailed below
 !!! tip "Barabási–Albert model"
 	Underlying principle: grow the network through preferential attachment, i.e. a new node always has $m$ neighbors. The neigbors are chosen at random, but proportional to the node's degree
 	```math
 	p_i = \frac{d_i}{\sum_j d_j}
 	```
 
-	It can be show that the degree distribution of such a network follows power law with coeffient ``\alpha = 3``
+	It can be shown that the degree distribution of such a network follows a power law with coeffient ``\alpha = 3``
 
 	This network model has been used to explain real world processes and model the internet.
 
@@ -821,7 +821,7 @@ begin
 end
 
 # ╔═╡ Cell order:
-# ╟─590d74fd-3143-4676-92e8-5e9a24092c29
+# ╠═590d74fd-3143-4676-92e8-5e9a24092c29
 # ╟─c6fed3f2-dd79-4dcc-bce8-5c61b3dc9be4
 # ╠═85e6ee4c-db6e-45dd-a33f-30cd3c9c51e2
 # ╟─1b54ae03-10ec-44c7-bcee-99cceee0b1fc
