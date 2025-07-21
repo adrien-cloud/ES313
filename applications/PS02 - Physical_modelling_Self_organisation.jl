@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.20.5
+# v0.20.13
 
 using Markdown
 using InteractiveUtils
@@ -142,51 +142,59 @@ md"""
 	- What are the (dis)advantages of the approach cfr. the referenced paper?
 """
 
-# ╔═╡ 9a369504-fdfe-46d3-969f-673580b47b99
+# ╔═╡ 99430b49-895c-4b88-8433-f5b6fd885b8e
 md"""
-# Phase transition in networks
-## Generalities - Networks
+# Forest Fires
 
-The concept of graphs has been introduced in the lectures. In what follows we will give a brief recapitulation:
+The forest fire model is probably the most illustrative model of self-criticality.
 
-!!! info "Graph"
-	Abstract mathematical structure consisting of vertices (or nodes) and edges (or links) connecting pairs of vertices. Representation of a real-world network (potentially simplified).
-    
-	Notation: ``G = (V, E)`` where ``V`` is the set of vertices and ``E`` is the set of edges.
+## Model Summary
 
-In the following, we will only consider undirected networks i.e. if node $i$ is connected to node $j$, then node $j$ is automatically connected to node $i$ (as is the case with Facebook friendships). For unweighted networks of $N$ nodes, the network structure can be represented by an $N \times N$ adjacency matrix $A$:
+The forest-fire model simulates a square grid where each site represents a patch of land. Over time:
+- Trees **grow** in empty sites.
+- **Lightning** randomly strikes and sets trees on fire.
+- Fires **spread** to neighboring trees.
+- Burnt trees become **empty**.
 
-```math
-a_{i,j} = \left\{
-                \begin{array}{ll}
-                  1 & \text{if there is an edge from node $i$ to node $j$}\\
-                  0 & \text{otherwise}\\
-                \end{array}
-                \right.
-```
-The degree of a node $i$ is the number of connections it has. In terms of the adjacency matrix
-$A$, the degree of node $i$ is the sum of the i$^{\text{th}}$ row of $A$:
-$$k_i = \sum_{j=1}^{N}a_{i,j}$$
+Over many steps, this process self-organizes — producing **fire size distributions** that follow a power law.
 
-The average node degree $\langle k \rangle$ is then given by: $$\langle k \rangle = \frac{1}{N} \sum_{i=1}^{N}k_{i}$$
+!!! info "Cell States"
+	Each site can be in one of three states:
+	- `0`: Empty
+	- `1`: Tree
+	- `2`: Burning
 
+!!! info "Model Parameters"
+	* `G` (`g x g`): The size of the grid.
+	* `f_s`: The sparking frequency.
+	* `N_s`: The number of steps to run the simulation.
+	* `N_f`: The number of fires with area (see infra).
+	* `A_f`: The area of each fire. (I.e. the amount of trees consumed per fire).
 
-## Erdös-Rényi random graph model
-One of the simplest graph models is the Erdös-Rényi random graph model, denoted by $\mathcal{G}(N,p)$ with $N$ being the amount of nodes and $p$ being the probability that a link exists between two nodes. Self-loops are excluded. The value of $p$ is typically small (this is to avoid that the average degree $\langle k \rangle$ depends on $N$, cf. specialised literature for more details). When studying random graph model models, a major aim is to predict the average behaviour of certain network metrics and, if possible, their variance.
+!!! info "Model Rules"
+	1. **Tree Growth**: At each and every timestep, a tree is 'dropped' on a randomly selected site. If it is unoccupied, the tree is planted.
+	2. **Lightning Strike**: 
+	   With sparking frequency `f_s`, a random site is struck:
+	   - If it holds a tree, it catches fire.
+	   - The fire spreads to **4-connected neighbors** (up/down/left/right).
+	The sparking frequency can also be seen as the inverse number of random tree drops before a lightning strikes.
+	3. **Burning Update**:  
+	   All burning trees (`2`) become **empty** (`0`) in the next time step.
+	4. **Repeat** for many steps.
 
+For large time intervals, the number of trees lost in ‘fires’ is approximately equal to the number of trees planted. However, the number of trees on the grid will fluctuate. The frequency–area distribution of ‘fires’ is a statistical measure of the behaviour of the system. This model is probabilistic (stochastic) in that the sites are chosen randomly. It is a cellular-automata model in that only nearest-neighbour trees are ignited by a ‘burning’ tree. In terms of the definition of self-organized critical behaviour, the steady-state input is the continuous planting of trees. The avalanches in which trees are lost are the ‘forest fires’. A measure of
+the state of the system is the fraction of sites occupied by trees. This ‘density’ fluctuates about a ‘quasi-equilibrium’ value.
 
-
-The Erdös-Rényi random graph  exhibits a phase transition. Let us consider the size (i.e., number of nodes) of the largest connected component in the network as a function of the mean degree ⟨k⟩. When ⟨k⟩ = 0, the network is trivially composed of N disconnected nodes. In the other extreme of ⟨k⟩ = N − 1, each node pair is adjacent such that the network is trivially connected. Between the two extremes, the network does not change smoothly in terms of the largest component size. Instead, a giant component, i.e., a component whose size is the largest and proportional to N, suddenly appears as ⟨k⟩ increases, marking a phase transition. The goal of this application is to determine this value by simulation.
-
-## Problem solution
-Resolve the problem and find the phase transition.
-!!! tip "Subproblems"
-	* generating a random graph
-	* determine the average degree
-	* identifying the size of the largest connected component
-	* visualising the result
-	* determine the critical value
-
+!!! tip "Assignment"
+	Find a method to implement the forest fire phenomenon.
+	* Make sure to visualise the evolution of your forest.
+	* Make a function of `N_f/N_s` as a function of `A_f` with:
+		* `G` = (128,128)
+		* `1/f_s` = [125, 500, 2000]
+		* `N_s` = 1e8
+	  Represent the figure on a logarithmic axis.
+	* What are the advantages and shortcomings of your implementation?
+	* What could you alter to the model to make it more realistic?
 """
 
 # ╔═╡ Cell order:
@@ -198,4 +206,4 @@ Resolve the problem and find the phase transition.
 # ╠═98417593-413e-465c-b46b-99e287fc24d4
 # ╟─7f090510-017b-4f42-b3fa-43c67119f6b5
 # ╟─7c680a64-e34a-46a2-ba09-26c415eeb57e
-# ╟─9a369504-fdfe-46d3-969f-673580b47b99
+# ╟─99430b49-895c-4b88-8433-f5b6fd885b8e
