@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.20.5
+# v0.20.13
 
 using Markdown
 using InteractiveUtils
@@ -29,6 +29,68 @@ html"""
     	padding-right: max(160px, 10%);
 	}
 </style>
+"""
+
+# ╔═╡ 72ad677c-738f-4e62-afcb-c5260ff9a79e
+md"""
+# Optimization overview
+During the lectures, a detailed overview of the most commonly available optimization techniques was provided. You saw a veriety of practical implementations in the Julia coding language. With this short overview, we wish to highlight how these same techniques can be used in other common programming languages. You will notice how the same optimization techniques take on different forms.
+
+*Note: This list is not in any way exhaustive. The choice of optimizer will always depend on the particularities of the project you are working on.*
+
+## MATLAB
+
+As a student, you have never experienced the financial consequences of using MATLAB. For professional use, licenses can easily become very expensive. Given this high price, the MATLAB code is always well maintained, with seamless integration and interoperability.
+
+Therefore, all optimization tools are integrated in the [Optimization Toolbox](https://nl.mathworks.com/products/optimization.html), which offers both a command line interface as a graphical user interface. We highly recommend experimenting with these modules, 
+
+!!! warning "Installation"
+	The `Optimization Toolbox` needs to be added as a package to your MATLAB installation.
+
+The primary [functions](https://nl.mathworks.com/help/matlab/optimization.html) are:
+
+| Optimizer | Application |
+| :-- | :-- |
+| `fminbnd` |	Find local minimum of single-variable function on fixed interval
+| `fminsearch` | Search for local minimum of unconstrained multivariable function using derivative-free method
+| `lsqnonneg` | Solve nonnegative linear least-squares problem
+
+Or simply call `Optimize` in the live editor. Your optimization procedure can be customized by using the function `optimset`.
+
+The interested student is highly recommended to go through the 'Getting Started' section on the [MathWorks Website](https://nl.mathworks.com/help/optim/getting-started-with-optimization-toolbox.html), where you can find easily accessible tutorials, further information and even instructive videos.
+
+## Python
+
+Python is a widely used, high-level, open-source programming language known for its readability, simplicity, and versatility. Python is easy to learn and write, comes with extensive library support and is carried by a large community. However, the language often lacks performance and is memory intensive.
+
+When considering optimization, the [Scipy Optimization](https://docs.scipy.org/doc/scipy/tutorial/optimize.html) library provides a variety of tools:
+
+* Local minimization of multivariate scalar functions (`minimize`)
+* Constrained minimization
+* Global optimization
+* Least-squares minimization (`least-squares`)
+* Univariate function minimizers
+* Custom minimizers
+* Linear Programming
+* Etc.
+
+SciPy offers functionality for optimization, integration, interpolation, linear algebra, eigenvalue problems, algebraic and differential equations, statistics, signal and image processing, and much more. It uses numpy arrays as its basic data structure and adds specialised algorithms. The code is mostly written in Python, but critical parts are implemented in compiled languages like C and Fortran.
+
+## C and C++
+
+C and C++ are both compiled languages, which means they become pertinent when performance is key. Contrarily to the aforementioned examples, they do not have one reference package. You can thus resort to:
+
+| Package | Information |
+| :-- | :-- |
+| [Ceres Solver](http://ceres-solver.org) | Open source library for modeling and solving large, complicated opimization problems. |
+| [OptimLib](https://optimlib.readthedocs.io/en/latest/) | Lightweight library of numerical optimization methods for nonlinear functions. |
+| [OR-Tools]() | OR-Tools is open source software for combinatorial optimization. It is written in C++, but you can also use it with Python, Java, or .Net. |
+| Etc. | |
+
+## What to choose?
+
+More often than not, a programming language is chosen for you. In larger frameworks, letting everyone pick their own language quickly becomes messy—though it still happens. As a result, you’ll often need to adapt to the limitations in front of you, which means familiarizing yourself with the language’s syntax, core principles, and available packages. Learning to code program independently is a valuable skill.
+
 """
 
 # ╔═╡ b4764948-0330-11eb-3669-974d75ab1134
@@ -460,6 +522,7 @@ end
 
 # ╔═╡ Cell order:
 # ╟─543d9901-6bdc-4ca5-bfac-800f543c3490
+# ╟─72ad677c-738f-4e62-afcb-c5260ff9a79e
 # ╟─b4764948-0330-11eb-3669-974d75ab1134
 # ╟─1b769f0c-0332-11eb-1efb-178c1985f3df
 # ╠═f1068fca-0331-11eb-20de-a98c65d5c2dc
