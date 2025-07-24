@@ -135,7 +135,7 @@ We can distinguish different optimization methods based on the number of derivat
 md"""
 ### Zeroth-order methods
 !!! info "Nelder-Mead simplex algorithm"
-	Nelder-Mead is a derivative-free optimizer of an function in ``n`` variables that keeps a simplex of ``n + 1`` points moving over the objective surface. At each step it ranks the points by their function value, tosses out the worst one, and tries four rules in order:
+	Nelder-Mead is a derivative-free optimizer of a function in ``n`` variables that keeps a simplex of ``n + 1`` points moving over the objective surface. At each step it ranks the points by their function value, tosses out the worst one, and tries four rules in order:
 	- reflection (flip it through the centroid)
 	- expansion (push farther if it improved)
 	- contraction (pull back if it got worse)
@@ -284,7 +284,7 @@ f\left(\vec{p}_{0}\right)\leq f\left(\vec{p}_{1}\right)\leq\cdots\leq f\left(\ve
 
 is assigned to the new vertex.
 
-The [wikipedia page](https://en.wikipedia.org/wiki/Nelder–Mead_method)	also provides a nice overview.
+The [wikipedia page](https://en.wikipedia.org/wiki/Nelder–Mead_method) also provides a nice overview. This [simple video](https://www.youtube.com/watch?v=j2gcuRVbwR0) should also help you grasp a better understanding.
 """
 simplex_updates = PlutoUI.details("Simplex update rules", simplex_updates_content)
 	
@@ -2001,7 +2001,7 @@ end
 md"""
 ## Optimisation of stochastic functions
 !!! info "Optimisation of Stochastic Functions"
-	This refers to optimisation problems where the objective function or constraints involve randomness, such as when \(f(\vec{x})\) is an expected value or involves noisy measurements. Examples include optimising systems under uncertainty (e.g., financial models, machine learning). The goal is to minimise the expected value of the objective function:
+	This refers to optimisation problems where the objective function or constraints involve randomness, such as when ``\left(f(\vec{x})\right)`` is an expected value or involves noisy measurements. Examples include optimising systems under uncertainty (e.g., financial models, machine learning). The goal is to minimise the expected value of the objective function:
 	```math
 	\min_{\vec{x} \in \Omega} \mathbb{E}[f(\vec{x}, \omega)]
 	```
@@ -2529,7 +2529,7 @@ md"""
 # ╠═102e0051-dbfb-45e0-871d-db0a0d07abb1
 # ╠═86e70877-1f9c-4634-9f5a-94659bfab519
 # ╟─d4b05c5e-ac08-4a69-b54c-5d825d864bfa
-# ╠═1450d898-5e03-4b54-a1ba-bf3d0f659d25
+# ╟─1450d898-5e03-4b54-a1ba-bf3d0f659d25
 # ╟─9e9a1b5c-a78f-414c-b99e-328e96061542
 # ╟─ff3de131-b74b-4924-aa3f-4954f4b0ecca
 # ╟─110a345d-70dd-40eb-bc1f-1a4d4c9c1926
