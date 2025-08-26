@@ -4,16 +4,26 @@
 using Markdown
 using InteractiveUtils
 
+# ╔═╡ c175a542-11d4-49f1-a872-2053d81d5ade
+begin
+	# Pkg needs to be used to force Pluto to use the current project instead of making an environment for each notebook
+	using Pkg
+	# this is redundant if you run it through start.jl, but to make sure...
+	while !isfile("Project.toml") && !isdir("Project.toml")
+        cd("..")
+    end
+    Pkg.activate(pwd())
+end
+
 # ╔═╡ f1068fca-0331-11eb-20de-a98c65d5c2dc
 begin
-	using Pkg
-	cd(joinpath(dirname(@__FILE__),".."))
-    Pkg.activate(pwd())
 	using Optim, Plots
     using Distributions
 	using JuMP, Ipopt
 	using LaTeXStrings
 	using LinearAlgebra
+	using Tulip, GLPK
+	using StatsPlots, Measures
 	using PlutoUI
 	PlutoUI.TableOfContents()
 end
@@ -33,7 +43,7 @@ html"""
 
 # ╔═╡ 72ad677c-738f-4e62-afcb-c5260ff9a79e
 md"""
-# Optimization overview
+# Optimization Libraries and Toolboxes: A Cross-Language Survey
 During the lectures, a detailed overview of the most commonly available optimization techniques was provided. You saw a variety of practical implementations in the Julia coding language. With this short overview, we wish to highlight how these techniques can be used in other common programming languages. You will notice how the same optimization techniques take on different forms.
 
 *Note: This list is not in any way exhaustive. The choice of optimizer will always depend on the particularities of the project you are working on.*
@@ -95,26 +105,40 @@ More often than not, a programming language is chosen for you. In larger framewo
 
 # ╔═╡ b4764948-0330-11eb-3669-974d75ab1134
 md"""
-# Optimisation techniques
+# Optimisation Techniques in Julia
+
+In this section, we will cover some practical examples and implementations of the optimisation techniques seen in the lectures. For all practical purposes, we will exploit the appropriate libraries.
+
 """
 
 # ╔═╡ 1b769f0c-0332-11eb-1efb-178c1985f3df
 md"""
-We will be using [`Optim`](https://julianlsolvers.github.io/Optim.jl/stable/) for several applications, both uni- and multivariate optimization.
+We will be using [`Optim`](https://julianlsolvers.github.io/Optim.jl/stable/) for several applications, in both uni- and multivariate optimization. For linear programming, we wil be using [JuMP](https://jump.dev/JuMP.jl/stable/) as a general framework, combined with [Tulip](https://github.com/ds4dm/Tulip.jl) or [GLPK](https://github.com/jump-dev/GLPK.jl) as a solver.
 """
 
 # ╔═╡ 165f35b0-0332-11eb-12e7-f7939d389e58
 md"""
-## Optimizing a function without gradient information
-### Straightforward example
+## Unconstrained optimisation
+
+
+!!! tip "Reminder"
+	The general formulation of an unconstrained optimization problem is:
+
+	```math
+	\min f\left(\vec x\right)
+	```
+
+### Optimizing a function without gradient information
+#### Straightforward example
 For a univariation function, you need to provide an upper and lower bound
 ```Julia
 optimize(f, lower, upper)
 ```
 Try to optimize $x^3 - 6x + x^2 +2$
-* Compare the result between both methods (`Brent()` vs `GoldenSection()`).
-* Intermediate results can be store by using the `store_trace=true` keyword argument. The type of the returned object is `Optim.UnivariateOptimizationResults`. The numerical value of each entry can be read by using `.value`.
-* Illustrate the evolution of the estimated optimum.
+!!! info "Tasks"
+	* Compare the result between both methods (`Brent()` vs `GoldenSection()`).
+	* Intermediate results can be store by using the `store_trace=true` keyword argument. The type of the returned object is `Optim.UnivariateOptimizationResults`. The numerical value of each entry can be read by using `.value`.
+	* Illustrate the evolution of the estimated optimum.
 """
 
 # ╔═╡ 77d89aa8-07d2-11eb-1bbd-a5c896e3ecfe
@@ -142,17 +166,15 @@ let
 	
 end
 
-# ╔═╡ 7bce2500-0332-11eb-2b63-87dc0d713825
-
-
 # ╔═╡ e6294d6a-0334-11eb-3829-51ee2b8cadaf
 md"""
-### Data fitting
+#### Data fitting
 Suppose we have a random periodic signal with noise, i.e. $y_i = a \sin(x_i-b) + c + \epsilon_i$ and we wish to determine the values of $a,b$ and $c$ that minimize the difference between the “model” and the measured points.
 
-* Define an error function
-* Determine possible values for $a,b$ and $c$
-* What is the effect of the initial values? Make an illustration of the error for different starting values.
+!!! info "Tasks"
+	* Define an error function
+	* Determine possible values for $a,b$ and $c$
+	* What is the effect of the initial values? Make an illustration of the error for different starting values.
 """
 
 # ╔═╡ 66be5114-0335-11eb-01a9-c594b92937bf
@@ -213,20 +235,21 @@ Compare the estimates:
 * b̂: $(res.minimizer[2]) $$\leftrightarrow$$ b: $(b)
 * ĉ: $(res.minimizer[3]) $$\leftrightarrow$$ c: $(c)
 
-with the original data. What do you observe? can you explain this?
+with the original data. What do you observe? Can you explain this?
 """
 
 # ╔═╡ add5faba-03b8-11eb-0cc7-15f19eb1e0e2
 md"""
-## Optimisation with gradient information
+### Optimisation with gradient information
 Suppose we want to minimize a function ``\mathbb{R}^3 \mapsto \mathbb{R}``:
 
 ``\min g(\bar{x}) = x_1 ^2 + 2.5\sin(x_2) - x_1^2x_2^2x_3^2 ``
 
-Compare the results (computation time) using
-1. a zero order method (i.e. no gradients used)
-2. the function and its gradient (both [newton](https://www.youtube.com/watch?v=W7S94pq5Xuo) and [BFGS](https://www.youtube.com/watch?v=VIoWzHlz7k8) method)
-3. the function, its gradient and the hessian
+!!! info "Tasks"
+	Compare the results (computation time) using
+	1. a zero order method (i.e. no gradients used)
+	2. the function and its gradient (both [newton](https://www.youtube.com/watch?v=W7S94pq5Xuo) and [BFGS](https://www.youtube.com/watch?v=VIoWzHlz7k8) method)
+	3. the function, its gradient and the hessian
 
 You can evaluate the performance using the `@time` macro. For a more detailed and representative analysis, you can use the package [`BenchmarkTools`](https://github.com/JuliaCI/BenchmarkTools.jl) (we will go into detail in the session about performance)
 """
@@ -273,10 +296,11 @@ end
 
 # ╔═╡ 966b88dc-03bc-11eb-15a4-b5492ddf4ede
 md"""
-## Optimize the optimizer
+### Optimize the optimizer
 You could study the influence of the optimization methods and try to optimize them as well (this is sometimes refered to as hyperparameter tuning). 
 
-Try to create a method that minimizes the amount of iterations by modifying the parameter $\eta$ from the `BFGS` method, which can be seen as a particular implementation of the `ConjugateGradient` method.
+!!! info "Task"
+	Try to create a method that minimizes the amount of iterations by modifying the parameter $\eta$ from the `BFGS` method, which can be seen as a particular implementation of the `ConjugateGradient` method.
 
 **Note:** 
 * Look at the documentation for possible values of $\eta$.
@@ -294,27 +318,78 @@ begin
 	optimize(optimme, 0, 20)
 end
 
+# ╔═╡ 0b83404d-2caf-4cdf-8418-7c8296a539ba
+md"""
+## Constrained optimisation
+
+In this case, we have a function that needs to be minimised, subject to several constraints. We will cover the most general formulation of such a problem, before we cover specific cases:
+
+!!! tip "Typical Problem Layout"
+	```math
+	\begin{align}
+	\min_{\vec{x}}\, & f\left(\vec{x}\right)\, \textrm{subject to}\, \begin{cases}
+	\vec{h}\left(\vec{x}\right)=\vec{0}\, \\
+	\vec{g}\left(\vec{x}\right)\leq\vec{0}
+	\end{cases}
+	\end{align}
+	```
+	
+	where  ``f:\mathbb{R}^{n}\rightarrow\mathbb{R}``, ``\vec{h}:\mathbb{R}^{n}\rightarrow\mathbb{R}^{m}``,
+	``m\leq n, \text{and } \vec{g}:\mathbb{R}^{n}\rightarrow\mathbb{R}^{p}``.
+
+However, if both your objective function and constraints are linear, the problem (and solutions methods) can be simplified.
+
+!!! tip "Linear Programming"
+	A linear program is an optimization problem of the form:
+	
+	```math
+	\min_{\vec{x} \in \Omega } \vec{c}^\mathsf{T}\vec{x} \; \text{ subject to } 
+	\cases{
+	\mathbf{A}\vec x=\vec b\\
+	\vec x\ge\vec 0}
+	```
+	where $\vec c\in\mathbb R^n$, $\vec b\in\mathbb R^m$ and $\mathbf A \in \mathbb R^{m\times n}$.
+
+Making way for the application of the simplex and interior point methods.
+
+!!! tip "Quadratic Programming"
+	An optimization problem with a quadratic objective function and linear
+	constraints is called a _quadratic program_. The general quadratic program can be stated as
+	
+	```math
+	\begin{aligned}
+	\min_{\vec{x}}\, & f\left(\vec{x}\right)\overset{\vartriangle}{=}\frac{1}{2}\vec{x}^\mathsf{T}Q\vec{x}-\vec{c}^\mathsf{T}\vec{x}\\
+	\textrm{subject to}\, & \begin{cases}
+	A_{\textrm{eq}}\vec{x}=\vec{b}_{\textrm{eq}}\,,\\
+	A_{\textrm{in}}\vec{x}\leq\vec{b}_{\textrm{in}}\,,
+	\end{cases}
+	\end{aligned}
+	```
+	
+	where $Q$ is a symmetric $n\times n$ matrix, $\vec{c}\in\mathbb R^{n}$,
+	$A_{\textrm{eq}}$ is a $m\times n$ matrix, $\vec{b}_{\textrm{eq}}\in\mathbb R^{m}$,
+	$A_{\textrm{in}}$ is a $p\times n$ matrix and $\vec{b}_{\textrm{in}}\in\mathbb R^{p}$.
+
+Problems of this type are important in their own right, and they also arise a subproblems in methods for general constrained optimization such as sequential quadratic programming and interior-point methods.
+
+!!! tip "Sequential Quadratic Programming"
+	Sequential Quadratic Programming (SQP) is an iterative method used to solve constrained nonlinear optimization problems by approximating the original problem at each iteration with a quadratic programming subproblem. This subproblem minimizes a quadratic model of the objective function subject to linearized constraints derived from the original nonlinear constraints. By solving this sequence of quadratic programs, SQP efficiently handles nonlinear objectives and constraints, converging towards an optimal solution while incorporating derivative information such as gradients and Hessians.
+
+
+"""
+
+# ╔═╡ f23a8448-bd4e-4837-8ed9-c990d489a67e
+md"""
+### Linear Programming
+!!! warning "Section on LP"
+	For all practical purposes, the majority of the work in linear programming comes down to the appropriate mathematical translation of the problem you are trying to optimize. As these can become quite elaborate, we will cover them in a separate section.
+"""
+
 # ╔═╡ ec264b44-03c2-11eb-1695-cbf638f8cea9
 md"""
-## Sequential Quadratic Programming
-**Reminder**:  typical problem layout:
+### Sequential Quadratic Programming
 
-
-
-```math
-\begin{align}
-\min_{\vec{x}}\, & f\left(\vec{x}\right)\, \textrm{subject to}\, \begin{cases}
-\vec{h}\left(\vec{x}\right)=\vec{0}\, \\
-\vec{g}\left(\vec{x}\right)\leq\vec{0}
-\end{cases}
-\end{align}
-```
-
-where  ``f:\mathbb{R}^{n}\rightarrow\mathbb{R}``, ``\vec{h}:\mathbb{R}^{n}\rightarrow\mathbb{R}^{m}``,
-``m\leq n, \text{and } \vec{g}:\mathbb{R}^{n}\rightarrow\mathbb{R}^{p}``.
-
-
-This allows you to deal with non-linear constraints. 
+SQP allows you to deal with nonlinear constraints.
 
 Try to solve the following problem:
 ```math
@@ -342,16 +417,19 @@ end
 
 # ╔═╡ b5cf333b-5ffa-45d5-b9c0-00abc4b63196
 md"""
-## Some applications
+# Applications
+## General Optimization
 ### More curve fitting
-Consider the following setting:
-we want to recover an unknown function ``u(t)`` from noisy datapoints ``b_i``. As we do not know the actual underlying signal, we want to make sure that the resulting function is piecewise smooth.
 
-**Note**
-```
-A piecewise smooth function is can be broken into distinct pieces and on each piece both the functions and their derivatives, are continuous. A piecewise smooth function may not be continuous everywhere, however only a finite number of discontinuities are allowed.
-```
-For the underlying signal, we use the following function:
+
+!!! tip "Setting"
+	We want to recover an unknown function ``u(t)`` from noisy datapoints ``b_i``. As we do not know the actual underlying signal, we want to make sure that the resulting function is piecewise smooth.
+
+
+!!! warning "Piecewise smooth function"
+	A piecewise smooth function is can be broken into distinct pieces and on each piece both the functions and their derivatives, are continuous. A piecewise smooth function may not be continuous everywhere, however only a finite number of discontinuities are allowed.
+
+For the **underlying signal**, we use the following function:
 ```math
 b_p(t) = \begin{cases}1 & 0 \le t < 0.25 \\
 				      2 & 0.25 \le t < 0.5\\
@@ -360,12 +438,19 @@ b_p(t) = \begin{cases}1 & 0 \le t < 0.25 \\
 \end{cases}
 ```
 
-Given our unknown vector ``u``, which should be an approximation for ``b_i``, we consider the following loss function which needs to be minimized:
+Given our unknown vector ``u``, which should be an approximation for ``b_i``, we consider the following **loss function** which needs to be minimized:
 ```math
 \phi_1 = \frac{h}{2}\sum_{i=1}^{N}\frac{1}{2}\left[ (u_i - b_i)^2 + (u_{i-1} - b_{i-1})^2 \right]+ \frac{\beta h}{2}\sum_{i=1}^{N}\left( \frac{u_i - u_{i-1}}{h}\right) ^2
 ```
+!!! info "Tasks"
+	Find the optimal fit using `Optim.jl`. 
 
-Find the optimal fit using `Optim.jl`. The noise on the datapoints is normally distributed ``\mathcal{N}(0, \sigma)``. Use ``h=\{0.0125; 0.008\}``. Given the following pairs of values for ``(β, \sigma = noise) = \{(1\text{e-3}; 0.01); (1\text{e-3}; 0.1); (1\text{e-4}; 0.01); (1\text{e-3}; 0.1) \}``. What do you observe and what is the best approximation?
+	*Use following parameters:*
+	* The noise on the datapoints is normally distributed ``\mathcal{N}(0, \sigma)``. 
+	* Use ``h=\{0.0125; 0.008\}``. 
+	* Given the following pairs of values for ``(β, \sigma = noise) = \{(1\text{e-3}; 0.01); (1\text{e-3}; 0.1); (1\text{e-4}; 0.01); (1\text{e-3}; 0.1) \}``. 
+
+	What do you observe and what is the best approximation?
 
 """
 
@@ -442,13 +527,16 @@ end
 
 # ╔═╡ eac72e64-8584-4588-8b0e-03ddb04956f8
 md"""
-From the previous results, you might not be satisfied, so we propose an additional loss function ϕ₂, this time using another regularization term.
+From the previous results, you might not be satisfied, so we propose an **additional loss function** ``\phi_2``, this time using another regularization term.
 ```math
 \phi_2 = \frac{h}{2}\sum_{i=1}^{N}\frac{1}{2}\left[ (u_i - b_i)^2 + (u_{i-1} - b_{i-1})^2 \right]+ \gamma h \sum_{i=1}^{N} \left( \sqrt{ \left(\frac{u_i - u_{i-1}}{h}\right) ^2 + \epsilon} \right)
 ```
+!!! info "Tasks"
+	Repeat the exercise, but using:
+	* ϵ=1e-6, 
+	* ``(γ, σ) = \{(1\text{e-2}; 0.01); (1\text{e-2}; 0.1); (1\text{e-3}; 0.01); (1\text{e-3}; 0.1) \}``. 
 
-Repeat the exercise, but using ϵ=1e-6, 
-``(γ, noise) = \{(1\text{e-2}; 0.01); (1\text{e-2}; 0.1); (1\text{e-3}; 0.01); (1\text{e-3}; 0.1) \}``. What do you observe and what is the best approximation?
+	What do you observe and what is the best approximation?
 """
 
 # ╔═╡ 128d37f1-f4b0-44f8-8a47-5c75e0c44875
@@ -473,7 +561,8 @@ end
 
 # ╔═╡ 8e3a7568-ae6c-459d-9d95-4f80ca79accf
 md"""
-Can you optimize the loss function, i.e. determine those values of β or (γ, ϵ) that generate the best result? Note: you might want to think on how to deal with the stochastic aspect of the problem.
+!!! info "Task"
+	Can you optimize the loss function, i.e. determine those values of β or (γ, ϵ) that generate the best result? Note: you might want to think on how to deal with the stochastic aspect of the problem.
 """
 
 # ╔═╡ 580b7d3b-78c3-4eee-889a-884fc732515a
@@ -498,12 +587,14 @@ end
 
 # ╔═╡ ffa3233d-a17c-4600-8fa1-8001e07fe600
 md"""
-1. minimise the flower function.
-2. minimise the flower function with the additional constraint ``x_1^2 + x_2^2 \ge 2``
+!!! info "Tasks"
+	1. minimise the flower function.
+	2. minimise the flower function with the additional constraint ``x_1^2 + x_2^2 \ge 2``
 
-Make an illustration for different starting values.
+	Make an illustration for different starting values.
 
-How could you allow (limited) disrespect of the constraints?
+!!! tip "Alternative?"
+	How could you allow (limited) disrespect of the constraints?
 """
 
 # ╔═╡ f7478cd0-7558-4c71-8933-2003863eb1bd
@@ -517,11 +608,354 @@ let
 	ylabel!("y")
 end
 
-# ╔═╡ d39b62d0-3f89-45d7-9ddc-4f9a106611d6
+# ╔═╡ fea692ef-2192-40a5-91ad-c3aad9a12676
+md"""
+## Linear Programming
+!!! warning "Applications"
+	Applications on LP will be covered in the section on LP.
+"""
 
+# ╔═╡ c76417ca-f3ba-49bd-a16e-6246c396d458
+md"""
+# Linear programming
+We will be using [JuMP](https://jump.dev/JuMP.jl/stable/) as a general framework, combined with [Tulip](https://github.com/ds4dm/Tulip.jl) or [GLPK](https://github.com/jump-dev/GLPK.jl) as a solver.
+"""
+
+# ╔═╡ 5f9e6cbc-ce95-4b00-a0e5-f5633e82b157
+md"""
+## Example - Employee planning
+We manage a crew of call center employees and want to optimise our shifts in order to reduce the total payroll cost. 
+
+!!! tip "Setting"
+	* Employees have to work for five consecutive days and are then given two days off. 
+	* The current policy is simple: each day gets the same amount of employees (currently we have 5 persons per shift, which leads to 25 persons on any given day).
+	* We have some historical data that gives us the minimum amount of calls we can expect: Mon: 22, Tue: 17, Wed:13, Thu:14, Fri: 15, Sat: 18, Sun: 24
+	* Employees are payed € 96 per day of work. This lead to the current payroll cost of 25x7x96 = € 16.800. 
+
+!!! info "Task"
+	You need to optimize employee planning to reduce the payroll cost.
+
+Following table gives an overview:
+
+| Schedule | Days worked | Attibuted Pers | Mon | Tue | Wed | Thu | Fri | Sat | Sun |
+|----------|-------------|----------------|-----|-----|-----|-----|-----|-----|-----|
+| A | Mon-Fri | 5 | W | W | W | W | W | O | O |
+| B | Tue-Sat | 5 | O | W | W | W | W | W | O |
+| C | Wed-Sun | 5 | O | O | W | W | W | W | W |
+| D | Thu-Mon | 5 | W | O | O | W | W | W | W |
+| E | Fri-Tue | 5 | W | W | O | O | W | W | W |
+| F | Sat-Wed | 5 | W | W | W | O | O | W | W |
+| G | Sun-Thu | 5 | W | W | W | W | O | O | W |
+| Total Employees: | - | 35 | 5 | 5 | 5 | 5 | 5 | 5 | 5 |
+| Required (calls): | - | - | 22 | 17 | 13 | 14 | 15 | 18 | 24 |
+
+### Mathematical formulation
+We need to formaly define our decision variables, constraints and objective function.
+
+!!! tip "Decision variables"
+	The amount of persons attributed to each schedule ( ``Y = [y_1,y_2,\dots,y_7]^{\intercal}``)
+
+!!! tip "Objective function"
+	*The payroll cost*
+	  
+	Suppose the matrix ``A`` is the matrix indicating the workload for each schedule (in practice ``W=1`` and ``O=0``):
+	```math
+	A = \begin{bmatrix}  
+	W & W & W & W & W & O & O \\
+	O & W & W & W & W & W & O \\
+	O & O & W & W & W & W & W \\
+	W & O & O & W & W & W & W \\
+	W & W & O & O & W & W & W \\
+	W & W & W & O & O & W & W \\
+	W & W & W & W & O & O & W 	\\
+	\end{bmatrix}
+	```
+	Now $$A^\intercal Y$$ gives us a vector indicating the amount of employees working on a given day. Suppose we also use the vector $$c$$ to indicate the salary for a given day (in this case $$c = [96,96,96,\dots,96]$$). 
+	
+	We are now able to write our objective function:
+	```math
+	\min Z = c^\intercal A^\intercal Y
+	```
+
+!!! tip "Constraints"
+
+	1. Each day we need at least enough employees to cover all incoming calls. Suppose we use the vector $$b$$ to indicate the amount of incoming calls for a given day. We are able to write the constraints in a compact way:
+	
+	```math
+	\text{subject to } A^\intercal Y  \ge b 
+	```
+	
+	2. We also want to avoid a negative amount of attributed employees on any given day, since this would lead to a negative payroll cost:
+	```math
+	\text{and }Y \ge 0
+	```
+	
+	3. $\forall Y : Y \in \mathbb{N}$
+### Implementation
+"""
+
+# ╔═╡ 5e75e9f8-e76f-417e-8b83-e90c2f08f657
+begin
+	# basic data
+	A = ones(Bool,7,7) - diagm(-1=>ones(Bool,6), -2=> ones(Bool,5), 5=>ones(Bool,2), 6=>ones(Bool,1))
+	Y = [5,5,5,5,5,5,5]
+	Bc = [22,17,13,14,15,18,24]
+	C = [96,96,96,96,96,96,96];
+	A
+end
+
+# ╔═╡ d05bd2a1-475d-4f0c-b070-1adb0015ca3b
+# A' * Y .> Bc
+C' * A' * Y
+
+# ╔═╡ 2d949d67-f5d3-4ac4-ae89-9ce0ae6a4c73
+let
+	model = Model(GLPK.Optimizer)
+	@variable(model, Y[1:7] >= 0, Int)
+	@constraint(model, A' * Y .>= Bc)
+	@objective(model, Min, C' * A' * Y)
+	optimize!(model)
+	println("termination status: $(termination_status(model))")
+	println("objective value:    $(objective_value(model))")
+	println("personnel assignment per schedule: $(value.(Y))")
+end
+
+# ╔═╡ 40e020d3-53e2-4953-8ba0-119ad43dbab9
+md"""
+### Adding uncertainty
+Up to now, we have had constant numbers for the minimum number of employees needed per day. In reality these quantities are uncertain. The actual number of calls will fluctuate each day. For simplicity's sake will we use a [lognormal distribution](https://en.wikipedia.org/wiki/Log-normal_distribution#Occurrence_and_applications) for the amount of calls (using their initial value as mean and a standard deviation of two). Working this way, we avoid having negative calls.
+"""
+
+# ╔═╡ 65ca25af-03ef-4798-97d1-4e4187704e94
+Bc
+
+# ╔═╡ f52b6763-e57d-44cf-92ee-144a049993a5
+begin
+	# generating the distributions
+	B_u = Distributions.LogNormal.(Bc,2) # array with distributions
+
+	# quick sample to illustrate amount of calls being randomized
+	log.(rand.(B_u))
+end
+
+# ╔═╡ 03b24a45-607c-4f66-8155-eb96d91aceaa
+begin
+	cost = Float64[]
+	for _ in 1:10000
+		let cout=cost
+			model = Model(GLPK.Optimizer)
+			@variable(model, Y[1:7] >= 0, Int)
+			@constraint(model, A' * Y .>= log.(rand.(B_u)))
+			@objective(model, Min, C' * A' * Y)
+			optimize!(model)
+			push!(cout, objective_value(model))
+		end
+	end
+	cost
+end
+
+# ╔═╡ 34dca455-df8a-48f9-a0e4-31492d25867a
+StatsPlots.histogram(cost, normalize=:pdf,xlabel="objective value", ylabel="PDF", label="")
+
+# ╔═╡ f0a7dc6b-d9cd-4198-9016-e55ef8c93a7e
+md"""
+### Small variant: adding a commission
+Suppose each worker receives extra pay for the amount of calls that have been treated. We can easily include this in our model
+"""
+
+# ╔═╡ f409d2f6-0309-43a6-9f55-bfde2ca1a589
+begin
+	cost_c = Float64[]
+	commission = 20
+	for _ in 1:1000
+		let cout=cost_c
+			model = Model(GLPK.Optimizer)
+			appels = log.(rand.(B_u))
+			@variable(model, Y[1:7] >= 0, Int)
+			@constraint(model, A' * Y .>= appels)
+			@objective(model, Min, C' * A' * Y + sum(appels) * commission)
+			optimize!(model)
+			push!(cout, objective_value(model))
+		end
+	end
+
+	StatsPlots.histogram(cost_c, normalize=:pdf,xlabel="objective value", ylabel="PDF", label="")
+end
+
+# ╔═╡ fcbc6f59-958c-440e-b5f3-676edb0b308c
+md"""
+#### Playing it safe
+The above has given us some information on what the distributions of the payroll cost may be, however in reality, you would want to make sure that the clients calling to center are taken care off. To realise this, one might say that for any given day, you want to make sure that 90% of all calls can be treated by the specific capacity.
+"""
+
+# ╔═╡ 49666e38-230d-4a2c-894c-7b7113bb29d7
+log.(quantile.(B_u, 0.90))
+
+# ╔═╡ b2f11df8-d83e-40d0-9cfa-0fa3b56e0c87
+ let
+	model = Model(GLPK.Optimizer)
+	@variable(model, Y[1:7] >= 0, Int)
+	@constraint(model, A' * Y .>= log.(quantile.(B_u, 0.99)))
+	@objective(model, Min, C' * A' * Y)
+	optimize!(model)
+	termination_status(model)
+	objective_value(model)
+end
+
+# ╔═╡ fc31d991-4683-4d49-bb83-69db0cb4fb76
+md"""
+### Additional questions
+* The example we have treated so far has very traditional working patterns for the employees. How woud you deal with modern working patterns (e.g. 4/5 or parttime working)?
+* We took a look at the stochastic nature of the amount of calls, however, the personnel might not show up for various reasons. How would you describe the possible influence? Hint: make a discrete event model of this setting, using the optimal design and controlling for employees showing up or not.
+"""
+
+# ╔═╡ 376b3f70-013a-4931-9284-fda3ceb88683
+md"""
+## Application - Maximize flow in a network
+
+We try to maximize the flow in a network using Linear Programming.
+
+
+!!! tip "Setting"
+	Let $N = (V, E)$ be a directed graph, where $V$ denotes the set of vertices and $E$ is the set of edges. Let $s ∈ V$ and $t ∈ V$ be the source and the sink of $N$, respectively. The capacity of an edge is a mapping $c : E \mapsto \mathbb{R}^+$, denoted by $c_{u,v}$ or $c(u, v)$. It represents the maximum amount of flow that can pass through an edge.
+	
+	A flow is a mapping $f : E \mapsto \mathbb{R}^+$ , denoted by $f_{uv}$ or  $f(u, v)$, subject to the following two constraints:
+	
+	* Capacity Constraint: 
+	
+	```math
+	\forall e \in E: f_{uv} \le c_{uv}
+	```
+	
+	* Conservation of Flows: 
+	
+	```math
+	\forall v \in V\setminus\{s,t\} : \sum_{u:(u,v)\in E}f_{uv} = \sum_{w:(v,w)\in E} f_{vw}
+	```
+
+!!! info "Tasks"
+
+	We want to maximize the flow in the network, i.e. 
+	```math
+	\max |f| = \max \sum_{v:(s,v)\in E}f_{sv} = \max \sum_{v:(v,t)\in E}f_{vt}
+	```
+
+
+#### Setting:
+Consider the following network:
+
+$(PlutoUI.LocalResource("./applications/img/network.png"))
+
+!!! info "We want to:"
+	1. Determine the maximal flow in the network
+	2. Be able to get a troughput of 35 from the source node to the sink node, whilst keeping the costs limited. Each link has a possible increase, with an associated cost (cf. table)
+
+$(PlutoUI.LocalResource("./applications/img/networkcost.png"))
+"""
+
+# ╔═╡ 1ac40672-daf3-49e2-b4a4-bf4b9960dcb1
+# given set-up
+begin
+	# Topology and maximum flow matrix
+	W = [0 13 6 10 0 0 0;
+		 0 0  0  9 5 7 0;
+		 0 0  0  8 0 0 0;
+		 0 0  0  0 3 0 12;
+		 0 0  0  0 0 4 6;
+		 0 0  0  0 0 0 9;
+		 0 0  0  0 0 0 0;
+	];
+	# extra capacity
+	xcap = [ 0 6  4  3 0 0 0;
+			 0 0  0  4 5 3 0;
+			 0 0  0  5 0 0 0;
+			 0 0  0  0 2 0 5;
+			 0 0  0  0 0 2 4;
+			 0 0  0  0 0 0 5;
+			 0 0  0  0 0 0 0;
+	];
+	# cost per increased capacity
+	xcost= [ 0 2.8  2.5  2.8 0   0   0;
+			 0 0    0    2.5 3.1 1.6 0;
+			 0 0    0    3.9 0   0   0;
+			 0 0    0    0   2.8 0   1.6;
+			 0 0    0    0   0   4.6 2.9;
+			 0 0    0    0   0   0   1.8;
+			 0 0    0    0   0   0   0;
+	];
+end
+
+# ╔═╡ 1b2ff048-e4a5-4fc6-a7cb-f18430a18ce1
+md"""
+## Application - Optimizing an investment portfolio
+
+In 1952 [Harry Max Markowitz](https://en.wikipedia.org/wiki/Harry_Markowitz) proposed a new approach for the optimization of an investment portfolio. This ultimately led to him winning the Nobel Prize in Economic Sciences in 1990. The idea is relatively simple:
+
+!!! tip "Setting"
+	Given a portfolio with $n$ stock proportions $S_1,S_2,\dots, S_n$, we want to maximize the return (=profit) and minimize the risk. The goal is to find the values $S_i$ that lead to either a minimum risk attribution with a minimal return or that lead to a maximum return attribution with a maximal risk.
+	
+	Remembering that $\sigma^{2} {\sum_{i=1}^{n}X_i}= \sum_{i=1}^{n}\sigma^2_{X_i} + \sum_{i \ne j}\text{Cov}(X_i,X_j) $, the risk can be expressed in terms of the covariance matrix $\Sigma$:
+	
+	$$S^\mathsf{T} \Sigma S $$ 
+	
+	The return can be expressed as:
+	$$\mu^\mathsf{T}S$$
+
+Consider the following portfolio problem:
+!!! info "Tasks"
+	You are given the covariance matrix and expected returns and you want study several approaches. For each case you should formulate a proper Linear/Quadratic Programming form.
+	1. Ignore the risk and go for optimal investment (i.e. maximal return)
+	2. Same as (1), but a single stock can be at most 40% of the portfolio
+	3. Minimize the risk, with a lower bound on the return e.g. with at least 35% expected return
+	4. Make a graph for:
+	    * the minimal risk in fuction of the expected return. 
+	    * the distribution of the portfolio with the minimal risk in function of the expected return
+	    * the final portfolio value in function of the expected return
+"""
+
+# ╔═╡ a9e7cff7-0ca2-4b4a-824b-17af4065c610
+begin
+	P = [60; 127; 4; 50; 150; 20] # stock prices
+	μ = [0.2; 0.42; 1.; 0.5; 0.46; 0.3] # expected returns
+	Σ = [0.032 0.005 0.03 -0.031 -0.027 0.01;
+		 0.005 0.1 0.085 -0.07 -0.05 0.02;
+		 0.03 0.085 1/3 -0.11 -0.02 0.042;
+		 -0.031 -0.07 -0.11 0.125 0.05 -0.06;
+		 -0.027 -0.05 -0.02 0.05 0.065 -0.02;
+		 0.01 0.02 0.042 -0.06 -0.02 0.08]; # covariance matrix
+end
+
+# ╔═╡ 43ba9db1-a10a-4bf8-b2ad-30e97da6cc46
+md"""
+## Application - Optimal course planning
+!!! tip "Setting"
+	Suppose a professor teaches a course with $N=20$ lectures. We must decide how to split each lecture between theory and applications. Let $T_i$ and $A_i$ denote the fraction of the i$^{\text{th}}$ lecture devoted to theory and applications, for $i=1,\dots,N$. We can already determine the following: 
+	
+	```math
+	\forall i: T_i \ge 0, A_i \ge 0, T_i+A_i =1.
+	```
+	
+	As you may know from experience, you need to cover a certain amount of theory before you can start doing applications. For this application consider the following model:
+	
+	$$\sum_{i=1}^{N} A_i \le \phi \left( \sum_{i=1}^{N} T_i \right)$$
+	
+	We interpret $\phi(u)$ as the cumulative amount of applications that can be covered, when the cumulative amount of theory covered is $u$. We will use the simple form $\phi(u) = a(u − b)$, with $a=2, b=3$, which means that no applications can be covered until $b$ lectures of the theory are covered; after that, each lecture of theory covered opens the possibility of covering a lecture on applications.
+	
+	Psychological studies have shown that the theory-applications split affects the emotional state of students differently. Let $s_i$ denote the emotional state of a student after lecture $i$, with $s_i = 0$ meaning neutral, $s_i > 0$ meaning happy, and $s_i < 0$ meaning unhappy. Careful studies have shown that $s_i$ evolves via a linear recursion dynamic:
+	
+	$$s_i =(1−\theta)s_{i−1} +\theta(\alpha T_i +\beta A_i)\text{ with }\theta \in[0,1]$$ 
+	
+	with $s_0=0$. In order to make sure that the student leave with a good feeling at the end of the course, we try to maximize $s_N$, i.e. the emotional state after the last lecture.
+
+!!! info "Tasks"
+	1. Determine the optimal split that leads to the most positive emotional state (for $\theta = 0.05, \alpha = -0.1, \beta = 1.4$);
+	2. Show the course repartition graphically
+	3. Determine values for $\alpha$ and $\beta$ that lead to a neutral result at the end of the course. Can you give an interpretation to these values?
+"""
 
 # ╔═╡ Cell order:
 # ╟─543d9901-6bdc-4ca5-bfac-800f543c3490
+# ╟─c175a542-11d4-49f1-a872-2053d81d5ade
 # ╟─72ad677c-738f-4e62-afcb-c5260ff9a79e
 # ╟─b4764948-0330-11eb-3669-974d75ab1134
 # ╟─1b769f0c-0332-11eb-1efb-178c1985f3df
@@ -529,7 +963,6 @@ end
 # ╟─165f35b0-0332-11eb-12e7-f7939d389e58
 # ╠═77d89aa8-07d2-11eb-1bbd-a5c896e3ecfe
 # ╠═f27797e5-b83f-4375-ab17-480c09fd7b7f
-# ╟─7bce2500-0332-11eb-2b63-87dc0d713825
 # ╟─e6294d6a-0334-11eb-3829-51ee2b8cadaf
 # ╠═66be5114-0335-11eb-01a9-c594b92937bf
 # ╠═15ef34dc-0336-11eb-0de5-b942e8871db8
@@ -542,6 +975,8 @@ end
 # ╠═6f552aa6-07d5-11eb-18a5-b32ed233c403
 # ╟─966b88dc-03bc-11eb-15a4-b5492ddf4ede
 # ╠═68263aea-07d0-11eb-24f8-6383a3a1e09d
+# ╟─0b83404d-2caf-4cdf-8418-7c8296a539ba
+# ╟─f23a8448-bd4e-4837-8ed9-c990d489a67e
 # ╟─ec264b44-03c2-11eb-1695-cbf638f8cea9
 # ╠═053bae8a-087d-11eb-2e8c-73c41fb4e005
 # ╟─b5cf333b-5ffa-45d5-b9c0-00abc4b63196
@@ -556,4 +991,25 @@ end
 # ╠═117d36ab-a6ba-40e0-b5fc-c0209acbfbfd
 # ╟─ffa3233d-a17c-4600-8fa1-8001e07fe600
 # ╠═f7478cd0-7558-4c71-8933-2003863eb1bd
-# ╠═d39b62d0-3f89-45d7-9ddc-4f9a106611d6
+# ╟─fea692ef-2192-40a5-91ad-c3aad9a12676
+# ╟─c76417ca-f3ba-49bd-a16e-6246c396d458
+# ╟─5f9e6cbc-ce95-4b00-a0e5-f5633e82b157
+# ╠═5e75e9f8-e76f-417e-8b83-e90c2f08f657
+# ╠═d05bd2a1-475d-4f0c-b070-1adb0015ca3b
+# ╠═2d949d67-f5d3-4ac4-ae89-9ce0ae6a4c73
+# ╟─40e020d3-53e2-4953-8ba0-119ad43dbab9
+# ╠═65ca25af-03ef-4798-97d1-4e4187704e94
+# ╠═f52b6763-e57d-44cf-92ee-144a049993a5
+# ╠═03b24a45-607c-4f66-8155-eb96d91aceaa
+# ╠═34dca455-df8a-48f9-a0e4-31492d25867a
+# ╟─f0a7dc6b-d9cd-4198-9016-e55ef8c93a7e
+# ╠═f409d2f6-0309-43a6-9f55-bfde2ca1a589
+# ╟─fcbc6f59-958c-440e-b5f3-676edb0b308c
+# ╠═49666e38-230d-4a2c-894c-7b7113bb29d7
+# ╠═b2f11df8-d83e-40d0-9cfa-0fa3b56e0c87
+# ╟─fc31d991-4683-4d49-bb83-69db0cb4fb76
+# ╟─376b3f70-013a-4931-9284-fda3ceb88683
+# ╠═1ac40672-daf3-49e2-b4a4-bf4b9960dcb1
+# ╟─1b2ff048-e4a5-4fc6-a7cb-f18430a18ce1
+# ╠═a9e7cff7-0ca2-4b4a-824b-17af4065c610
+# ╟─43ba9db1-a10a-4bf8-b2ad-30e97da6cc46

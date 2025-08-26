@@ -34,6 +34,19 @@ begin
 	using Distributions
 end
 
+# ╔═╡ a94f7808-4801-45a7-a612-d44282258303
+html"""
+ <! -- this adapts the width of the cells to display its being used on -->
+<style>
+	main {
+		margin: 0 auto;
+		max-width: 2000px;
+    	padding-left: max(160px, 10%);
+    	padding-right: max(160px, 10%);
+	}
+</style>
+"""
+
 # ╔═╡ be2db4dd-9ace-4985-8414-65124e48e7d3
 md"""
 # Image Segmentation with Cellular Automata
@@ -198,7 +211,8 @@ the state of the system is the fraction of sites occupied by trees. This ‘dens
 """
 
 # ╔═╡ Cell order:
-# ╠═dab1dfbe-5e52-11f0-05a0-df522fb51dd7
+# ╟─a94f7808-4801-45a7-a612-d44282258303
+# ╟─dab1dfbe-5e52-11f0-05a0-df522fb51dd7
 # ╠═cdecef07-e0f9-4372-b1c0-d284d763bb83
 # ╟─be2db4dd-9ace-4985-8414-65124e48e7d3
 # ╟─8a7b7b90-bc6e-4cbf-bd66-a000acb56a92

@@ -20,7 +20,10 @@ end
 begin
 	# Pkg needs to be used to force Pluto to use the current project instead of making an environment for each notebook
 	using Pkg
-	cd(joinpath(dirname(@__FILE__),".."))
+	# this is redundant if you run it through start.jl, but to make sure...
+	while !isfile("Project.toml") && !isdir("Project.toml")
+        cd("..")
+    end
     Pkg.activate(pwd())
     
 	using Distributions, LinearAlgebra, InteractiveUtils
@@ -483,7 +486,7 @@ md"""
 
 # ╔═╡ Cell order:
 # ╟─1e9ecd99-5a36-448f-9b07-71a070655c0f
-# ╠═5312be7e-edd8-11ea-34b0-7581fc4b7126
+# ╟─5312be7e-edd8-11ea-34b0-7581fc4b7126
 # ╠═997d4cb3-ab09-48a4-a505-7b2d8e632e62
 # ╟─a813912a-edb3-11ea-3b13-23da723cb488
 # ╟─b6e7f9a2-50eb-45e4-8a1a-3eefd591dc6a

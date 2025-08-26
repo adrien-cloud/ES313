@@ -94,6 +94,19 @@ let
 	adf # a Julia `DataFrame`
 end
 
+# ╔═╡ 55810ad4-430c-4a01-823c-13fec55dba0f
+html"""
+ <! -- this adapts the width of the cells to display its being used on -->
+<style>
+	main {
+		margin: 0 auto;
+		max-width: 2000px;
+    	padding-left: max(160px, 10%);
+    	padding-right: max(160px, 10%);
+	}
+</style>
+"""
+
 # ╔═╡ 9a8f734d-5225-4dda-a44e-96960418ac73
 md"""
 # Agent-based modelling
@@ -160,6 +173,7 @@ Given this framework, implement following scenario:
 """
 
 # ╔═╡ Cell order:
+# ╟─55810ad4-430c-4a01-823c-13fec55dba0f
 # ╟─f85fbaa0-661c-11f0-3381-7f4e2e5abf87
 # ╠═ca20668e-3867-4d42-8259-44ce294c11e8
 # ╟─9a8f734d-5225-4dda-a44e-96960418ac73

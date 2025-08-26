@@ -646,9 +646,6 @@ If you are very eager, consult this series of [Youtube](https://youtu.be/mZFlLkP
 
 """
 
-# ╔═╡ 79faeac0-ec66-11ea-1d6d-318ab749e232
-
-
 # ╔═╡ Cell order:
 # ╟─9f0fff31-d180-499b-b8a4-27d09f9311c2
 # ╟─8e3917d6-ec62-11ea-0c16-7d2749432dd1
@@ -696,6 +693,5 @@ If you are very eager, consult this series of [Youtube](https://youtu.be/mZFlLkP
 # ╟─7a3fbc40-ec66-11ea-34f3-b3804f016b55
 # ╠═0bfad805-2483-40d9-bd94-c76b2dcb238a
 # ╠═7a269742-ec66-11ea-1b40-9d8cce31f885
-# ╠═7a111b6a-ec66-11ea-3a5a-cd6de910dd00
-# ╠═1c2ac5e2-792f-4368-92dd-1e7dab3dd6ad
-# ╠═79faeac0-ec66-11ea-1d6d-318ab749e232
+# ╟─7a111b6a-ec66-11ea-3a5a-cd6de910dd00
+# ╟─1c2ac5e2-792f-4368-92dd-1e7dab3dd6ad

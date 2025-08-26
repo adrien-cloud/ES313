@@ -7,7 +7,9 @@ using InteractiveUtils
 # ╔═╡ 10349518-03ca-11eb-09b2-69c80c4662ac
 begin
 	using Pkg
-	cd(joinpath(dirname(@__FILE__),".."))
+	while !isfile("Project.toml") && !isdir("Project.toml")
+        cd("..")
+    end
     Pkg.activate(pwd())
 	using JuMP, Tulip, GLPK, LinearAlgebra, Ipopt
 	using Distributions, Plots, StatsPlots, LaTeXStrings, Measures
@@ -38,12 +40,18 @@ We will be using [JuMP](https://jump.dev/JuMP.jl/stable/) as a general framework
 # ╔═╡ 7910d53e-03ca-11eb-1536-7fc4c236e10a
 md"""
 ## Application - Employee planning
-We manage a crew of call center employees and want to optimise our shifts in order to reduce the total payroll cost. Employees have to work for five consecutive days and are then given two days off. The current policy is simple: each day gets the same amount of employees (currently we have 5 persons per shift, which leads to 25 persons on any given day).
+We manage a crew of call center employees and want to optimise our shifts in order to reduce the total payroll cost. 
 
-We have some historical data that gives us the minimum amount of calls we can expect: Mon: 22, Tue: 17, Wed:13, Thu:14, Fri: 15, Sat: 18, Sun: 24
+!!! tip "Setting"
+	* Employees have to work for five consecutive days and are then given two days off. 
+	* The current policy is simple: each day gets the same amount of employees (currently we have 5 persons per shift, which leads to 25 persons on any given day).
+	* We have some historical data that gives us the minimum amount of calls we can expect: Mon: 22, Tue: 17, Wed:13, Thu:14, Fri: 15, Sat: 18, Sun: 24
+	* Employees are payed € 96 per day of work. This lead to the current payroll cost of 25x7x96 = € 16.800. 
 
-Employees are payed € 96 per day of work. This lead to the current payroll cost of 25x7x96 = € 16.800. You need to optimize employee planning to reduce the payroll cost.
+!!! info "Task"
+	You need to optimize employee planning to reduce the payroll cost.
 
+Following table gives an overview:
 
 | Schedule | Days worked | Attibuted Pers | Mon | Tue | Wed | Thu | Fri | Sat | Sun |
 |----------|-------------|----------------|-----|-----|-----|-----|-----|-----|-----|
@@ -54,46 +62,51 @@ Employees are payed € 96 per day of work. This lead to the current payroll cos
 | E | Fri-Tue | 5 | W | W | O | O | W | W | W |
 | F | Sat-Wed | 5 | W | W | W | O | O | W | W |
 | G | Sun-Thu | 5 | W | W | W | W | O | O | W |
-| Totals: | - | 35 | 5 | 5 | 5 | 5 | 5 | 5 | 5 |
-| Required: | - | - | 22 | 17 | 13 | 14 | 15 | 18 | 24 |
+| Total Employees: | - | 35 | 5 | 5 | 5 | 5 | 5 | 5 | 5 |
+| Required (calls): | - | - | 22 | 17 | 13 | 14 | 15 | 18 | 24 |
 
 ### Mathematical formulation
 We need to formaly define our decision variables, constraints and objective function.
-* decision variables: the amount of persons attributed to each schedule ( ``Y = [y_1,y_2,\dots,y_7]^{\intercal} ``)
-* objective function: the payroll cost
-  
-  Suppose the matrix ``A`` is the matrix indicating the workload for each schedule (in practice ``W=1`` and ``O=0``):
-```math
-A = \begin{bmatrix}  
-W & W & W & W & W & O & O \\
-O & W & W & W & W & W & O \\
-O & O & W & W & W & W & W \\
-W & O & O & W & W & W & W \\
-W & W & O & O & W & W & W \\
-W & W & W & O & O & W & W \\
-W & W & W & W & O & O & W 	\\
-\end{bmatrix}
-```
 
-  Now $$A^\intercal Y$$ gives us a vector indicating the amount of employees working on a given day. Suppose we also use the vector $$c$$ to indicate the salary for a given day (in this case $$c = [96,96,96,\dots,96]$$). 
+!!! tip "Decision variables"
+	The amount of persons attributed to each schedule ( ``Y = [y_1,y_2,\dots,y_7]^{\intercal}``)
 
-We are now able to write our objective function:
-```math
-\min Z = c^\intercal A^\intercal Y
-```
+!!! tip "Objective function"
+	*The payroll cost*
+	  
+	Suppose the matrix ``A`` is the matrix indicating the workload for each schedule (in practice ``W=1`` and ``O=0``):
+	```math
+	A = \begin{bmatrix}  
+	W & W & W & W & W & O & O \\
+	O & W & W & W & W & W & O \\
+	O & O & W & W & W & W & W \\
+	W & O & O & W & W & W & W \\
+	W & W & O & O & W & W & W \\
+	W & W & W & O & O & W & W \\
+	W & W & W & W & O & O & W 	\\
+	\end{bmatrix}
+	```
+	Now $$A^\intercal Y$$ gives us a vector indicating the amount of employees working on a given day. Suppose we also use the vector $$c$$ to indicate the salary for a given day (in this case $$c = [96,96,96,\dots,96]$$). 
+	
+	We are now able to write our objective function:
+	```math
+	\min Z = c^\intercal A^\intercal Y
+	```
 
-* constraints (1): each day we need at least enough employees to cover all incoming calls. Suppose we use the vector $$b$$ to indicate the amount of incoming calls for a given day. We are able to write the constraints in a compact way:
+!!! tip "Constraints"
 
-```math
-\text{subject to } A^\intercal Y  \ge b 
-```
-
-* constraints (2): we also want to avoid a negative amount of attributed employees on any given day, since this would lead to a negative payroll cost:
-```math
-\text{and }Y \ge 0
-```
-
-* $\forall Y : Y \in \mathbb{N}$
+	1. Each day we need at least enough employees to cover all incoming calls. Suppose we use the vector $$b$$ to indicate the amount of incoming calls for a given day. We are able to write the constraints in a compact way:
+	
+	```math
+	\text{subject to } A^\intercal Y  \ge b 
+	```
+	
+	2. We also want to avoid a negative amount of attributed employees on any given day, since this would lead to a negative payroll cost:
+	```math
+	\text{and }Y \ge 0
+	```
+	
+	3. $\forall Y : Y \in \mathbb{N}$
 ### Implementation
 """
 
@@ -122,9 +135,6 @@ let
 	println("objective value:    $(objective_value(model))")
 	println("personnel assignment per schedule: $(value.(Y))")
 end
-
-# ╔═╡ 3bafd152-6724-4847-a79d-f2340e2ab5e4
-
 
 # ╔═╡ 4bc4c2aa-04b4-11eb-2b6e-452d4ecc258a
 md"""
@@ -225,27 +235,29 @@ md"""
 We try to maximize the flow in a network using Linear Programming.
 
 
+!!! tip "Setting"
+	Let $N = (V, E)$ be a directed graph, where $V$ denotes the set of vertices and $E$ is the set of edges. Let $s ∈ V$ and $t ∈ V$ be the source and the sink of $N$, respectively. The capacity of an edge is a mapping $c : E \mapsto \mathbb{R}^+$, denoted by $c_{u,v}$ or $c(u, v)$. It represents the maximum amount of flow that can pass through an edge.
+	
+	A flow is a mapping $f : E \mapsto \mathbb{R}^+$ , denoted by $f_{uv}$ or  $f(u, v)$, subject to the following two constraints:
+	
+	* Capacity Constraint: 
+	
+	```math
+	\forall e \in E: f_{uv} \le c_{uv}
+	```
+	
+	* Conservation of Flows: 
+	
+	```math
+	\forall v \in V\setminus\{s,t\} : \sum_{u:(u,v)\in E}f_{uv} = \sum_{w:(v,w)\in E} f_{vw}
+	```
 
-Let $N = (V, E)$ be a directed graph, where $V$ denotes the set of vertices and $E$ is the set of edges. Let $s ∈ V$ and $t ∈ V$ be the source and the sink of $N$, respectively. The capacity of an edge is a mapping $c : E \mapsto \mathbb{R}^+$, denoted by $c_{u,v}$ or $c(u, v)$. It represents the maximum amount of flow that can pass through an edge.
+!!! info "Tasks"
 
-A flow is a mapping $f : E \mapsto \mathbb{R}^+$ , denoted by $f_{uv}$ or  $f(u, v)$, subject to the following two constraints:
-
-* Capacity Constraint: 
-
-```math
-\forall e \in E: f_{uv} \le c_{uv}
-```
-
-* Conservation of Flows: 
-
-```math
-\forall v \in V\setminus\{s,t\} : \sum_{u:(u,v)\in E}f_{uv} = \sum_{w:(v,w)\in E} f_{vw}
-```
-
-We want to maximize the flow in the network, i.e. 
-```math
-\max |f| = \max \sum_{v:(s,v)\in E}f_{sv} = \max \sum_{v:(v,t)\in E}f_{vt}
-```
+	We want to maximize the flow in the network, i.e. 
+	```math
+	\max |f| = \max \sum_{v:(s,v)\in E}f_{sv} = \max \sum_{v:(v,t)\in E}f_{vt}
+	```
 
 
 #### Setting:
@@ -253,9 +265,9 @@ Consider the following network:
 
 $(PlutoUI.LocalResource("./applications/img/network.png"))
 
-We want to:
-1. Determine the maximal flow in the network
-2. Be able to get a troughput of 35 from the source node to the sink node, whilst keeping the costs limited. Each link has a possible increase, with an associated cost (cf. table)
+!!! info "We want to:"
+	1. Determine the maximal flow in the network
+	2. Be able to get a troughput of 35 from the source node to the sink node, whilst keeping the costs limited. Each link has a possible increase, with an associated cost (cf. table)
 
 $(PlutoUI.LocalResource("./applications/img/networkcost.png"))
 """
@@ -292,33 +304,32 @@ begin
 	];
 end
 
-# ╔═╡ fd237525-8b40-4da5-821b-aa3e890a18cd
-
-
 # ╔═╡ 242139f3-4213-45d4-805e-89caff6493d7
 md"""
 ## Optimizing an investment portfolio
 
 In 1952 [Harry Max Markowitz](https://en.wikipedia.org/wiki/Harry_Markowitz) proposed a new approach for the optimization of an investment portfolio. This ultimately led to him winning the Nobel Prize in Economic Sciences in 1990. The idea is relatively simple:
 
-Given a portfolio with $n$ stock proportions $S_1,S_2,\dots, S_n$, we want to maximize the return (=profit) and minimize the risk. The goal is to find the values $S_i$ that lead to either a minimum risk attribution with a minimal return or that lead to a maximum return attribution with a maximal risk.
-
-Remembering that $\sigma^{2}_{\sum_{i=1}^{n}X_i}= \sum_{i=1}^{n}\sigma^2_{X_i} + \sum_{i \ne j}\text{Cov}(X_i,X_j) $, the risk can be expressed in terms of the covariance matrix $\Sigma$:
-
-$$S^\mathsf{T} \Sigma S $$ 
-
-The return can be expressed as:
-$$\mu^\mathsf{T}S$$
+!!! tip "Setting"
+	Given a portfolio with $n$ stock proportions $S_1,S_2,\dots, S_n$, we want to maximize the return (=profit) and minimize the risk. The goal is to find the values $S_i$ that lead to either a minimum risk attribution with a minimal return or that lead to a maximum return attribution with a maximal risk.
+	
+	Remembering that $\sigma^{2} {\sum_{i=1}^{n}X_i}= \sum_{i=1}^{n}\sigma^2_{X_i} + \sum_{i \ne j}\text{Cov}(X_i,X_j) $, the risk can be expressed in terms of the covariance matrix $\Sigma$:
+	
+	$$S^\mathsf{T} \Sigma S $$ 
+	
+	The return can be expressed as:
+	$$\mu^\mathsf{T}S$$
 
 Consider the following portfolio problem:
-You are given the covariance matrix and expected returns and you want study several approaches. For each case you should formulate a proper Linear/Quadratic Programming form.
-1. Ignore the risk and go for optimal investment (i.e. maximal return)
-2. Same as (1), but a single stock can be at most 40% of the portfolio
-3. Minimize the risk, with a lower bound on the return e.g. with at least 35% expected return
-4. Make a graph for:
-    * the minimal risk in fuction of the expected return. 
-    * the distribution of the portfolio with the minimal risk in function of the expected return
-    * the final portfolio value in function of the expected return
+!!! info "Tasks"
+	You are given the covariance matrix and expected returns and you want study several approaches. For each case you should formulate a proper Linear/Quadratic Programming form.
+	1. Ignore the risk and go for optimal investment (i.e. maximal return)
+	2. Same as (1), but a single stock can be at most 40% of the portfolio
+	3. Minimize the risk, with a lower bound on the return e.g. with at least 35% expected return
+	4. Make a graph for:
+	    * the minimal risk in fuction of the expected return. 
+	    * the distribution of the portfolio with the minimal risk in function of the expected return
+	    * the final portfolio value in function of the expected return
 """
 
 # ╔═╡ ff4eed1a-2711-4ef2-8624-72f7a8643f81
@@ -333,65 +344,56 @@ begin
 		 0.01 0.02 0.042 -0.06 -0.02 0.08]; # covariance matrix
 end
 
-# ╔═╡ 8cd6b3ca-39f8-4f4c-b95c-d54201493f21
-
-
 # ╔═╡ 5364cd1d-599b-40da-b296-823a89d33fca
 md"""
 ## Optimal course planning
-Suppose a professor teaches a course with $N=20$ lectures. We must decide how to split each lecture between theory and applications. Let $T_i$ and $A_i$ denote the fraction of the i$^{\text{th}}$ lecture devoted to theory and applications, for $i=1,\dots,N$. We can already determine the following: 
+!!! tip "Setting"
+	Suppose a professor teaches a course with $N=20$ lectures. We must decide how to split each lecture between theory and applications. Let $T_i$ and $A_i$ denote the fraction of the i$^{\text{th}}$ lecture devoted to theory and applications, for $i=1,\dots,N$. We can already determine the following: 
+	
+	```math
+	\forall i: T_i \ge 0, A_i \ge 0, T_i+A_i =1.
+	```
+	
+	As you may know from experience, you need to cover a certain amount of theory before you can start doing applications. For this application consider the following model:
+	
+	$$\sum_{i=1}^{N} A_i \le \phi \left( \sum_{i=1}^{N} T_i \right)$$
+	
+	We interpret $\phi(u)$ as the cumulative amount of applications that can be covered, when the cumulative amount of theory covered is $u$. We will use the simple form $\phi(u) = a(u − b)$, with $a=2, b=3$, which means that no applications can be covered until $b$ lectures of the theory are covered; after that, each lecture of theory covered opens the possibility of covering a lecture on applications.
+	
+	Psychological studies have shown that the theory-applications split affects the emotional state of students differently. Let $s_i$ denote the emotional state of a student after lecture $i$, with $s_i = 0$ meaning neutral, $s_i > 0$ meaning happy, and $s_i < 0$ meaning unhappy. Careful studies have shown that $s_i$ evolves via a linear recursion dynamic:
+	
+	$$s_i =(1−\theta)s_{i−1} +\theta(\alpha T_i +\beta A_i)\text{ with }\theta \in[0,1]$$ 
+	
+	with $s_0=0$. In order to make sure that the student leave with a good feeling at the end of the course, we try to maximize $s_N$, i.e. the emotional state after the last lecture.
 
-```math
-\forall i: T_i \ge 0, A_i \ge 0, T_i+A_i =1.
-```
-
-As you may know from experience, you need to cover a certain amount of theory before you can start doing applications. For this application consider the following model:
-
-$$\sum_{i=1}^{N} A_i \le \phi \left( \sum_{i=1}^{N} T_i \right)$$
-
-We interpret $\phi(u)$ as the cumulative amount of applications that can be covered, when the cumulative amount of theory covered is $u$. We will use the simple form $\phi(u) = a(u − b)$, with $a=2, b=3$, which means that no applications can be covered until $b$ lectures of the theory are covered; after that, each lecture of theory covered opens the possibility of covering a lecture on applications.
-
-Psychological studies have shown that the theory-applications split affects the emotional state of students differently. Let $s_i$ denote the emotional state of a student after lecture $i$, with $s_i = 0$ meaning neutral, $s_i > 0$ meaning happy, and $s_i < 0$ meaning unhappy. Careful studies have shown that $s_i$ evolves via a linear recursion dynamic:
-
-$$s_i =(1−\theta)s_{i−1} +\theta(\alpha T_i +\beta A_i)\text{ with }\theta \in[0,1]$$ 
-
-with $s_0=0$. In order to make sure that the student leave with a good feeling at the end of the course, we try to maximize $s_N$, i.e. the emotional state after the last lecture.
-
-Questions:
-1. Determine the optimal split that leads to the most positive emotional state (for $\theta = 0.05, \alpha = -0.1, \beta = 1.4$);
-2. Show the course repartition graphically
-3. Determine values for $\alpha$ and $\beta$ that lead to a neutral result at the end of the course. Can you give an interpretation to these values?
+!!! info "Tasks"
+	1. Determine the optimal split that leads to the most positive emotional state (for $\theta = 0.05, \alpha = -0.1, \beta = 1.4$);
+	2. Show the course repartition graphically
+	3. Determine values for $\alpha$ and $\beta$ that lead to a neutral result at the end of the course. Can you give an interpretation to these values?
 """
-
-# ╔═╡ 015eb1df-5f94-4b2b-9763-79cd678e5a66
-
 
 # ╔═╡ Cell order:
 # ╟─10850c10-3b60-406a-8741-5ed5618af8e9
-# ╟─f7f3a256-03c6-11eb-2c1e-83cc62bf55e6
+# ╠═f7f3a256-03c6-11eb-2c1e-83cc62bf55e6
 # ╠═10349518-03ca-11eb-09b2-69c80c4662ac
-# ╟─7910d53e-03ca-11eb-1536-7fc4c236e10a
+# ╠═7910d53e-03ca-11eb-1536-7fc4c236e10a
 # ╠═572d14c4-03cb-11eb-2b68-234b3d7e9e8e
 # ╠═4ba4687e-087f-11eb-1cb0-2581818cbd93
 # ╠═79351ee4-087f-11eb-147d-d389de200857
-# ╠═3bafd152-6724-4847-a79d-f2340e2ab5e4
-# ╟─4bc4c2aa-04b4-11eb-2b6e-452d4ecc258a
+# ╠═4bc4c2aa-04b4-11eb-2b6e-452d4ecc258a
 # ╠═6e48e306-04b4-11eb-2561-0151a5e0a908
 # ╠═7a54f9b4-04b4-11eb-3a7c-8d90eb026392
 # ╠═9d3ceafe-0880-11eb-36f0-0f8530d6b285
 # ╠═14a32a20-0881-11eb-1a20-715b99417266
-# ╟─259bbbc6-04b5-11eb-1ad4-c567e45ba4b6
+# ╠═259bbbc6-04b5-11eb-1ad4-c567e45ba4b6
 # ╠═83130656-0881-11eb-2c87-a3ae5f81f04b
-# ╟─e1e41ea6-04b5-11eb-174e-1d43f601a07c
+# ╠═e1e41ea6-04b5-11eb-174e-1d43f601a07c
 # ╠═62b516be-0882-11eb-094b-d183f8d00ab8
 # ╠═6274be66-0882-11eb-11be-05163cda6633
-# ╟─1f177098-04b6-11eb-2508-6bd8d7e1e996
+# ╠═1f177098-04b6-11eb-2508-6bd8d7e1e996
 # ╠═ab9a13a8-7cc2-4057-8b16-f6a378fca668
-# ╟─b849b11a-05e8-4b3b-b1ca-a766df13f0e0
+# ╠═b849b11a-05e8-4b3b-b1ca-a766df13f0e0
 # ╠═672dcd20-e610-4723-97ec-11a16f69742b
-# ╠═fd237525-8b40-4da5-821b-aa3e890a18cd
-# ╟─242139f3-4213-45d4-805e-89caff6493d7
+# ╠═242139f3-4213-45d4-805e-89caff6493d7
 # ╠═ff4eed1a-2711-4ef2-8624-72f7a8643f81
-# ╠═8cd6b3ca-39f8-4f4c-b95c-d54201493f21
-# ╟─5364cd1d-599b-40da-b296-823a89d33fca
-# ╠═015eb1df-5f94-4b2b-9763-79cd678e5a66
+# ╠═5364cd1d-599b-40da-b296-823a89d33fca

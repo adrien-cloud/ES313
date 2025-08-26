@@ -30,6 +30,19 @@ begin
 	using Statistics
 end
 
+# ╔═╡ 16a75573-704e-4d5f-864b-5d5533c056d4
+html"""
+ <! -- this adapts the width of the cells to display its being used on -->
+<style>
+	main {
+		margin: 0 auto;
+		max-width: 2000px;
+    	padding-left: max(160px, 10%);
+    	padding-right: max(160px, 10%);
+	}
+</style>
+"""
+
 # ╔═╡ 8fc1c404-1b58-43e6-b5d2-01e831c16952
 md"""
 # Phase transition in networks
@@ -78,6 +91,7 @@ Resolve the problem and find the phase transition.
 """
 
 # ╔═╡ Cell order:
+# ╟─16a75573-704e-4d5f-864b-5d5533c056d4
 # ╟─08173290-6242-11f0-004a-97a043c49b5d
 # ╠═ea86ea4b-4c53-4103-a4cc-18c6a99659ce
 # ╟─8fc1c404-1b58-43e6-b5d2-01e831c16952

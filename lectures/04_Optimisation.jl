@@ -2517,7 +2517,7 @@ md"""
 # ╟─ddac3c21-7ac9-4295-aeca-a8f460c1f3b1
 # ╠═27e916ea-958c-4df8-b861-b2674798cee9
 # ╟─7f3b10fe-8a8e-49ba-a468-a7fa0cb8c17d
-# ╟─19bc12c5-2d3c-46dc-bb9b-02efe0882295
+# ╠═19bc12c5-2d3c-46dc-bb9b-02efe0882295
 # ╟─3e7cdf87-e064-4746-abd3-8ca6a702a0fe
 # ╟─561c3509-a1d4-43f4-a1ba-a55dbdfb0620
 # ╟─a0c4e07f-504d-426e-8d9f-7a212855888f
@@ -2552,11 +2552,11 @@ md"""
 # ╟─1a29e47e-8495-4eca-95ea-971661fc615b
 # ╠═dc757906-2b34-4341-96ad-237a3cfcbfeb
 # ╟─b3fd0b39-ca17-49e5-adec-552a69e386f8
-# ╟─ce5cea4c-17a0-4c12-b2f0-3b2ba705954e
+# ╠═ce5cea4c-17a0-4c12-b2f0-3b2ba705954e
 # ╟─5819029f-796f-43ff-a079-5fa95b3fb011
 # ╟─c0d3cda6-2506-40be-8fa1-51c604d7f548
 # ╟─5ec1071f-cfaf-404a-a468-efd0f76d709e
-# ╟─c06bd9c8-f489-42a4-8a6d-162f4864ba19
+# ╠═c06bd9c8-f489-42a4-8a6d-162f4864ba19
 # ╟─b5c4010d-f373-4a5b-8e14-275fb45c5292
 # ╟─afb498db-dc05-49c3-baad-d4bca7d2cc27
 # ╟─3f38a7f9-d64a-4eca-8205-72cfee88bb4d

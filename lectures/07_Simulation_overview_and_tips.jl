@@ -315,6 +315,18 @@ begin
 	const service_distribution = Exponential(1/μ)
 end;
 
+# ╔═╡ 07520778-2231-46d1-99a8-7db44b7491c4
+function service(ev::AbstractEvent, times::Vector{Float64}, output::Vector{Int})
+    sim = environment(ev)
+    time = now(sim)
+    push!(times, time)
+    push!(output, output[end]-1)
+    if output[end] > 0
+        service_delay = rand(service_distribution)
+        @callback service(timeout(sim, service_delay), times, output)
+    end
+end
+
 # ╔═╡ b97beac5-fdf8-484a-89fc-f7421b6e9bd1
 function arrival(ev::AbstractEvent, times::Vector{Float64}, output::Vector{Int})
     sim = environment(ev)
@@ -327,18 +339,6 @@ function arrival(ev::AbstractEvent, times::Vector{Float64}, output::Vector{Int})
     end
     next_arrival_delay = rand(interarrival_distribution)
     @callback arrival(timeout(sim, next_arrival_delay), times, output)
-end
-
-# ╔═╡ 07520778-2231-46d1-99a8-7db44b7491c4
-function service(ev::AbstractEvent, times::Vector{Float64}, output::Vector{Int})
-    sim = environment(ev)
-    time = now(sim)
-    push!(times, time)
-    push!(output, output[end]-1)
-    if output[end] > 0
-        service_delay = rand(service_distribution)
-        @callback service(timeout(sim, service_delay), times, output)
-    end
 end
 
 # ╔═╡ e4db485f-ef16-4d73-9787-7e89c9b056f7
