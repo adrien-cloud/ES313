@@ -131,23 +131,6 @@ md"""
 ### Understanding the rules
 """
 
-# ╔═╡ eab8e8f9-8528-460c-bdee-94fcbbc49d8e
-"""
-	rules(p::String)
-
-Obtain the rules that are applicable for our problem. We read the entire file and for each line we obtain the current state, the neighbors and the future state. We also account for all the possible circular permutations that can occurs. 
-
-The function returns a nested dictionary: [current state] => Dict([neigbors] => [future state])
-"""
-function rules(p::String; debug=false)
-		d = Dict()
-		for rule in readlines(p)
-			addrule!(d, rule; debug)
-		end
-
-		return d
-end
-
 # ╔═╡ b1d05970-3660-434a-b4a6-38cf867a9a99
 """
 	addrule!(d::Dict, rule::String; debug=false)
@@ -170,6 +153,23 @@ function addrule!(d::Dict, rule::String; debug=false)
 	end
 
 	return (current_state, neighbors, next_state)
+end
+
+# ╔═╡ eab8e8f9-8528-460c-bdee-94fcbbc49d8e
+"""
+	rules(p::String)
+
+Obtain the rules that are applicable for our problem. We read the entire file and for each line we obtain the current state, the neighbors and the future state. We also account for all the possible circular permutations that can occurs. 
+
+The function returns a nested dictionary: [current state] => Dict([neigbors] => [future state])
+"""
+function rules(p::String; debug=false)
+		d = Dict()
+		for rule in readlines(p)
+			addrule!(d, rule; debug)
+		end
+
+		return d
 end
 
 # ╔═╡ 1a0c018d-63bf-4ef3-a13b-49c02af54a2e
@@ -477,121 +477,13 @@ md"""
 # ╔═╡ 43421788-e6f4-4a6b-ae64-93a04050954e
 md"""
 ## Implementation
-!!! warning "For your information"
-	The following implementation is similar to the one in the course notes, yet has slight differences in implementation.
+!!! info "Your implementation"
+	Make your own version of the Turing Machine described before. A model solution is available upon completion.
 """
-
-# ╔═╡ 00747d0d-ed30-42b1-ab54-60910ec4b129
-"""
-	TuringMachine
-
-A struct to represent the Turing state-machine.
-"""
-mutable struct TuringMachine
-	tape::Vector{Int}
-	position::Int
-	state::String
-end
-
-# ╔═╡ ce1b39bb-81c6-46e6-a43e-e92c52a170b4
-# Extend the Base.show function to represent the Turing state-machine.
-function Base.show(io::IO, turing::TuringMachine)
-	print(io, turing.position, " - ", turing.state, ": ", turing.tape)
-end
-
-# ╔═╡ 4d054954-4879-49a4-aadd-ac87fb7e9e2e
-"""
-    update_machine!(tm::TuringMachine)
-
-Update the TuringMachine `tm` by applying one transition step according to the palindrome checking rules.
-"""
-function update_machine!(tm::TuringMachine)
-    # State: q1
-    if tm.state == "q1"
-        if tm.tape[tm.position] != 0
-            # Remember the symbol by encoding the state
-            symbol = tm.tape[tm.position]
-            tm.state = "p" * string(symbol)
-            tm.tape[tm.position] = 0  # Write 0 to the tape
-            tm.position += 1  # Move right
-        else
-            tm.state = "qy"  # Move to the accepting state
-            tm.tape[tm.position] = 0  # Write 0 to the tape
-            tm.position += 1  # Move right
-        end
-
-    # State: pX (move right to end)
-    elseif startswith(tm.state, "p")
-        if tm.tape[tm.position] != 0
-            # Continue moving right
-            tm.position += 1
-        else
-            # At rightmost 0, switch to rX state
-            tm.state = "r" * tm.state[2:end]  # Keep the symbol
-            tm.tape[tm.position] = 0  # Write 0 to the tape
-            tm.position -= 1  # Move left
-        end
-
-    # State: rX (compare and move left)
-    elseif startswith(tm.state, "r")
-        remembered_symbol = parse(Int, tm.state[2:end])
-        if tm.tape[tm.position] != remembered_symbol && tm.tape[tm.position] != 0
-            # Mismatch, go to rejecting state
-            tm.state = "qn"
-            tm.position -= 1  # Move left
-        else
-            tm.state = "q2"  # Move to accepting state
-            tm.tape[tm.position] = 0  # Write 0 to the tape
-            tm.position -= 1  # Move left
-        end
-
-    # State: q2 (final state)
-    elseif tm.state == "q2"
-        if tm.tape[tm.position] != 0
-            tm.state = "q2"  # Stay in accepting state
-            tm.position -= 1  # Move left
-        else
-            tm.state = "q1"  # Reset to initial state
-            tm.tape[tm.position] = 0  # Write 0 to the tape
-            tm.position += 1  # Move right
-        end
-    end
-end
-
-# ╔═╡ f39ad815-e838-48bb-9d93-8895c329ce4f
-"""
-    run_turing_machine!(tm::TuringMachine)
-
-Run the Turing machine on the tape until it reaches an accepting or rejecting state.
-Prints the result and logs each step.
-"""
-function run_turing_machine!(tm::TuringMachine)
-    while !(tm.state in ["qy", "qn"])
-        update_machine!(tm)
-        @info tm
-    end
-    if tm.state == "qy"
-        println("Accepted: The input is a palindrome.")
-    else
-        println("Rejected: The input is not a palindrome.")
-    end
-end
-
-# ╔═╡ 8d2dc83a-6204-49bc-9a67-1d23eb1651b0
-md"""
-## Test the implementation
-"""
-
-# ╔═╡ 865db30c-24bc-4ee5-86e2-107f59b4f139
-let
-	tape = vcat([0], [1,2,3,2,1], [0])  # Initialize tape with 0s as boundaries
-	tm = TuringMachine(tape, 2, "q1")
-	run_turing_machine!(tm)
-end
 
 # ╔═╡ Cell order:
 # ╟─1e9ecd99-5a36-448f-9b07-71a070655c0f
-# ╟─5312be7e-edd8-11ea-34b0-7581fc4b7126
+# ╠═5312be7e-edd8-11ea-34b0-7581fc4b7126
 # ╠═997d4cb3-ab09-48a4-a505-7b2d8e632e62
 # ╟─a813912a-edb3-11ea-3b13-23da723cb488
 # ╟─b6e7f9a2-50eb-45e4-8a1a-3eefd591dc6a
@@ -637,9 +529,3 @@ end
 # ╟─785790f1-e2e4-4c21-97ae-ed36e598149d
 # ╟─d5d1488e-9b2d-4bd6-a2bd-c796e9987ff2
 # ╟─43421788-e6f4-4a6b-ae64-93a04050954e
-# ╠═00747d0d-ed30-42b1-ab54-60910ec4b129
-# ╠═ce1b39bb-81c6-46e6-a43e-e92c52a170b4
-# ╠═4d054954-4879-49a4-aadd-ac87fb7e9e2e
-# ╠═f39ad815-e838-48bb-9d93-8895c329ce4f
-# ╟─8d2dc83a-6204-49bc-9a67-1d23eb1651b0
-# ╠═865db30c-24bc-4ee5-86e2-107f59b4f139

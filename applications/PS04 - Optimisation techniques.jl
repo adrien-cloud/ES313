@@ -34,15 +34,15 @@ html"""
 # ╔═╡ 72ad677c-738f-4e62-afcb-c5260ff9a79e
 md"""
 # Optimization overview
-During the lectures, a detailed overview of the most commonly available optimization techniques was provided. You saw a veriety of practical implementations in the Julia coding language. With this short overview, we wish to highlight how these same techniques can be used in other common programming languages. You will notice how the same optimization techniques take on different forms.
+During the lectures, a detailed overview of the most commonly available optimization techniques was provided. You saw a variety of practical implementations in the Julia coding language. With this short overview, we wish to highlight how these techniques can be used in other common programming languages. You will notice how the same optimization techniques take on different forms.
 
 *Note: This list is not in any way exhaustive. The choice of optimizer will always depend on the particularities of the project you are working on.*
 
 ## MATLAB
 
-As a student, you have never experienced the financial consequences of using MATLAB. For professional use, licenses can easily become very expensive. Given this high price, the MATLAB code is always well maintained, with seamless integration and interoperability.
+As a student, you have never experienced the financial consequences of using MATLAB. For professional use, licenses can easily become very expensive. However, for this high price, the MATLAB code is always well maintained, with seamless integration and interoperability.
 
-Therefore, all optimization tools are integrated in the [Optimization Toolbox](https://nl.mathworks.com/products/optimization.html), which offers both a command line interface as a graphical user interface. We highly recommend experimenting with these modules, 
+Therefore, all optimization tools are integrated in the [Optimization Toolbox](https://nl.mathworks.com/products/optimization.html), which offers both a command line interface and a graphical user interface. We highly recommend experimenting with these modules. 
 
 !!! warning "Installation"
 	The `Optimization Toolbox` needs to be added as a package to your MATLAB installation.

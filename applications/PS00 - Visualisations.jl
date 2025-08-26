@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.20.5
+# v0.20.13
 
 using Markdown
 using InteractiveUtils
@@ -8,10 +8,18 @@ using InteractiveUtils
 begin
 	# Pkg needs to be used to force Pluto to use the current project instead of making an environment for each notebook
 	using Pkg
-	cd(joinpath(dirname(@__FILE__),".."))
+	# this is redundant if you run it through start.jl, but to make sure...
+	while !isfile("Project.toml") && !isdir("Project.toml")
+        cd("..")
+    end
     Pkg.activate(pwd())
-	
 	using PlutoUI
+	PlutoUI.TableOfContents()
+end
+
+# ╔═╡ 231e63f5-97f9-4b41-8ec4-450f6563ccfc
+# Dependencies
+begin
 	using Distributions
 	using LaTeXStrings
 	using Plots
@@ -37,7 +45,18 @@ html"""
 # ╔═╡ 02c1eefc-ec63-11ea-35cc-83d7cffdc592
 md"""
 # Basics
+
+!!! info "Why Julia?"
+	Scientific computing requires high performance, yet domain experts have moved to dynamic languages (Python and R) for daily work because of their convenience. Fortunately, modern language design and compiler techniques make it possible to mostly eliminate the performance trade-off and provide a single environment productive enough for prototyping and efficient enough for deploying performance-intensive applications. The Julia programming language fills this role: it is a flexible dynamic language, appropriate for scientific and numerical computing, with performance comparable to traditional statically-typed languages.
+
 Small refresher on function definition, methods & multiple dispatch:
+"""
+
+# ╔═╡ 5b3d1a0b-c162-4d51-b7c0-7aa46a734b87
+md"""
+!!! info "Key Features"
+	- **Multiple Dispatch**: Functions in Julia can have multiple method definitions based on the types of all arguments.
+	- **Type System**: Julia supports an (optional) type annotation, abstract types and parametric types.
 """
 
 # ╔═╡ 5b3db6f3-38be-4be2-9b66-b4ddd6c049bb
@@ -82,9 +101,6 @@ with_terminal() do
 	println("""\tfoo.(["\$(i)" for i in 174:179], "POL")\n\t = $(broadcast_result) (this is a ::$(typeof(broadcast_result)))""") 
 end
 
-# ╔═╡ 3d032a3c-58e0-41ee-b369-4c14b79f2ad2
-
-
 # ╔═╡ 59cd14ec-bda2-4342-b087-2c4640787c87
 md"""
 Remark: for data storage and access, you can use the [JLD2 package](https://github.com/JuliaIO/JLD2.jl)). E.g.
@@ -102,22 +118,23 @@ z = load("mydatadump.jld", "var1")
 """
 
 # ╔═╡ 650f5346-ec62-11ea-3007-bded07c572b4
-md"
+md"""
 # Visualisations
 This notebook demonstrates how different types of visualisations and customisations can be realised. The following packages are used:
-* [Plots](http://docs.juliaplots.org/latest/) (for the basic plotting needs)
-* [Measures](https://github.com/JuliaGraphics/Measures.jl) (for specific measurements e.g. mm, px etc.)
-* [LaTeXStrings](https://github.com/stevengj/LaTeXStrings.jl) (for LaTeX-style text in plots)
-* [Dates](https://docs.julialang.org/en/v1/stdlib/Dates/index.html) (for datetime functionality)
-* [Distributions](https://juliastats.github.io/Distributions.jl/stable/) (for everything related to probability distributions)
-* [StatsPlots](https://github.com/JuliaPlots/StatsPlots.jl) (drop-in for Plots, focused on statistical plots e.g. histograms, boxplots etc.)
 
+!!! tip "Visualisation Packages"
+	* [Plots](http://docs.juliaplots.org/latest/) (for the basic plotting needs)
+	* [Measures](https://github.com/JuliaGraphics/Measures.jl) (for specific measurements e.g. mm, px etc.)
+	* [LaTeXStrings](https://github.com/stevengj/LaTeXStrings.jl) (for LaTeX-style text in plots)
+	* [Dates](https://docs.julialang.org/en/v1/stdlib/Dates/index.html) (for datetime functionality)
+	* [Distributions](https://juliastats.github.io/Distributions.jl/stable/) (for everything related to probability distributions)
+	* [StatsPlots](https://github.com/JuliaPlots/StatsPlots.jl) (drop-in for Plots, focused on statistical plots e.g. histograms, boxplots etc.)
 
 For an in-depth overview of everything that is possible, please refer to the package  documentation. The illustrations below are intented to show the most common tasks and are by no means exhaustive.
-"
+"""
 
 # ╔═╡ b813bcb4-b055-4b9f-b9d7-82464a67b934
-md"""### Basic plotting
+md"""## Basic plotting
 """
 
 # ╔═╡ 7aab6b96-ec63-11ea-3bfb-3352ff34b218
@@ -181,7 +198,7 @@ plot(x, x, xflip=true, label="",
 	title="random colors, proportional size and marker alpha")
 
 # ╔═╡ fd5f008c-ec63-11ea-131c-11b728095a8a
-md"### Example  - subplots
+md"### Example  - Subplots
 In some cases, it is wishful to show multiple graphs on the same figure. This can be done either by a simple rectangular layout, or following a more advanced lay-out (seen below).
 
 When setting options after the global plot, they will be applied to all subplots. Below this is used to have the same domain and x-ticks for the different subplots.
@@ -206,9 +223,9 @@ end
 
 # ╔═╡ fd34e510-ec63-11ea-2bc4-17cd1d8fe2be
 md"
-More advanced layouts can be created with the `@layout` macro (already briefly seen in the previous example). The lay-out should be seen as a multidimensional array. Specific layouts can be obtained by using the curly brackets and specifying the desired dimensions for width and height. The example below creates a plot with three subplots divided over two rows. In the first row, p1 gets 30% of the total width and p2 gets the remaing 70%.
+More advanced layouts can be created with the `@layout` macro (already briefly seen in the previous example). The lay-out should be seen as a multidimensional array. Specific layouts can be obtained by using the curly brackets and specifying the desired dimensions for width and height. The example below creates a plot with three subplots divided over two rows. In the first row, `p1` gets 30% of the total width and `p2` gets the remaing 70%.
     
-Notice how we can pass the yscale (and most other) arguments as an argument to subplots that required similar scales.
+Notice how we can pass the `yscale` (and most other) arguments as an argument to subplots that required similar scales.
 "
 
 # ╔═╡ fd1eeb34-ec63-11ea-2c76-433607b69721
@@ -306,7 +323,7 @@ end
 
 # ╔═╡ ac923b84-ec64-11ea-31cd-278bce8566f7
 md"""
-### Example
+### Example - 3D plot
 Suppose we have a measurement that should follow a multinomial normal distribution: 
 ``X \sim N(\bar{\mu},\Sigma)``, i.e. a measurement in a two-dimensional space. We want to represent this graphically. Several options could be considered: a 3D-plot, a heatmap, a contour plot.
 """
@@ -366,14 +383,15 @@ md"""
 ## Statistical plots
 In the context of numerical simulations, it will be required to do some statistical exploitation of the generated data. A lot of specific statistical plotting recipes are grouped in the `StatsPlots` package.
 
-### Example
+### Example - Boxplot
 
 We have a sample (`` X \sim \chi ^{2}_{k=3}``) that we want to visualize as a boxplot. The following keywords are available:
-* `notch=false`: if a notch should be included in the box.
-* `range=1.5`: multiple of the inter-quartile range that is used to determine outliers
-* `whisker_width=:match`: width of the whiskers
-* `outliers=true`: if outliers should be show on the plot
-* `bar_width=0.8`: width of the boxplot
+!!! tip "Keywords"
+	* `notch=false`: if a notch should be included in the box.
+	* `range=1.5`: multiple of the inter-quartile range that is used to determine outliers
+	* `whisker_width=:match`: width of the whiskers
+	* `outliers=true`: if outliers should be show on the plot
+	* `bar_width=0.8`: width of the boxplot
 
 Most keywords that work with Plots also work here (as illustrated below)
 """
@@ -400,11 +418,12 @@ end
 
 # ╔═╡ f9efb41e-ec65-11ea-128a-77f4376ed9e4
 md"""
-### Example
+### Example - Type I and II errors
 We want to:
-- visualize a probality distribution, both the PDF and the CDF, e.g $X\sim N \left( 10,2  \right)$.
-- highlight some accents (annotations)
-- gain additional understanding of the concept type II errors. For $\alpha = 0.025$ and for the following $H_0: E[X]<=10,H_1: E[X]>10$ and we are interested in the type II error if $E[X]=16$
+!!! info "Goals"
+	- visualize a probality distribution, both the PDF and the CDF, e.g $X\sim N \left( 10,2  \right)$.
+	- highlight some accents (annotations)
+	- gain additional understanding of the concept type II errors. For $\alpha = 0.025$ and for the following $H_0: E[X]<=10,H_1: E[X]>10$ and we are interested in the type II error if $E[X]=16$
 """
 
 # ╔═╡ f9d800da-ec65-11ea-279b-4558590a769b
@@ -451,7 +470,7 @@ end
 
 # ╔═╡ f9c07316-ec65-11ea-33ef-7d3037547e69
 md"""
-# Example
+### Example - PDF/CDF/QQ
 We have data and we want to:
 * show the emperical and theoretical PDF 
 * show the emperical and theoretical CDF 
@@ -481,7 +500,7 @@ end
 
 # ╔═╡ 4a60fb9c-ec66-11ea-2582-a584b6ade23b
 md"""
-### Example
+### Example - Histograms
 
 We have generated some data and want to make 
 * a histogram representation (counts).
@@ -564,7 +583,8 @@ end
 
 # ╔═╡ 7a3fbc40-ec66-11ea-34f3-b3804f016b55
 md"""
-### Some Background - colors
+## Other tips and tricks
+### Colors
 The colors that will be used are associated with a palette, i.e. the way your plots will look in general (this includes background, frames, color palette etc. The default value is `:default` and the associated colorset has 17 colors. You can list these by using `palette(:default)`. When making a plot, you can also force to use color N° x by explicitly writing it as in integer. e.g `plot(x,color=1)`. A lot of colors have their own alias e.g. `:blue`
 
 Should you plot more than 17 data series, the list starts again at the beginning. Should you require more for some reason, let's say 20, you can use `get_color_palette(:auto, plot_color(:default),20)`. 
@@ -603,9 +623,14 @@ end
 # ╔═╡ 7a111b6a-ec66-11ea-3a5a-cd6de910dd00
 md"""
 ## Tasks
-* Play around a bit with plotting and different data respresentations.
-* Generate a histogram representing the birthdays of your colleagues. Also make a kernel density estimation and show this as a transparant overlay on the same figure. Save as pdf and compare with the other language group.
-* ...
+
+Perform the following tasks at your own discretion.
+
+!!! info "Assignments"
+	* Acquaint yourself with the features you saw before. Make sure to focus on different methods of representing data.
+	* Generate a histogram representing the birthdays of your colleagues. Also make a kernel density estimation and show this as a transparant overlay on the same figure. Save as a .pdf and compare with the other language group.
+	* Discover the website of the Belgian Statistical Agency: [STATBEL](https://statbel.fgov.be/language_selection_page?destination=/node/15). The data on display can be downloaded as a .csv file (consult [Importing and Exporting Data (I/O)](https://dataframes.juliadata.org/stable/man/importing_and_exporting/)). Choose a dataset to your liking and reproduce it in Julia.
+	* ...
 """
 
 # ╔═╡ 1c2ac5e2-792f-4368-92dd-1e7dab3dd6ad
@@ -617,6 +642,7 @@ There is a lot of additional information available on the webpages of the differ
 
 Another other nice resource is [Interactive Visualization and Plotting with Julia](https://packtpublishing.github.io/Interactive-Visualization-and-Plotting-with-Julia/).
 
+If you are very eager, consult this series of [Youtube](https://youtu.be/mZFlLkPjhXk?si=gEvHIiZbXHuevzl9) videos. *Note that they were made in 2022 and might have become outdated.*
 
 """
 
@@ -626,10 +652,11 @@ Another other nice resource is [Interactive Visualization and Plotting with Juli
 # ╔═╡ Cell order:
 # ╟─9f0fff31-d180-499b-b8a4-27d09f9311c2
 # ╟─8e3917d6-ec62-11ea-0c16-7d2749432dd1
+# ╠═231e63f5-97f9-4b41-8ec4-450f6563ccfc
 # ╟─02c1eefc-ec63-11ea-35cc-83d7cffdc592
+# ╟─5b3d1a0b-c162-4d51-b7c0-7aa46a734b87
 # ╠═5b3db6f3-38be-4be2-9b66-b4ddd6c049bb
 # ╟─a9547c5c-09e4-4336-b3d2-62e93efb15ac
-# ╠═3d032a3c-58e0-41ee-b369-4c14b79f2ad2
 # ╟─59cd14ec-bda2-4342-b087-2c4640787c87
 # ╟─650f5346-ec62-11ea-3007-bded07c572b4
 # ╟─b813bcb4-b055-4b9f-b9d7-82464a67b934
@@ -669,6 +696,6 @@ Another other nice resource is [Interactive Visualization and Plotting with Juli
 # ╟─7a3fbc40-ec66-11ea-34f3-b3804f016b55
 # ╠═0bfad805-2483-40d9-bd94-c76b2dcb238a
 # ╠═7a269742-ec66-11ea-1b40-9d8cce31f885
-# ╟─7a111b6a-ec66-11ea-3a5a-cd6de910dd00
-# ╟─1c2ac5e2-792f-4368-92dd-1e7dab3dd6ad
+# ╠═7a111b6a-ec66-11ea-3a5a-cd6de910dd00
+# ╠═1c2ac5e2-792f-4368-92dd-1e7dab3dd6ad
 # ╠═79faeac0-ec66-11ea-1d6d-318ab749e232
