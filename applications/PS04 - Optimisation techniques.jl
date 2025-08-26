@@ -953,6 +953,19 @@ md"""
 	3. Determine values for $\alpha$ and $\beta$ that lead to a neutral result at the end of the course. Can you give an interpretation to these values?
 """
 
+# ╔═╡ ca2425dc-cc33-4cff-9497-e522e0ed4516
+md"""
+## Application - Vehicle Routing
+
+You can find a more elaborate and detailed example here:
+
+```Julia
+include("./detailed/PS04 - Linear programming - vehicle routing.jl")
+```
+
+This Julia script models and solves the Capacitated Vehicle Routing Problem (CVRP) using JuMP and GLPK. It includes two versions: a basic Multiple Vehicle Routing Problem (MVRP) and a more advanced Multiple Trip Vehicle Routing Problem (MTVRP). Both use binary variables to decide routes for trucks visiting cities with demands while respecting vehicle capacity. The models include constraints for route continuity, capacity, and customer coverage.
+"""
+
 # ╔═╡ Cell order:
 # ╟─543d9901-6bdc-4ca5-bfac-800f543c3490
 # ╟─c175a542-11d4-49f1-a872-2053d81d5ade
@@ -1013,3 +1026,4 @@ md"""
 # ╟─1b2ff048-e4a5-4fc6-a7cb-f18430a18ce1
 # ╠═a9e7cff7-0ca2-4b4a-824b-17af4065c610
 # ╟─43ba9db1-a10a-4bf8-b2ad-30e97da6cc46
+# ╟─ca2425dc-cc33-4cff-9497-e522e0ed4516

@@ -417,7 +417,7 @@ md"""
 md"""
 ### Importance sampling
 !!! info "Principle"
-	Importance sampling makes a Monte Carlo method more efficient by making the random sampling focus on what counts (e.g. rare events). Normally, we would sample from $p(x)$ to obtain values which are then avaluated in $f(x)$, and averaged out to obtain an estimate. But if $p(x)$ is tricky to sample from, or if $f(x)$ only matters in specific areas, most of your samples might be useless, leading to a slow or shaky estimate. Importance sampling fixes this by sampling from a different, easier distribution, called the proposal distribution ($q(x)$), that focuses on the "important" regions where $f(x)$ is big. To make up for using $q(x)$ instead of $p(x)$, you weight each sample by $\frac{p(x)}{q(x)}$. Method overview:
+	Importance sampling makes a Monte Carlo method more efficient by making the random sampling focus on what counts (e.g. rare events). Normally, we would sample from $p(x)$ to obtain values which are then evaluated in $f(x)$, and averaged out to obtain an estimate. But if $p(x)$ is tricky to sample from, or if $f(x)$ only matters in specific areas, most of your samples might be useless, leading to a slow or shaky estimate. Importance sampling fixes this by sampling from a different, easier distribution, called the proposal distribution ($q(x)$), that focuses on the "important" regions where $f(x)$ is big. To make up for using $q(x)$ instead of $p(x)$, you weigh each sample by $\frac{p(x)}{q(x)}$. Method overview:
 	- Pick a proposal distribution $q(x)$ that is easy to sample from and ideally mimics where $f(x)$ is significant ("important region").
 	- Draw samples $x_i$ from $q(x)$.
 	- Calculate the weight $w_i = \frac{p(x_i)}{q(x_i)}$ for each sample
