@@ -59,7 +59,21 @@ html"""
 # ╔═╡ c395df98-145a-11eb-1716-2de187df1a1a
 md"""
 # Logging
-The [Logging](https://docs.julialang.org/en/v1/stdlib/Logging/index.html) module will be used for efficient debugging and testing during development. 
+The [Logging](https://docs.julialang.org/en/v1/stdlib/Logging/index.html) module will be used for efficient debugging and testing during development. It provides a flexible built-in system for recording log messages during program execution, which helps track the progress, debug issues, and monitor behavior.
+
+!!! info "Key Features"
+	The module supports several *log levels*:
+	* `@debug` for detailed debugging messages (log level $-1000$)
+	* `@info` for general information messages (log level $0$)
+	* `@warn` for warning about potential issues (log level $1000$)
+	* `@error` for actual errors (log level $2000$)
+
+	The global logger may be set with `global_logger` and task-local loggers with the `with_logger` environment for contextual logging for a specific block of code.
+
+	Messages can also be directed to various *loggers*:
+	* `ConsoleLogger` (default, prints to terminal/REPL)
+	* `SimpleLogger` (e.g., for writing logs to files)
+	* `NullLogger` (disables logging)
 
 A logger has its own lower bound on the `LogLevel` that it can show. In addition to this, there is a global setting that determines the lowest level that will be registered. When you are running a Julia script in the REPL, the default logger's minimal level is `Info`, so you won't see any messages below this level. When working with a Pluto notebook, as is the case here, a specific logger has ben built with the default level set to `Debug`.
 
@@ -183,10 +197,12 @@ logging_demo_2(1,2, goedemorgen="bonjour",
 
 # ╔═╡ dd63ff16-146d-11eb-059c-0586e1f972a5
 md"""
-## Working with resumable functions
-Using a resumable function, try to implement:
-1. the pascal triangle: each iteration should return a line of the Pascal triangle.
-2. a root finding method (e.g. square root of a number)
+# Working with resumable functions
+
+!!! tip "Tasks"
+	Using a resumable function, try to implement:
+	1. [The pascal triangle](https://en.wikipedia.org/wiki/Pascal%27s_triangle): each iteration should return a line of the Pascal triangle.
+	2. A root finding method (e.g. square root of a number)
 
 *Note*: a resumable function returns an iterator you need to call.
 
@@ -219,7 +235,8 @@ md"""
 # ConcurrentSim
 Before starting a larger project, we will look into some ConcurrentSim tricks.
 
-There are some compatibility issues between Pluto and more complex ConcurrentSim constructions, which is why you will find specific examples in a seperate file.
+!!! warning "Issues"
+	There are some compatibility issues between Pluto and more complex ConcurrentSim constructions, which is why you will find specific examples in a seperate file, in the `./applications/detailed` subfolder
 
 You can execute these file by running them from the REPL by using 
 ```julia
@@ -232,12 +249,16 @@ include("path/to/file.jl")
 md"""
 ## Working with `containers`
 
-Containers represent a level of something (e.g. liquid level, energy ...). If you want to store a specific type of object, you will be better of using a `store`.
+!!! info "Definition"
+	**Containers** represent a level of something (e.g. liquid level, energy ...) which is not serialised.
 
-Experiment a bit with containers (::Container). Discover their attributes (environment, capacity, level, get\_queue, put\_queue, seid) and find out how to use them. Generate a simple setting with:
-1. a fill process that waits for a random time $t < 10 \in \mathbb{N}$ and then adds 1 unit to a container. This process repeats forever.
-2. an empty process that waits for a random time $t < 10 \in \mathbb{N}$ and then requires a random amount from the container. This process repeats forever.
-3. a monitor proces that periodically prints an info message detailing the current level of the container. This process repeats forever.
+If you want to store a specific type of object, with specific properties and e.g. a serial number, you will be better of using a `store`.
+
+!!! tip "Task"
+	Experiment a bit with containers (`::Container`). Discover their attributes (environment, capacity, level, get\_queue, put\_queue, seid) and find out how to use them. Generate a simple setting with:
+	1. A fill process that waits for a random time $t < 10 \in \mathbb{N}$ and then adds 1 unit to a container. This process repeats forever.
+	2. An empty process that waits for a random time $t < 10 \in \mathbb{N}$ and then requires a random amount from the container. This process repeats forever.
+	3. A monitor proces that periodically prints an info message detailing the current level of the container. This process repeats forever.
 
 $(Markdown.parse(function_source_extractor(txt, "fill(sim::Simulation, c::C")))
 
@@ -259,7 +280,11 @@ end
 # ╔═╡ 71911828-1470-11eb-3519-bb52522ed2c9
 md"""
 ## Working with `Stores`
-A store can hold objects (struct) that can be used by other processes. Let's reconsider the same small scale application we did with the containers, i.e. generate a simple setting and verify everything works as intended (e.g. a fill, empty and monitor process). 
+
+!!! info "Definition"
+	A **store** can hold objects (struct) that can be used by other processes. 
+
+Let's reconsider the same small scale application we did with the containers, i.e. generate a simple setting and verify everything works as intended (e.g. a fill, empty and monitor process). 
 
 $(Markdown.parse(struct_source_extractor(txt, "Object")))
 
@@ -298,10 +323,8 @@ dependencydemo()
 # ╔═╡ ddd43e36-1473-11eb-2544-8f9e1ac0f59c
 md"""
 ## Linking a process to a type
-We want to simulate the life of a puppy. It's life consists of three activities:
-eating, sleeping and playing. This simple life can be disturbed (i.e. interrupted) 
-when it gets picked up by a human. If a puppy likes you, it might lick your face. 
-After being picked up, a puppy continues its life as before.
+!!! info "Context"
+	We want to simulate the life of a puppy. It's life consists of three activities: eating, sleeping and playing. This simple life can be disturbed (i.e. interrupted) when it gets picked up by a human. If a puppy likes you, it might lick your face. After being picked up, a puppy continues its life as before.
 
 We create our own type `Puppy` that has an associated process that models its life. 
 We also create a type `Human` that has an associated process to pick up a random 
@@ -322,23 +345,20 @@ include("path/to/PS07 - ConcurrentSim - Puppies.jl")
 md"""
 ### Waiting on more than one event
 
-We want to simulate a number of machines that each produce a specific product and 
-put it in a warehouse (a `Store`). There is a combination process that needs one
-of each generated products and combines it into another. The simulation ends when
-the fictive container of combined goods is full.
+!!! info "Context"
+	We want to simulate a number of machines that each produce a specific product and put it in a warehouse (a `Store`). There is a combination process that needs one of each generated products and combines it into another. The simulation ends when the fictive container of combined goods is full.
 
-We create our own type `Product` with two fields that allow to identify the kind of
-product and to identify its "creator" by means of a serial number.
-We also create a type `Machine` that has an associated process. This machine has
-an ID an make one type of products. All generated product are put into the same 
-store. 
+We create our own type `Product` with two fields that allow to identify the *kind* of product and to identify its "creator" by means of a *serial number*.
+We also create a type `Machine` that has an associated process. This machine has an *ID* and makes one type of products. All generated product are put into the same 
+store.
 
-The combiner process works as follows:
-* generate the events matching the availability of one of each product
-* wait until all of these events are realised. *Note*: if you only have two events, you can simply use `ev1` & `ev2`.
-* generate the event of putting a fictive combined product in a container
-* @yield the event (i.e. time-out until done)
-* verify if the container is full and if so stop the simulation on this event.
+!!! info "Process"
+	The combiner process works as follows:
+	* Generate the events matching the availability of one of each product
+	* Wait until all of these events are realised. *Note*: if you only have two events, you can simply use `ev1` & `ev2`.
+	* Generate the event of putting a fictive combined product in a container
+	* @yield the event (i.e. time-out until done)
+	* Verify if the container is full and if so stop the simulation on this event.
 
 This application illustrates how you can wait on multiple other events before 
 continuing the simulation. Keep in mind that this requires ALL events to be 
@@ -352,15 +372,20 @@ include("path/to/PS07 - ConcurrentSim - Machines.jl")
 # ╔═╡ 63db05d2-1546-11eb-169c-7b23fe0009c4
 md"""
 ### What if only one event needs to be realised?
-Suppose an agent requests a resource but only has a limited amount of patience before no longer wanting/needing the resource.
 
-For the example, a simulation is made with a `::Resource` with a capacity of $0$. So the agent can never obtain the requested resource. In the `agent` function the following happens:
-1. A request for `r::Resource` is made. The type of `req` is `ConcurrentSim.Put`. This event will be triggered by an `@yield`
-2. the variable `res` is a dictionary with the events as key and the `::StateValue` as value. The first event to have been processed will have its `::StateValue` equal to `ConcurrentSim.processed`
-3. the `if` conditions test whether the `::StateValue` of our request is equal to `ConcurrentSim.processed`. 
-  1. If this is the case, the agent obtains the `::Resource`, uses it for 1 time unit and releases it back for further use.
-  2. If this is NOT the case, the other event will have taken place (in this case the timeout) and we remove the request from the `::Resource` queue with `cancel`.
-4. the simulation terminates since no more processes are active on time 4.0.
+!!! info "Context"
+	Suppose an agent requests a resource but only has a limited amount of patience before no longer wanting/needing the resource.
+
+For the example, a simulation is made with a `::Resource` with a capacity of $0$. So the agent can never obtain the requested resource. 
+
+!!! info "Agent function"
+	In the `agent` function the following happens:
+	1. A request for `r::Resource` is made. The type of `req` is `ConcurrentSim.Put`. This event will be triggered by an `@yield`
+	2. The variable `res` is a dictionary with the events as key and the `::StateValue` as value. The first event to have been processed will have its `::StateValue` equal to `ConcurrentSim.processed`
+	3. The `if` conditions test whether the `::StateValue` of our request is equal to `ConcurrentSim.processed`. 
+	  1. If this is the case, the agent obtains the `::Resource`, uses it for 1 time unit and releases it back for further use.
+	  2. If this is NOT the case, the other event will have taken place (in this case the timeout) and we remove the request from the `::Resource` queue with `cancel`.
+	4. The simulation terminates since no more processes are active on time 4.0.
 
 
 $(Markdown.parse(function_source_extractor(txt, "agent")))
@@ -375,19 +400,17 @@ conditional_execution_demo()
 md"""
 ### Using the first available resource
 
-We want to simulate a number of warehouses that store the same product. At a regular
-interval, a product is required. But the origin of the product does not matter.
+!!! info "Context"
+	We want to simulate a number of warehouses that store the same product. At a regular interval, a product is required. But the origin of the product does not matter.
 
-We create our own type `Warehouse` with two field that allow to identify the 
-warehouse and that allow to track its stock by by means of a `Store`.
+We create our own type `Warehouse` with two field that allow to identify the warehouse and that allow to track its stock by by means of a `Store`.
 
-The production process works adds a random quantity to a random warehouse 
-(the first available) and works as follows:
-* generate a product
-* generate the requests for all resources
-* yield the requests the will occur first. *note*: if two events occur at the same time, they will both happen. We deal with this later.
-* cancel all the other requests that have not occured yet. For those that have occured,
-we decrement the store with the value it was increased by.
+!!! info "Production process"
+	The production process works adds a random quantity to a random warehouse (the first available) and works as follows:
+	* Generate a product
+	* Generate the requests for all resources
+	* Yield the requests that will occur first. *note*: if two events occur at the same time, they will both happen. We deal with this later.
+	* Cancel all the other requests that have not occured yet. For those that have occured, we decrement the store with the value it was increased by.
 
 The simulation stops when either all warehouses are full (or cannot handle the 
 produced quantity).
@@ -449,10 +472,13 @@ md"""
 # ╔═╡ 4bf1fce0-1470-11eb-1290-63d06c8246a2
 md"""
 ### Application 1
-Consider a candy machines that is continuously being monitored by a supervisor.  If the level is below a given treshold, the supervisor fills the machine up. 
-* Client arrival follows an exponential distribution with parameter $\theta = 1$ and each client takes two candies at a time.
-* Look at the mean time between refills. Is this what you would expect?
-* What happens when the amount of candy varies?  Is this still what you would expect? E.g. a clients takes one, two or three candies.
+!!! info "Context"
+	Consider a candy machines that is continuously being monitored by a supervisor.  If the level is below a given treshold, the supervisor fills the machine up.
+	* Client arrival follows an exponential distribution with parameter $\theta = 1$ and each client takes two candies at a time.
+
+!!! tip "Tasks"
+	* Look at the mean time between refills. Is this what you would expect?
+	* What happens when the amount of candy varies?  Is this still what you would expect? E.g. a clients takes one, two or three candies.
 """
 
 # ╔═╡ f3c8a4ba-1474-11eb-06b0-7f0e5ba47670
@@ -461,12 +487,13 @@ Consider a candy machines that is continuously being monitored by a supervisor. 
 # ╔═╡ c7b95ece-150e-11eb-0058-c15fde632ea0
 md"""
 ### Application 2
-When modeling physical things such as cables, RF propagation, etc. encapsulation of this process is better in order to keep the propagation mechanism outside of the sending and receiving processes.
+!!! info "Context"
+	When modeling physical things such as cables, RF propagation, etc. encapsulation of this process is better in order to keep the propagation mechanism outside of the sending and receiving processes.
 
-Consider the following:
-* a sender sends messages on a regular interval (e.g. every 5 minutes)
-* a receiver is listening on a permanent basis for new messages
-* the transfer between both of them is not instantaneous, but takes some time. To model this, you can store (hint: use a `::Store`) the messages on the cable for later reception.
+	Consider the following:
+	* a sender sends messages on a regular interval (e.g. every 5 minutes)
+	* a receiver is listening on a permanent basis for new messages
+	* the transfer between both of them is not instantaneous, but takes some time. To model this, you can store (hint: use a `::Store`) the messages on the cable for later reception.
 
 """
 
@@ -503,7 +530,7 @@ Consider the following:
 # ╟─a955fd5c-1536-11eb-0405-9bc433188115
 # ╟─418601ce-8469-4cad-967b-73cba91d566e
 # ╟─2bc8a711-3c47-4969-8755-80364148387b
-# ╠═3a41b319-0d19-4ddd-b6da-c6c53212fe54
+# ╟─3a41b319-0d19-4ddd-b6da-c6c53212fe54
 # ╟─414b4ee2-1473-11eb-3d7b-ef4f49e7efa0
 # ╟─4bf1fce0-1470-11eb-1290-63d06c8246a2
 # ╠═f3c8a4ba-1474-11eb-06b0-7f0e5ba47670

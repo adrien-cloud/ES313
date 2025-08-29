@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.42
+# v0.20.13
 
 using Markdown
 using InteractiveUtils
@@ -28,9 +28,45 @@ html"""
 # ╔═╡ 1c49d8ae-144e-11eb-024a-137460f78b15
 md"""
 # Performance
-When building more complex programs, performance can be an issue. The [performance tips](https://docs.julialang.org/en/v1/manual/performance-tips/) website already contains a lot tips. We will illustrate potential performance gains for a function by providing one or more alternatives. In order to make sure the the functions produce the same result, the results are verified to be identical before starting the benchmarks.
+During the introductory session, we already covered the performance benefits of Julia compared to other dynamic languages such as Python and R. It is however of utmost importance that you get a feeling for the programming *best practices* in Julia to fully exploit its capabilities.
 
-The actual performance is measured using [BenchmarkTools](https://github.com/JuliaCI/BenchmarkTools.jl). More advanced methods (that we cannot cover due to time constraints) included profiling your code. In Visual Studio Code you can get a detailed overview with the [`@profview`](https://discourse.julialang.org/t/julia-vs-code-extension-version-v0-17-released/42865) macro. For a REPL based method you could use [Traceur](https://github.com/JunoLab/Traceur.jl).
+When building more complex programs, performance can be an issue. The [performance tips](https://docs.julialang.org/en/v1/manual/performance-tips/) website already contains a lot tips. We will briefly summarise these performance tips before we proceed with a few examples.
+
+!!! info "Performance Tips"
+	- **Put performance-critical code inside functions:**  
+	  Julia’s compiler optimizes functions much better than code in global scope.
+	
+	- **Avoid untyped global variables:**  
+	  Globals slow down code; use local variables or pass arguments to functions. Mark truly constant globals as `const`.
+	
+	- **Avoid containers with abstract type parameters:**  
+	  Use concrete types where possible for better memory layout and speed.
+	
+	- **Write type-stable code:**  
+	  Types should be predictable and not change dynamically during execution to allow compiler optimizations.
+	
+	- **Use parametric types for structs:**  
+	  This helps Julia generate efficient code for multiple concrete types.
+	
+	- **Avoid fields with abstract types in structs:**  
+	  This prevents dynamic dispatch and type instability.
+	
+	- **Break complex functions into multiple methods:**  
+	  Helps compiler generate specialized, optimized code.
+	
+	- **Profile and benchmark regularly:**  
+	  Identify bottlenecks and optimize where it counts.
+
+These tips collectively help write fast, efficient, and idiomatic Julia code.
+
+We will illustrate potential **performance gains** for a function by providing one or more alternatives. 
+
+!!! warning "Validity"
+	In order to make sure the the functions produce the same result, the results are verified to be identical before starting the benchmarks.
+
+The actual performance is measured using [BenchmarkTools](https://github.com/JuliaCI/BenchmarkTools.jl). BenchmarkTools repeatedly runs your code snippet and collects timing samples while accounting for system noise and compiler optimizations. You can customize the benchmarking process and exclude setup costs.
+
+More advanced methods (that we cannot cover due to time constraints) include **profiling** your code. Profiling tells you where in your program the time is spent. It breaks down execution time across functions and lines of code, helping identify hotspots needing optimization. In Visual Studio Code you can get a detailed overview with the [`@profview`](https://discourse.julialang.org/t/julia-vs-code-extension-version-v0-17-released/42865) macro. For a REPL based method you could use [Traceur](https://github.com/JunoLab/Traceur.jl).
 
 ## Tools
 Below you can find a set of very generic functions that we will be using to evaluate the functions that we will be benchmarking.
@@ -56,7 +92,8 @@ julia
 
 both examples above suppose "julia" is known in your terminal. If this is not the case, simply replace it by the path to the julia executable.
 
-*Remark*: starting from julia 1.5 you can use command line arguments to specify the number of threads e.g. `julia --threads 4`
+!!! warning "Remark"
+	Starting from julia 1.5 you can use command line arguments to specify the number of threads e.g. `julia --threads 4`
 """
 
 # ╔═╡ a4ed00b8-144f-11eb-0c66-932242a1767c
@@ -118,6 +155,8 @@ end
 # ╔═╡ ff480c88-144f-11eb-2839-598b8452a945
 md"""
 ## Hands-on
+
+### String Joining
 """
 
 # ╔═╡ 1e0ef46a-1450-11eb-2676-d94d5cc1f073
@@ -172,6 +211,11 @@ begin
 	demo1()
 	
 end
+
+# ╔═╡ e6c2157e-f5d1-4240-8852-86a459ee9431
+md"""
+### Memory Allocation
+"""
 
 # ╔═╡ 41ef249a-1450-11eb-2c52-0930531fa46e
 begin
@@ -232,6 +276,11 @@ begin
 	
 end
 
+# ╔═╡ cbf339be-d2f4-4aa1-968f-377e0c4ae16b
+md"""
+### Changing variable type
+"""
+
 # ╔═╡ 6332ef7e-1450-11eb-0a36-41818207b78f
 begin
 	# avoid changing type of a variable
@@ -271,6 +320,11 @@ begin
 	demo3()
 end
 
+# ╔═╡ c008820b-efad-4b93-a63c-3e5ffcbf4264
+md"""
+### Vectorization
+"""
+
 # ╔═╡ 75948388-1450-11eb-0a0e-431ad5929504
 begin
 	f_norm(x) = 3x.^2 + 4x + 7x.^3;
@@ -296,6 +350,18 @@ begin
 	demo4()
 	
 end
+
+# ╔═╡ fc0f8d9d-ff5f-4c78-8fd2-939cd85345f0
+md"""
+### Bringing it together
+* Preallocation
+* Threading
+* `@view` macro
+
+!!! info "Macros"
+	* `@views`: Normally, slicing arrays creates a copy of that part of the array, which allocates new memory and slows down the code. The `@views` macro converts standard indexing operations in an expression into views, which are lightweight references to the original array data without copying.
+	* `@inbounds`: Julia checks array bounds on every index operation to catch errors. `@inbounds` tells the compiler to skip these bounds checks within a block or loop. Removing bounds checks reduces overhead in tight loops with many index operations, boosting speed. However, using it means you must be sure your code does not access invalid indices, or you’ll get undefined behavior or crashes.
+"""
 
 # ╔═╡ 98e356f4-1450-11eb-0229-eb57f262ea4d
 begin
@@ -355,6 +421,11 @@ begin
 	demo5()
 end
 
+# ╔═╡ 55578fed-d830-4362-b00b-5acefd8d4c30
+md"""
+### Growing your array
+"""
+
 # ╔═╡ b341b4d2-1450-11eb-0549-7db5bd6756ba
 begin
 	function grow(N::Int; kwargs...)
@@ -394,6 +465,11 @@ begin
 	
 	demo6()
 end
+
+# ╔═╡ e7a21dbb-e5a9-4eae-a384-3c65198867c9
+md"""
+### Struct types
+"""
 
 # ╔═╡ c6702048-1450-11eb-1f1d-a54089545949
 begin
@@ -470,10 +546,16 @@ end
 # ╠═e32569b0-144f-11eb-33e9-8fd8755c208f
 # ╟─ff480c88-144f-11eb-2839-598b8452a945
 # ╠═1e0ef46a-1450-11eb-2676-d94d5cc1f073
+# ╟─e6c2157e-f5d1-4240-8852-86a459ee9431
 # ╠═41ef249a-1450-11eb-2c52-0930531fa46e
+# ╟─cbf339be-d2f4-4aa1-968f-377e0c4ae16b
 # ╠═6332ef7e-1450-11eb-0a36-41818207b78f
+# ╟─c008820b-efad-4b93-a63c-3e5ffcbf4264
 # ╠═75948388-1450-11eb-0a0e-431ad5929504
+# ╟─fc0f8d9d-ff5f-4c78-8fd2-939cd85345f0
 # ╠═98e356f4-1450-11eb-0229-eb57f262ea4d
+# ╟─55578fed-d830-4362-b00b-5acefd8d4c30
 # ╠═b341b4d2-1450-11eb-0549-7db5bd6756ba
+# ╟─e7a21dbb-e5a9-4eae-a384-3c65198867c9
 # ╠═c6702048-1450-11eb-1f1d-a54089545949
 # ╠═df4563da-1450-11eb-08a7-25ed365f578c

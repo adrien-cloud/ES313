@@ -37,15 +37,16 @@ md"""
 
 
 ## General approach
-When a simulation is used to answer a question or to solve a problem, the following steps are involved:
-* Formulate the problem and plan the study
-* Collect the data and formulate the simulation model
-* Check the accuracy of the simulation model (assumptions, limitations etc.)
-* Construct a computer program
-* Test the validity of the simulation model
-* Plan the simulations to be performed
-* Conduct the simulation runs and analyze the results
-* Present the conclusions
+!!! info "Steps"
+	When a simulation is used to answer a question or to solve a problem, the following steps are involved:
+	* Formulate the problem and plan the study
+	* Collect the data and formulate the simulation model
+	* Check the accuracy of the simulation model (assumptions, limitations etc.)
+	* Construct a computer program
+	* Test the validity of the simulation model
+	* Plan the simulations to be performed
+	* Conduct the simulation runs and analyze the results
+	* Present the conclusions
 
 During this practical session, we will run small simulations going over all these steps.
 
@@ -55,32 +56,36 @@ During this practical session, we will run small simulations going over all thes
 # ╔═╡ 349b8586-0c96-11eb-2e7b-5b3230d1cf27
 md"""
 ## Casino game
-A casino offers a coin flipping game with the following rules:
-1. Each play of the game involves repeatedly flipping an unbiased coin 
-2. The game stops when the difference between the number of heads tossed and the number of tails is 3
-3. If you decide to play, each flip costs you € 1. You are not allowed to quit during a play of the game.
-4. You receive € 8 at the end of each play of the game.
+
+!!! info "Context"
+	A casino offers a coin flipping game with the following rules:
+	1. Each play of the game involves repeatedly flipping an unbiased coin 
+	2. The game stops when the difference between the number of heads tossed and the number of tails is 3
+	3. If you decide to play, each flip costs you € 1. You are not allowed to quit during a play of the game.
+	4. You receive € 8 at the end of each play of the game.
 
 
-The problem at hand is to decide whether to play or not and to get an idea of the expected gains and the length of each game. We might also look into the required simulation size and into a parametric study (e.g. influence of the required difference between heads/tails and/or the default gain).
+The problem at hand is to decide **whether to play or not** and to get an idea of the **expected gains** and the **length** of each game. We might also look into the required simulation size and into a parametric study (e.g. influence of the required difference between heads/tails and/or the default gain).
 
-*Tip:* it can be analytically proven that the true mean of the number of flips required for a play of this game is 9. 
+!!! warning "Tip"
+	It can be analytically proven that the true mean of the number of flips required for a play of this game is **9**.
 
+---
 
-##### Steps in the simulation process
-
-###### Formulate the problem and plan the study:
-the problem is described in a clear way (cf. suppra). Given these rules, we want to find out
-1. if it is a good idea to play
-2. the value of the expected profit
-
-###### Collect the data and formulate the simulation model:
-Let $X$ be the outcome of one coin flip $\Rightarrow X\sim \mathcal{Be}(1/2)$
-
-###### Check the accuracy of the simulation model:
-Our model is complete, we make no assumptions
-
-###### Construct a computer program
+!!! info "Steps in the simulation process"
+	
+	###### Formulate the problem and plan the study:
+	The problem is described in a clear way (*cfr. suppra*). Given these rules, we want to find out
+	1. If it is a good idea to play.
+	2. The value of the expected profit.
+	
+	###### Collect the data and formulate the simulation model:
+	Let $X$ be the outcome of one coin flip $\Rightarrow X\sim \mathcal{Be}(1/2)$
+	
+	###### Check the accuracy of the simulation model:
+	Our model is complete, we make no assumptions
+	
+	###### Construct a computer program:
 """
 
 # ╔═╡ 3a20552e-0c97-11eb-3f0d-2586b1bb46ed
@@ -153,25 +158,22 @@ end
 
 # ╔═╡ 65c6476c-0c98-11eb-2c7d-3bc3ba8d51e2
 md"""
-###### Test the validity of the simulation model
-A game should stop when the difference between the amount of heads and tails equals 3
-```julia
-begin 
-	g = game()
-	@assert abs(g["heads"] - g["tails"]) == 3
-end
-```
-"""
+!!! info "Steps in the simulation process"
+	###### Test the validity of the simulation model
+	A game should stop when the difference between the amount of heads and tails equals 3
+	```julia
+	begin 
+		g = game()
+		@assert abs(g["heads"] - g["tails"]) == 3
+	end
+	```
 
-# ╔═╡ 5b08b538-0c97-11eb-0319-877b39c4c4ed
-md"""
-###### Plan the simulations to be performed
-We will run a certain number of simulations. At this time we do not have additional information that we can use (optimal number to be determined later).
-"""
+	###### Plan the simulations to be performed
+	We will run a certain number of simulations. At this time we do not have additional information that we can use (optimal number to be determined later).
 
-# ╔═╡ 607e4392-0c98-11eb-0a9d-ddfab6b42b26
-md"""
-###### Conduct the simulation runs and analyze the results
+	###### Conduct the simulation runs and analyze the results
+	Below we will visualise the outcomes of our simulations.
+
 """
 
 # ╔═╡ 75d35828-0c99-11eb-1888-e9e7be234e89
@@ -223,7 +225,7 @@ end
 # ╔═╡ 7fafde70-0c9c-11eb-0403-9bfb6e42045b
 md"""
 #### Parametric study
-suppose we consider a range of differences [2,4] and a range of gains [4, 12] where we play 1e5 games for each config.
+Suppose we consider a range of differences [2,4] and a range of gains [4, 12] where we play $1e5$ games for each config.
 """
 
 # ╔═╡ c8b107ba-0c9d-11eb-11c7-830d112ca82f
@@ -247,44 +249,48 @@ end
 
 # ╔═╡ 0bfa3ffe-0c9a-11eb-2c99-3d8e57983c4c
 md"""
-###### Present the conclusions
-We find that on average a game takes 9 turns, which will lead you to lose on average € 1. The game could be tempting given that in six out of ten cases the player will actually win (a small amount).
+!!! info "Steps in the simulation process"
+	###### Present the conclusions
+	We find that on average a game takes 9 turns, which will lead you to lose on average € 1. The game could be tempting given that in six out of ten cases the player will actually win (a small amount).
 """
 
 # ╔═╡ 8df49b7e-0c9e-11eb-0048-9368c9d7bee9
 md"""
 ## Project management
-Suppose we want to simulate a industrial process that can be presented as the table shown below:
+!!! info "Context"
+	Suppose we want to simulate a industrial process that can be presented as the table shown below:
+	
+	| Activity | Predecessors | Completion time |
+	|----------|--------------|---------------- |
+	| A | - | $\sim \mathcal{N}(6,1)$ |
+	| B | A | $\sim \mathcal{U}(6,10)$ |
+	| C | A | $\sim \mathcal{U}(1.5,2.5)$ |
+	| D | B,C | $\sim \mathcal{U}(1.5,3)$ |
+	| E | D | $\sim \mathcal{U}(3,6)$ |
+	| F | E | $\sim \mathcal{U}(2,5)$ |
+	| G | E | $\sim \mathcal{U}(3,5)$ |
+	| H | F,G | $\sim \mathcal{U}(4,7)$ |
+	| I | H | $\sim \mathcal{U}(5,7)$ |
+	| J | H | $\le 5$ |
 
-| Activity | Predecessors | Completion time |
-|----------|--------------|---------------- |
-| A | - | $\sim \mathcal{N}(6,1)$ |
-| B | A | $\sim \mathcal{U}(6,10)$ |
-| C | A | $\sim \mathcal{U}(1.5,2.5)$ |
-| D | B,C | $\sim \mathcal{U}(1.5,3)$ |
-| E | D | $\sim \mathcal{U}(3,6)$ |
-| F | E | $\sim \mathcal{U}(2,5)$ |
-| G | E | $\sim \mathcal{U}(3,5)$ |
-| H | F,G | $\sim \mathcal{U}(4,7)$ |
-| I | H | $\sim \mathcal{U}(5,7)$ |
-| J | H | $\le 5$ |
-
-We want to get an idea of:
-1. the mean project completion time
-2. the probability that the project will be finished in less than 36 time units
-3. determine the critical subprocesses with a sensitivity chart (i.e. determine the impact of changing a specific subprocess on the completion time given all the others remain the same)
+!!! tip "Tasks"
+	We want to get an idea of:
+	1. The mean project completion time
+	2. The probability that the project will be finished in less than 36 time units
+	3. Determine the critical subprocesses with a sensitivity chart (i.e. determine the impact of changing a specific subprocess on the completion time given all the others remain the same)
 
 """
 
 # ╔═╡ 7aceebea-0d1d-11eb-05fa-d7374004b881
 md"""
-###### Formulate the problem and plan the study
-The problem and the tasks are described above
-
-###### Collect the data and formulate the simulation Model
-Data model (coming from historical data) is known. The duration can be obtained from the a vector of duration times.
-
-###### Construct a computer program
+!!! info "Steps in the simulation process"
+	###### Formulate the problem and plan the study
+	The problem and the tasks are described above.
+	
+	###### Collect the data and formulate the simulation Model
+	Data model (coming from historical data) is known. The duration can be obtained from the a vector of duration times.
+	
+	###### Construct a computer program
 """
 
 # ╔═╡ 8f99cf60-0c9e-11eb-2b6d-b5ca5ed20a65
@@ -329,10 +335,11 @@ end
 
 # ╔═╡ 864b050c-0d1e-11eb-03d8-8ffcf23e019e
 md"""
-###### Check the accuracy of the simulation model (assumptions, limitations etc.)
-We use a normal distribution for the first activity, so it is theoretically possible that a negative value for A occurs, which does not make sense. In a similar way, using a uniform distribution sets hard limits for task durations.
-
-You can make testcases to assert the correctness of the result calculated by the duration function.
+!!! info "Steps in the simulation process"
+	###### Check the accuracy of the simulation model (assumptions, limitations etc.)
+	We use a normal distribution for the first activity, so it is theoretically possible that a negative value for A occurs, which does not make sense. In a similar way, using a uniform distribution sets hard limits for task durations.
+	
+	You can make testcases to assert the correctness of the result calculated by the duration function.
 """
 
 # ╔═╡ f9562612-0d1e-11eb-1e16-bfa53760c18c
@@ -343,8 +350,9 @@ end
 
 # ╔═╡ d18a68b2-0d20-11eb-0f39-150f9bc9e0e9
 md"""
-###### Plan the simulations to be performed
-We will generate a sample of a given length an look at the experimental CDF.
+!!! info "Steps in the simulation process"
+	###### Plan the simulations to be performed
+	We will generate a sample of a given length an look at the experimental CDF.
 """
 
 # ╔═╡ da7801bc-0ca0-11eb-0480-33f07e16c85b
@@ -370,11 +378,12 @@ end
 
 # ╔═╡ 3d5f9648-0d21-11eb-14c4-65704b349ed6
 md"""
-###### Conduct the simulation runs and analyze the results
-We have obtained the results. We can do some additional testing such as validating the normality of our simulation data. 
-
-
-The sensitivity analysis can be done by changing one-factor-at-a-time (OAT), to see what effect this produces on the output. I.e. we move one input variable, keeping others at their baseline (nominal) values and repeat this for each of the other inputs in the same way.
+!!! info "Steps in the simulation process"
+	###### Conduct the simulation runs and analyze the results
+	We have obtained the results. We can do some additional testing such as validating the normality of our simulation data. 
+	
+	
+	The sensitivity analysis can be done by changing one-factor-at-a-time (OAT), to see what effect this produces on the output. I.e. we move one input variable, keeping others at their baseline (nominal) values and repeat this for each of the other inputs in the same way.
 """
 
 # ╔═╡ d8b821a0-0d21-11eb-08bc-f7027b1cbea1
@@ -409,11 +418,12 @@ end
 
 # ╔═╡ d148f3ea-0d21-11eb-2d67-f1f4c77248d5
 md"""
-###### Present the conclusions
-With respect to the initial goals, we can conclude the following:
-* the mean project completion time is around 37 time units
-* the probability that the project will be finished in less than 36 time units is around 34%
-* processes 3 and 10 do not impact the total project duration. Steps two and four account for the largest variability.
+!!! info "Steps in the simulation process"
+	###### Present the conclusions
+	With respect to the initial goals, we can conclude the following:
+	* The mean project completion time is around 37 time units
+	* The probability that the project will be finished in less than 36 time units is around 34%
+	* Processes 3 and 10 do not impact the total project duration. Steps two and four account for the largest variability.
 """
 
 # ╔═╡ Cell order:
@@ -424,8 +434,6 @@ With respect to the initial goals, we can conclude the following:
 # ╠═3a20552e-0c97-11eb-3f0d-2586b1bb46ed
 # ╠═b1bae776-0dfe-11eb-291b-53f9a87c4a41
 # ╟─65c6476c-0c98-11eb-2c7d-3bc3ba8d51e2
-# ╟─5b08b538-0c97-11eb-0319-877b39c4c4ed
-# ╟─607e4392-0c98-11eb-0a9d-ddfab6b42b26
 # ╠═75d35828-0c99-11eb-1888-e9e7be234e89
 # ╠═fae1e448-0c98-11eb-3721-dddb169e403f
 # ╠═a39a3a72-0c99-11eb-00df-e92eb7a6ce07
