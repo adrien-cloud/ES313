@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.20.5
+# v0.20.13
 
 using Markdown
 using InteractiveUtils
@@ -22,7 +22,9 @@ begin
 	# Pkg needs to be used to force Pluto to use the current project instead of making an environment for each notebook
 	using Pkg
 	# this is redundant if you run it through start.jl, but to make sure...
-	cd(joinpath(dirname(@__FILE__),".."))
+	while !isfile("Project.toml") && !isdir("Project.toml")
+        cd("..")
+    end
     Pkg.activate(pwd())
 	using PlutoUI
 	PlutoUI.TableOfContents(depth=4)
@@ -121,14 +123,14 @@ md"""## Wolfram's Experiment
 	|-------------|---|---|---|---|---|---|---|---|
 	|next state ("rule")         |0  |0  |1  |1  |0  |0  |1  |0  |
 	|byte position|``b_7`` |``b_6`` |``b_5`` |``b_4`` |``b_3`` |``b_2`` |``b_1`` |``b_0`` |
-	|value | ``128`` | ``64`` | ``32`` | ``16`` | ``8`` | ``4`` | 2 | ``1``|
+	|value | ``128`` | ``64`` | ``32`` | ``16`` | ``8`` | ``4`` | ``2`` | ``1``|
 
 
 Based on the byte positions, we can convert a rule into an integer. The present example can be transformed as follows:
 ```math
 \sum_{i=0}^{7} b_{i} 2^{i}.
 ```
-When aplied to the example in the table, we find "rule 50": ``32 + 15 + 2 = 50``
+When aplied to the example in the table, we find "rule 50": ``32 + 16 + 2 = 50``
 """
 
 # ╔═╡ 2d708d14-38ff-4554-b3ce-a2e5b8ef7eff
@@ -365,7 +367,7 @@ md"""- After about 100 steps, simple repeating patterns emerge, but there are a 
 
 - Collisions between spaceships yields different results depending on their type and their phase. Some collisions annihilate both ships; other leaves one ship unchanged; still other yield one or more ships of different types.
 
-- The collisions are the basis of computation in a rule110 CA. You can think of spaceships as signales that propagate through space, and collisions as gate that compute logical operations like AND and OR."""
+- The collisions are the basis of computation in a rule110 CA. You can think of spaceships as signals that propagate through space, and collisions as gates that compute logical operations like AND and OR."""
 
 # ╔═╡ 11fa5930-eb97-11ea-274e-3f2c45958666
 md"""
@@ -785,7 +787,7 @@ let
 end
 
 # ╔═╡ Cell order:
-# ╟─310ce685-2661-4f32-bf14-91a4f4e569ce
+# ╠═310ce685-2661-4f32-bf14-91a4f4e569ce
 # ╟─e9873822-4bf1-425e-bc32-98922b27995f
 # ╟─a27d4d98-c20c-4251-b7ba-73e60fcb472c
 # ╟─56f41ca0-eb93-11ea-1ea6-11b0e8bb9a7d
@@ -796,7 +798,7 @@ end
 # ╠═2393fe0e-eb94-11ea-2858-b50503395d4a
 # ╟─2dde4510-eb94-11ea-212a-5da1e7733bf6
 # ╟─35cbd760-eb94-11ea-201a-6b58802154a1
-# ╟─758a0c50-eb94-11ea-11a2-e3e007b089a9
+# ╠═758a0c50-eb94-11ea-11a2-e3e007b089a9
 # ╟─2d708d14-38ff-4554-b3ce-a2e5b8ef7eff
 # ╠═d8481030-eb94-11ea-1af4-db838adc37ed
 # ╟─49527027-1c4a-460a-b455-de2767a3c0ef
@@ -804,7 +806,7 @@ end
 # ╟─e393e8b2-eb94-11ea-3d70-d31f7ee89420
 # ╠═eed0a600-eb94-11ea-1863-0f33980508ba
 # ╟─af9f9fad-66dc-44c9-baf0-d553a1487f2e
-# ╟─0749769f-ff28-45d7-8ebb-3bd2de8e36cd
+# ╠═0749769f-ff28-45d7-8ebb-3bd2de8e36cd
 # ╟─0002a810-eb95-11ea-2ba8-bb2849bdec17
 # ╠═04139c70-eb95-11ea-1759-298193ce97b0
 # ╟─108edf3d-c230-4180-8892-6f8d487ca650

@@ -34,7 +34,7 @@ md"""
 ## Who are we?
 
 * Lecturer: Prof Bart De Clerck / D30.20 / [bart.declerck@mil.be]()
-* Assistant: Kapt Thijs Verhaeghe / D30.17 / [thijs.verhaeghe@mil.be]()
+* Assistant: Capt Thijs Verhaeghe / D30.20 / [thijs.verhaeghe@mil.be]()
 
 ## Why Modeling and Simulation
 Reality is often too complex, costly, time-consuming, dangerous, or simply unavailable for direct experimentation or complete analytical calculation.
@@ -60,7 +60,7 @@ begin
 	# Problem definition
 	problem_content = md"""!!! tip "Problem definition"
 			* What is the system or process to be studied? 
-			* What specific question(s) need to be answered
+			* What specific question(s) need to be answered?
 			* What problem(s) need to be solved?
 
 		!!! tip "Objective setting"

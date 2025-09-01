@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.20.5
+# v0.20.13
 
 using Markdown
 using InteractiveUtils
@@ -417,7 +417,7 @@ md"""
 md"""
 ### Importance sampling
 !!! info "Principle"
-	Importance sampling makes a Monte Carlo method more efficient by making the random sampling focus on what counts (e.g. rare events). Normally, we would sample from $p(x)$ to obtain values which are then avaluated in $f(x)$, and averaged out to obtain an estimate. But if $p(x)$ is tricky to sample from, or if $f(x)$ only matters in specific areas, most of your samples might be useless, leading to a slow or shaky estimate. Importance sampling fixes this by sampling from a different, easier distribution, called the proposal distribution ($q(x)$), that focuses on the "important" regions where $f(x)$ is big. To make up for using $q(x)$ instead of $p(x)$, you weight each sample by $\frac{p(x)}{q(x)}$. Method overview:
+	Importance sampling makes a Monte Carlo method more efficient by making the random sampling focus on what counts (e.g. rare events). Normally, we would sample from $p(x)$ to obtain values which are then evaluated in $f(x)$, and averaged out to obtain an estimate. But if $p(x)$ is tricky to sample from, or if $f(x)$ only matters in specific areas, most of your samples might be useless, leading to a slow or shaky estimate. Importance sampling fixes this by sampling from a different, easier distribution, called the proposal distribution ($q(x)$), that focuses on the "important" regions where $f(x)$ is big. To make up for using $q(x)$ instead of $p(x)$, you weigh each sample by $\frac{p(x)}{q(x)}$. Method overview:
 	- Pick a proposal distribution $q(x)$ that is easy to sample from and ideally mimics where $f(x)$ is significant ("important region").
 	- Draw samples $x_i$ from $q(x)$.
 	- Calculate the weight $w_i = \frac{p(x_i)}{q(x_i)}$ for each sample
@@ -1278,7 +1278,7 @@ end
 # ╟─4c7434d6-2e5b-4c45-af15-649b65caa875
 # ╟─6e1d9ce1-d90b-4b9b-9e8e-9f474535c868
 # ╟─b90b8319-b2f9-4948-a500-a7b6518db502
-# ╟─6cc32888-d93f-473f-b4dc-0c21cb69608e
+# ╠═6cc32888-d93f-473f-b4dc-0c21cb69608e
 # ╠═12241581-863f-4717-b825-ff0cf357cc9c
 # ╟─a783183d-50dd-4c7c-80ba-65c9d858682c
 # ╟─4b81af14-bc99-475b-a52b-f1aaa1e60a1e
@@ -1290,7 +1290,7 @@ end
 # ╟─47830c86-6480-4228-b116-8ca72461a176
 # ╟─05d321bf-4cc2-4d97-86b8-1325c3d63dbc
 # ╟─2476451f-eecb-4713-9023-c7d1e2f38c55
-# ╠═b11f2c5f-63f8-40bd-a90c-3598380860b4
+# ╟─b11f2c5f-63f8-40bd-a90c-3598380860b4
 # ╟─0d8f3619-5af4-45f3-b358-636a655ce4a7
 # ╟─708ffc5b-83b6-48b2-a0d1-bdabd970ee9a
 # ╟─a0db54fa-9ee7-40dd-92f6-f29265f83c63

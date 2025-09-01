@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.20.5
+# v0.20.13
 
 using Markdown
 using InteractiveUtils
@@ -330,7 +330,7 @@ There even exists an entire Julia package focussing entirely on Agent Based Mode
 
 # ╔═╡ 42bc0402-149f-11f0-22d3-295f5dfa2ca9
 md"""# Networks and graphs
-Many real-world systems can be represented as (potentially different) entities that are connected in some way to one another. We often call this a network. Examples incude social networks, transportation networks, computer networks, biological networks.
+Many real-world systems can be represented as (potentially different) entities that are connected in some way to one another. We often call this a network. Examples include social networks, transportation networks, computer networks, biological networks.
 
 !!! info "Network"
 	While often used interchangeably with "graph", it typically refers to a real-world system of interacting entities
@@ -342,7 +342,7 @@ Many real-world systems can be represented as (potentially different) entities t
 	Notation: ``G = (V, E)`` where ``V`` is the set of vertices and ``E`` is the set of edges.
 
 Graphs basics:
-* A graph can also be represented by its adjacency matrix ``A``, where a non-zero value ``a_{ij}`` represents that a connection from node ``ì`` to ``j`` is present (note how this implies that a graph can be directional). 
+* A graph can also be represented by its adjacency matrix ``A``, where a non-zero value ``a_{ij}`` represents that a connection from node ``i`` to ``j`` is present (note how this implies that a graph can be directional). 
 * Edges can also have weights (typically positive weights, altough negative weighted graphs are definined, but handling these is not straightforward)
 
 Some examples:
@@ -384,7 +384,7 @@ end
 # ╔═╡ 1b303b0a-b9e7-453f-b2aa-2e395fd37619
 md"""
 ## Graph metrics
-Graph metrics are value we can compute on node, meso, or graph level that allow us to describe a graph and and its nodes. 
+Graph metrics are values we can compute on node, meso, or graph level that allow us to describe a graph and and its nodes. 
 
 !!! note "Degree"
 	Quantifies the connectivity of individual nodes
@@ -523,14 +523,14 @@ end
 # ╔═╡ 556daa75-47ca-4e71-abac-4610ec9cf8b8
 md"""
 ## Graph models
-There are many approach to building a network, and some of these models are detailed below
+There are many approaches to building a network, and some of these models are detailed below
 !!! tip "Barabási–Albert model"
 	Underlying principle: grow the network through preferential attachment, i.e. a new node always has $m$ neighbors. The neigbors are chosen at random, but proportional to the node's degree
 	```math
 	p_i = \frac{d_i}{\sum_j d_j}
 	```
 
-	It can be show that the degree distribution of such a network follows power law with coeffient ``\alpha = 3``
+	It can be shown that the degree distribution of such a network follows a power law with coeffient ``\alpha = 3``
 
 	This network model has been used to explain real world processes and model the internet.
 
@@ -821,10 +821,10 @@ begin
 end
 
 # ╔═╡ Cell order:
-# ╟─590d74fd-3143-4676-92e8-5e9a24092c29
+# ╠═590d74fd-3143-4676-92e8-5e9a24092c29
 # ╟─c6fed3f2-dd79-4dcc-bce8-5c61b3dc9be4
 # ╠═85e6ee4c-db6e-45dd-a33f-30cd3c9c51e2
-# ╠═1b54ae03-10ec-44c7-bcee-99cceee0b1fc
+# ╟─1b54ae03-10ec-44c7-bcee-99cceee0b1fc
 # ╟─62d79d46-149f-4261-9b5e-44deaee68828
 # ╟─9905781e-6096-4a38-9923-96f027ec04e5
 # ╟─417abab7-568c-466a-a4f0-a69e03da1ace
@@ -832,7 +832,7 @@ end
 # ╟─ed837bfb-169c-4aa6-8521-e471611f87f4
 # ╟─a1f16676-3f6e-4518-bbbd-42b99edc4f70
 # ╠═4a6608bf-bd15-4005-bbc8-488afc65dcee
-# ╟─1f0ea6ed-93f5-49ba-ac1e-b2e38370f3c8
+# ╠═1f0ea6ed-93f5-49ba-ac1e-b2e38370f3c8
 # ╟─42bc0402-149f-11f0-22d3-295f5dfa2ca9
 # ╟─d01f1f2e-af33-417f-b6cc-894d95f56c15
 # ╟─44b81a7f-a7b7-4a2f-8c55-3c495cb5a9cc

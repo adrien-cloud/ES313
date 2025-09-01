@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.20.5
+# v0.20.13
 
 using Markdown
 using InteractiveUtils
@@ -135,7 +135,7 @@ We can distinguish different optimization methods based on the number of derivat
 md"""
 ### Zeroth-order methods
 !!! info "Nelder-Mead simplex algorithm"
-	Nelder-Mead is a derivative-free optimizer of an function in ``n`` variables that keeps a simplex of ``n + 1`` points moving over the objective surface. At each step it ranks the points by their function value, tosses out the worst one, and tries four rules in order:
+	Nelder-Mead is a derivative-free optimizer of a function in ``n`` variables that keeps a simplex of ``n + 1`` points moving over the objective surface. At each step it ranks the points by their function value, tosses out the worst one, and tries four rules in order:
 	- reflection (flip it through the centroid)
 	- expansion (push farther if it improved)
 	- contraction (pull back if it got worse)
@@ -284,7 +284,7 @@ f\left(\vec{p}_{0}\right)\leq f\left(\vec{p}_{1}\right)\leq\cdots\leq f\left(\ve
 
 is assigned to the new vertex.
 
-The [wikipedia page](https://en.wikipedia.org/wiki/Nelder–Mead_method)	also provides a nice overview.
+The [wikipedia page](https://en.wikipedia.org/wiki/Nelder–Mead_method) also provides a nice overview. This [simple video](https://www.youtube.com/watch?v=j2gcuRVbwR0) should also help you grasp a better understanding.
 """
 simplex_updates = PlutoUI.details("Simplex update rules", simplex_updates_content)
 	
@@ -2001,7 +2001,7 @@ end
 md"""
 ## Optimisation of stochastic functions
 !!! info "Optimisation of Stochastic Functions"
-	This refers to optimisation problems where the objective function or constraints involve randomness, such as when \(f(\vec{x})\) is an expected value or involves noisy measurements. Examples include optimising systems under uncertainty (e.g., financial models, machine learning). The goal is to minimise the expected value of the objective function:
+	This refers to optimisation problems where the objective function or constraints involve randomness, such as when ``\left(f(\vec{x})\right)`` is an expected value or involves noisy measurements. Examples include optimising systems under uncertainty (e.g., financial models, machine learning). The goal is to minimise the expected value of the objective function:
 	```math
 	\min_{\vec{x} \in \Omega} \mathbb{E}[f(\vec{x}, \omega)]
 	```
@@ -2517,7 +2517,7 @@ md"""
 # ╟─ddac3c21-7ac9-4295-aeca-a8f460c1f3b1
 # ╠═27e916ea-958c-4df8-b861-b2674798cee9
 # ╟─7f3b10fe-8a8e-49ba-a468-a7fa0cb8c17d
-# ╟─19bc12c5-2d3c-46dc-bb9b-02efe0882295
+# ╠═19bc12c5-2d3c-46dc-bb9b-02efe0882295
 # ╟─3e7cdf87-e064-4746-abd3-8ca6a702a0fe
 # ╟─561c3509-a1d4-43f4-a1ba-a55dbdfb0620
 # ╟─a0c4e07f-504d-426e-8d9f-7a212855888f
@@ -2529,7 +2529,7 @@ md"""
 # ╠═102e0051-dbfb-45e0-871d-db0a0d07abb1
 # ╠═86e70877-1f9c-4634-9f5a-94659bfab519
 # ╟─d4b05c5e-ac08-4a69-b54c-5d825d864bfa
-# ╠═1450d898-5e03-4b54-a1ba-bf3d0f659d25
+# ╟─1450d898-5e03-4b54-a1ba-bf3d0f659d25
 # ╟─9e9a1b5c-a78f-414c-b99e-328e96061542
 # ╟─ff3de131-b74b-4924-aa3f-4954f4b0ecca
 # ╟─110a345d-70dd-40eb-bc1f-1a4d4c9c1926
@@ -2552,11 +2552,11 @@ md"""
 # ╟─1a29e47e-8495-4eca-95ea-971661fc615b
 # ╠═dc757906-2b34-4341-96ad-237a3cfcbfeb
 # ╟─b3fd0b39-ca17-49e5-adec-552a69e386f8
-# ╟─ce5cea4c-17a0-4c12-b2f0-3b2ba705954e
+# ╠═ce5cea4c-17a0-4c12-b2f0-3b2ba705954e
 # ╟─5819029f-796f-43ff-a079-5fa95b3fb011
 # ╟─c0d3cda6-2506-40be-8fa1-51c604d7f548
 # ╟─5ec1071f-cfaf-404a-a468-efd0f76d709e
-# ╟─c06bd9c8-f489-42a4-8a6d-162f4864ba19
+# ╠═c06bd9c8-f489-42a4-8a6d-162f4864ba19
 # ╟─b5c4010d-f373-4a5b-8e14-275fb45c5292
 # ╟─afb498db-dc05-49c3-baad-d4bca7d2cc27
 # ╟─3f38a7f9-d64a-4eca-8205-72cfee88bb4d
