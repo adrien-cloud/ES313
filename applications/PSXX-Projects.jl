@@ -28,6 +28,14 @@ html"""
 
 # ╔═╡ 69a9e78f-1150-4914-9772-d8feedd13fd0
 md"""
+# 2025 Project Ideas
+### Simulation-based improvement of medical examination throughput
+This project aims to model and simulate the medical examination pathway for SAO/DOO candidates to improve efficiency. 
+The current system, using predefined groups and schedules, reportedly experiences variable loads leading to both idle time and congestion. 
+Students will collect operational data, build and validate a simulation model, and experiment with alternative process configurations 
+(e.g., scheduling logic, group sizes) to propose evidence-based recommendations for reducing bottlenecks and improving overall throughput.
+This project will be conducted in collaboration with the staff of MHQA.
+
 # 2024 Project Ideas
 
 ## Overview

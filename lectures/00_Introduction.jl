@@ -186,37 +186,38 @@ md"""
 ## Schedule (TBC)
 
 ### Theory
-- 02/09: Introduction, Cellular Automaton + Game of Life
-- 03/09: Physical Modelling
-- 10/09: Physical Modelling (cont.) + Self-Organization
-- 11/09: Optimisation Techniques
-- 24/09: Linear Programming I
-- 25/10: Linear Programming II
-- 02/10: Applications of Linear Programming
-- 22/10: Introduction to Discrete Event Simulation
-- 23/10: Process Driven DES: SimJulia I
-- 29/10: Process Driven DES II + Applications I
-- 30/10: Applications with SimJulia II
+- 03 Sep
+- 11 Sep
+- 18 Sep
+- 02 Oct
+- 03 Oct
+- 17 Oct
+- 23 Oct
+- 31 Oct
+- 06 Nov
+
 
 ### Practice
-
-- 17/09: Julia refresher + visualisations
-- 18/09: Cellular Automaton + Game of Life
-- 01/10: Physical Modelling + Self-Organization
-- 09/10: Optimisation Techniques I
-- 15/10: Linear Programming
-- 05/11: Discrete Event Simulation
-- 06/11: Process Driven DES: broader scope
-- 12/11: DES Applications
-- 13/11: Performance
+- 04 Sep
+- 12 Sep
+- 19 Sep
+- 25 Sep
+- 26 Sep
+- 10 Oct
+- 16 Oct
+- 24 Oct
+- 30 Oct
+- 07 Nov
+- 13 Nov
+- 14 Nov
 
 
 ### Project timings
 
 - early November: list of projects available
 - no ex cathedra classes, but we are available during contact hours
-- 02/12: mandatory meeting: understanding of the problem
-- 16/12: mandatory meeting: progress
+- 04+05 Dec: mandatory meeting: understanding of the problem
+- 18 + 19 Dec: mandatory meeting: progress
 """
 
 # ╔═╡ cd6436f1-005a-495f-bc2b-fb519d0139dc
