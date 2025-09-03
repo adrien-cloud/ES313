@@ -2,7 +2,7 @@
 #         CHANGE ONLY THIS (IF NEEDED)              #
 # ------------------------------------------------- #
 # set the paths
-const downloadfolder = joinpath(homedir(),"Documents")
+const downloadfolder = joinpath(homedir(),"OneDrive - Belgian Defence\\Documents\\3BA\\Semester 1\\ES313 - Mathematical Modeling and Computer Simulation\\ES313")
 const git_path_windows = "C:\\Program Files\\Git\\bin\\git.exe"
 
 # set the proxy server setting if required (on CDN)
