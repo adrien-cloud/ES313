@@ -26,8 +26,11 @@ begin
 	using StatsPlots
 	using Measures
 	using Dates
-	#using JLD # removed because JLD does not work on CDN
+	using JLD # removed because JLD does not work on CDN
 end
+
+# ╔═╡ da219414-5952-413e-a933-e5e980ed6d5d
+using CSV, DataFrames
 
 # ╔═╡ 9f0fff31-d180-499b-b8a4-27d09f9311c2
 html"""
@@ -245,6 +248,9 @@ let
 	subplots = plot(p1,p2,p3,; layout=L, plotsettings...)
 	# final (global plot)
 	p_final = plot(global_title, subplots, layout=@layout([A{0.01h}; B]) )
+
+	savefig(p_final,"mysubplot.pdf") # saves as pdf
+	savefig(p_final,"mysubplot.png") # saves as png
 end
 
 # ╔═╡ fd0b42d2-ec63-11ea-1c4a-392ddd2b618f
@@ -633,6 +639,51 @@ Perform the following tasks at your own discretion.
 	* ...
 """
 
+# ╔═╡ 42cb902d-be7b-48f5-9cd6-197b0554a46d
+Inflation = CSV.read(joinpath(pwd(),"applications\\data\\Inflation.csv"), DataFrame)
+
+# ╔═╡ 1673b92d-ee1d-4bdd-a174-3b4fd2ccd54b
+let
+	# data generation
+	x = DateTime.(Inflation.Column1, "mm/yyyy")
+	y = Inflation."Indice des prix à la consommation"
+	y = replace.(y, "," => ".")
+	y = replace.(y, "%" => "")
+	y = parse.(Float64,y)
+
+	# subplots
+	plotsettings = Dict(:grid => false, :legend => false)
+	p1 = plot(x,y,title="default layout"; plotsettings...)
+	p2 = plot(x,y,title="modified layout",xrotation=75; plotsettings...)
+
+	# specifying the tick format (cf. documentation)
+	n = 10
+	datexticks = [Dates.value(mom) for mom in x[1:n:end]]
+	datexticklabels = Dates.format.(x,"u yyyy")
+	xticks!(datexticks, datexticklabels, tickfonthalign=:center)
+
+	# final plot
+	plot(p1,p2,size=(800,300),bottom_margin=23mm)
+end
+
+# ╔═╡ d4d83b14-116b-4bbd-825f-2c39fc3a3e96
+
+
+# ╔═╡ 90d00523-551d-4d77-b449-8cf100711419
+
+
+# ╔═╡ d4a3ef21-c0db-4a6b-a573-54ba56dbd048
+
+
+# ╔═╡ ace397ae-3419-45d3-b04e-7e70c890792c
+
+
+# ╔═╡ 9eba54eb-9578-4443-8f5b-cbf54a9ef6e4
+
+
+# ╔═╡ 1e0a1e11-da3f-4fdf-8a9e-3a33cc5cb6d3
+
+
 # ╔═╡ 1c2ac5e2-792f-4368-92dd-1e7dab3dd6ad
 md"""
 ## More info
@@ -652,8 +703,8 @@ If you are very eager, consult this series of [Youtube](https://youtu.be/mZFlLkP
 # ╠═231e63f5-97f9-4b41-8ec4-450f6563ccfc
 # ╟─02c1eefc-ec63-11ea-35cc-83d7cffdc592
 # ╟─5b3d1a0b-c162-4d51-b7c0-7aa46a734b87
-# ╠═5b3db6f3-38be-4be2-9b66-b4ddd6c049bb
-# ╟─a9547c5c-09e4-4336-b3d2-62e93efb15ac
+# ╟─5b3db6f3-38be-4be2-9b66-b4ddd6c049bb
+# ╠═a9547c5c-09e4-4336-b3d2-62e93efb15ac
 # ╟─59cd14ec-bda2-4342-b087-2c4640787c87
 # ╟─650f5346-ec62-11ea-3007-bded07c572b4
 # ╟─b813bcb4-b055-4b9f-b9d7-82464a67b934
@@ -694,4 +745,13 @@ If you are very eager, consult this series of [Youtube](https://youtu.be/mZFlLkP
 # ╠═0bfad805-2483-40d9-bd94-c76b2dcb238a
 # ╠═7a269742-ec66-11ea-1b40-9d8cce31f885
 # ╟─7a111b6a-ec66-11ea-3a5a-cd6de910dd00
+# ╠═da219414-5952-413e-a933-e5e980ed6d5d
+# ╠═42cb902d-be7b-48f5-9cd6-197b0554a46d
+# ╠═1673b92d-ee1d-4bdd-a174-3b4fd2ccd54b
+# ╠═d4d83b14-116b-4bbd-825f-2c39fc3a3e96
+# ╠═90d00523-551d-4d77-b449-8cf100711419
+# ╠═d4a3ef21-c0db-4a6b-a573-54ba56dbd048
+# ╠═ace397ae-3419-45d3-b04e-7e70c890792c
+# ╠═9eba54eb-9578-4443-8f5b-cbf54a9ef6e4
+# ╠═1e0a1e11-da3f-4fdf-8a9e-3a33cc5cb6d3
 # ╟─1c2ac5e2-792f-4368-92dd-1e7dab3dd6ad

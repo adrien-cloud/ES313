@@ -146,6 +146,58 @@ In a last step, the elements of the CA undergo a process that results in the ide
 
 """
 
+# ╔═╡ 5bff7529-53fc-4147-8a27-8126e96192b0
+function C(a,b)
+	if a>b
+		return -1
+	elseif a<b
+		return 1
+	else a==b
+		return 0
+	end
+end
+
+# ╔═╡ 13c2cf6b-186b-46fd-86ce-cb73c45d9b55
+function rule_1_2(matrix,iterations,dist)
+	for iter in iterations
+		M=zeros(size(matrix))
+		for i in 1+dist:size(matrix,1)-dist, j in 1+dist:size(matrix,2)-dist
+			x_0= matrix[i,j]
+			sum=0
+			for x in -dist:dist, y in -dist:dist
+				sum+=C(x_0,matrix[x+i,y+j])
+			end
+			M[i,j]=C(0,sum)
+		end
+		matrix+=M
+	end
+	return matrix
+end
+
+# ╔═╡ 2a6ab6b7-cdaa-4876-91fb-38ee624b0ce7
+function rule_3(matrix,n)
+	matrix=round.(matrix/n)
+end
+
+# ╔═╡ d6e1f8d0-d4cd-41eb-b6e2-97b82be31ed2
+function cellular_automata(mat,iter1,iter2,n)
+	matrix=copy(mat)
+	matrix=rule_1_2(matrix,iter1,1)
+	matrix=rule_1_2(matrix,iter2,2)
+	matrix=rule_3(matrix,n)
+	return matrix
+end
+
+# ╔═╡ 61b33749-4c0c-4fc1-b524-12e9982ee0d1
+let
+	base_array=star_image_array*255
+	output=cellular_automata(base_array,10,10,128)
+	p1 = heatmap(base_array, title="Input")
+	p2 = heatmap(output, title="Output")
+
+	plot(p1, p2, layout=(1,2), size=(1600,800))
+end
+
 # ╔═╡ 7c680a64-e34a-46a2-ba09-26c415eeb57e
 md"""
 !!! tip "Assignment"
@@ -210,6 +262,61 @@ the state of the system is the fraction of sites occupied by trees. This ‘dens
 	* What could you alter to the model to make it more realistic?
 """
 
+# ╔═╡ feee8d62-6f58-4aed-b0b8-65381ba92157
+function evolution_forest!(G,forest,lighting,fires)
+	i=rand(1:length(forest))
+	cartesian = CartesianIndices((1:G[1], 1:G[2]))
+	if forest[i]==0 
+		forest[i] = 1
+	end
+
+	i=rand(1:length(forest))
+	if lighting && forest[i] == 1
+		forest[i] = 2
+	end
+
+	count=0
+	for i in 1:length(forest)
+		if forest[i]==2
+			for direction in [(0,-1),(0,1),(1,0),(-1,0)]
+				try 
+					if forest[cartesian[i]+CartesianIndex(direction)]==1
+						forest[cartesian[i]+CartesianIndex(direction)]=2
+					end
+				catch
+				end
+			end
+			forest[i]=0
+			fires[end] +=1
+			count +=1
+		end
+	end
+	if count == 0 && fires[end] != 0
+		append!(fires,0)
+	end
+end
+
+# ╔═╡ 078aa050-1b1f-4137-8b61-c176aed98f70
+function Forest_fire(G,f,N)
+	forest=zeros(G)
+	fires=[0]
+	for iter in 1:N
+		lighting = iter%f==1
+		evolution_forest!(G,forest,lighting,fires)
+	end
+	return forest,fires
+end
+
+# ╔═╡ 9bdd9873-8bbc-42b2-94c5-88f9b175ba46
+let 
+G = (25,25)
+f = 10
+N = 400
+	forest,fires=Forest_fire(G,f,N)
+	heatmap(forest)
+	fires
+end
+
 # ╔═╡ Cell order:
 # ╟─a94f7808-4801-45a7-a612-d44282258303
 # ╟─dab1dfbe-5e52-11f0-05a0-df522fb51dd7
@@ -219,5 +326,13 @@ the state of the system is the fraction of sites occupied by trees. This ‘dens
 # ╠═8d5d3300-4cad-4adc-b865-1631a20a9ed6
 # ╠═98417593-413e-465c-b46b-99e287fc24d4
 # ╟─7f090510-017b-4f42-b3fa-43c67119f6b5
+# ╠═5bff7529-53fc-4147-8a27-8126e96192b0
+# ╠═13c2cf6b-186b-46fd-86ce-cb73c45d9b55
+# ╠═2a6ab6b7-cdaa-4876-91fb-38ee624b0ce7
+# ╠═d6e1f8d0-d4cd-41eb-b6e2-97b82be31ed2
+# ╠═61b33749-4c0c-4fc1-b524-12e9982ee0d1
 # ╟─7c680a64-e34a-46a2-ba09-26c415eeb57e
 # ╟─99430b49-895c-4b88-8433-f5b6fd885b8e
+# ╠═078aa050-1b1f-4137-8b61-c176aed98f70
+# ╠═feee8d62-6f58-4aed-b0b8-65381ba92157
+# ╠═9bdd9873-8bbc-42b2-94c5-88f9b175ba46

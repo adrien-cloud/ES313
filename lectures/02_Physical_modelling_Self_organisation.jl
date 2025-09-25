@@ -1079,7 +1079,7 @@ function visualizepileonekind(pile, dim, val)
 end
 
 # ╔═╡ 36bd6862-32d7-4ef8-99ab-05d547f5db3d
-visualizepileonekind(pile131.array, 4, 0)
+visualizepileonekind(pile131.array, 4, 1)
 
 # ╔═╡ a40ead54-317e-441c-9728-88da17062789
 md"""Visually, these patterns resemble fractals, but looks can be deceiving. To be more confident, we can estimate the fractal dimension for each pattern using box counting:
