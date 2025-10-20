@@ -262,56 +262,66 @@ the state of the system is the fraction of sites occupied by trees. This ‘dens
 	* What could you alter to the model to make it more realistic?
 """
 
-# ╔═╡ feee8d62-6f58-4aed-b0b8-65381ba92157
-function evolution_forest!(G,forest,lighting,fires)
-	i=rand(1:length(forest))
-	cartesian = CartesianIndices((1:G[1], 1:G[2]))
-	if forest[i]==0 
-		forest[i] = 1
-	end
+# ╔═╡ cda9d4f8-7aa4-421d-bd5e-f0a6883484af
+function evolution_forest!(G::Tuple{Int,Int}, forest::Matrix{Int8}, lighting::Bool,fires::Vector{Int}, queue_fire::Vector{CartesianIndex{2}})
 
-	i=rand(1:length(forest))
-	if lighting && forest[i] == 1
-		forest[i] = 2
-	end
+    i = rand(1:length(forest))
+    if forest[i] == 0
+        forest[i] = 1
+    end
 
-	count=0
-	for i in 1:length(forest)
-		if forest[i]==2
-			for direction in [(0,-1),(0,1),(1,0),(-1,0)]
-				try 
-					if forest[cartesian[i]+CartesianIndex(direction)]==1
-						forest[cartesian[i]+CartesianIndex(direction)]=2
-					end
-				catch
-				end
-			end
-			forest[i]=0
-			fires[end] +=1
-			count +=1
-		end
-	end
-	if count == 0 && fires[end] != 0
-		append!(fires,0)
-	end
+    i = rand(1:length(forest))
+    if lighting && forest[i] == 1
+        forest[i] = 2
+        pos = CartesianIndices(forest)[i]
+        push!(queue_fire, pos)
+    end
+
+    count = 0
+    new_queue = Vector{CartesianIndex{2}}()
+
+    for pos in queue_fire
+        I, J = Tuple(pos)
+        for (di, dj) in ((0,-1), (0,1), (1,0), (-1,0))
+            ni, nj = I + di, J + dj
+            if 1 ≤ ni ≤ G[1] && 1 ≤ nj ≤ G[2] && forest[ni, nj] == 1
+                forest[ni, nj] = 2
+                newpos = CartesianIndex(ni, nj)
+                push!(new_queue, newpos)
+            end
+        end
+        forest[I, J] = 0
+        fires[end] += 1
+        count += 1
+    end
+
+    empty!(queue_fire)
+    append!(queue_fire, new_queue)
+
+    if count == 0 && fires[end] != 0
+        push!(fires, 0)
+    end
 end
 
-# ╔═╡ 078aa050-1b1f-4137-8b61-c176aed98f70
-function Forest_fire(G,f,N)
-	forest=zeros(G)
-	fires=[0]
-	for iter in 1:N
-		lighting = iter%f==1
-		evolution_forest!(G,forest,lighting,fires)
-	end
-	return forest,fires
+# ╔═╡ 9ae23657-0329-47d6-b296-05c11c8344c5
+function Forest_fire(G::Tuple{Int,Int}, f::Int, N::Int)
+    forest = fill(Int8(0), G)
+    fires = [0]
+    queue_fire = Vector{CartesianIndex{2}}()
+
+    for iter in 1:N
+        lighting = iter % f == 1
+        evolution_forest!(G, forest, lighting, fires, queue_fire)
+    end
+
+    return forest, fires
 end
 
 # ╔═╡ 9bdd9873-8bbc-42b2-94c5-88f9b175ba46
 let 
 G = (128,128)
 f = 125
-N = 1e7
+N = 10^8
 	forest,fires=Forest_fire(G,f,N)
 	heatmap(forest)
 	histogram(fires)
@@ -326,13 +336,13 @@ end
 # ╠═8d5d3300-4cad-4adc-b865-1631a20a9ed6
 # ╠═98417593-413e-465c-b46b-99e287fc24d4
 # ╟─7f090510-017b-4f42-b3fa-43c67119f6b5
-# ╠═5bff7529-53fc-4147-8a27-8126e96192b0
-# ╠═13c2cf6b-186b-46fd-86ce-cb73c45d9b55
-# ╠═2a6ab6b7-cdaa-4876-91fb-38ee624b0ce7
-# ╠═d6e1f8d0-d4cd-41eb-b6e2-97b82be31ed2
+# ╟─5bff7529-53fc-4147-8a27-8126e96192b0
+# ╟─13c2cf6b-186b-46fd-86ce-cb73c45d9b55
+# ╟─2a6ab6b7-cdaa-4876-91fb-38ee624b0ce7
+# ╟─d6e1f8d0-d4cd-41eb-b6e2-97b82be31ed2
 # ╠═61b33749-4c0c-4fc1-b524-12e9982ee0d1
 # ╟─7c680a64-e34a-46a2-ba09-26c415eeb57e
 # ╟─99430b49-895c-4b88-8433-f5b6fd885b8e
-# ╠═078aa050-1b1f-4137-8b61-c176aed98f70
-# ╠═feee8d62-6f58-4aed-b0b8-65381ba92157
+# ╠═cda9d4f8-7aa4-421d-bd5e-f0a6883484af
+# ╠═9ae23657-0329-47d6-b296-05c11c8344c5
 # ╠═9bdd9873-8bbc-42b2-94c5-88f9b175ba46

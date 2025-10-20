@@ -549,6 +549,24 @@ From the previous results, you might not be satisfied, so we propose an **additi
 		return h/2 * sum(0.5 .* ((u[2:end] - b[2:end]).^2 + (u[1:end-1] - b[1:end-1]).^2)) + γ*h * sum( sqrt.(((u[2:end] - u[1:end-1]) ./ h).^2 .+ ϵ))
 	end
 
+# ╔═╡ eb85e2d9-68f6-4d84-b804-7ef462a4d913
+let
+	# Illustration
+	h= 0.0125
+	β = 1e-3
+	ϵ = 1e-6
+	γ = 1e-2
+	t = range(0, 1, step=h)
+	s = gensample.(t, 0.01)
+	plot(t, bₚ.(t), label="ground thruth")
+	scatter!(t, s, label="sample", legendposition=:topleft)
+
+	# Optimisation trial
+	res = optimize(u -> ϕ₂(u, s, h, γ, ϵ), s)
+	res.minimizer
+	plot!(t, res.minimizer, marker=:circle, label="fit")
+end
+
 # ╔═╡ 8da27e06-3798-423d-b882-b8c98eb36f6a
 begin
 	# signal generation
@@ -557,6 +575,22 @@ begin
 	noise = 0.1
 	T = range(0,1, step=h)
 	B = bₚ.(T) + rand(Normal(),length(T)) * mean(bₚ.(T)) * noise
+end
+
+# ╔═╡ a562aff8-a810-4535-8580-21695ae4bdae
+let
+	p = plot(range(0, 1, step=0.01), bₚ.(range(0, 1, step=0.01)), label="ground truth")
+	# concept solution
+	ϵ = 1e-6
+	h = 0.0125
+		for (γ, noise) in [(1e-2, 0.01); (1e-2, 0.1); (1e-3, 0.01); (1e-3, 0.1)]
+			t = range(0, 1, step=h)
+			s = gensample.(t, noise)
+			fit = optimize(u -> ϕ₂(u, s, h, γ, ϵ), s).minimizer
+			plot!(t, fit, label="fit (β = $(β), noise = $(noise))")
+
+		end
+	p
 end
 
 # ╔═╡ 8e3a7568-ae6c-459d-9d95-4f80ca79accf
@@ -596,6 +630,24 @@ md"""
 !!! tip "Alternative?"
 	How could you allow (limited) disrespect of the constraints?
 """
+
+# ╔═╡ e3665a99-84a9-4ff4-8e81-8f484ea3c9f5
+optimize(flower,[1.;1.]).minimizer
+
+# ╔═╡ e3cd63dc-0c80-41bb-8eb0-ed170474e32e
+let 
+	model_flower = Model(Ipopt.Optimizer)
+	@variable(model_flower, x[1:2])
+	#sqrt(x[1]^2)+x[2]^2) + sin(4*atan(x[2], x[1]))
+	set_start_value(x[1],-3)
+	set_start_value(x[2],3)
+	@NLobjective(model_flower, Min, sqrt(x[1]^2+x[2]^2) + sin(4*atan(x[2], x[1])))
+	@NLconstraint(model_flower, x[1] ^2 + x[2]^2 -2 >= 0)
+	optimize!(model_flower)
+	println(termination_status(model_flower))
+	println("minimum: $(objective_value(model_flower))")
+	value.(x)
+end
 
 # ╔═╡ f7478cd0-7558-4c71-8933-2003863eb1bd
 let
@@ -857,7 +909,7 @@ $(PlutoUI.LocalResource("./applications/img/networkcost.png"))
 # given set-up
 begin
 	# Topology and maximum flow matrix
-	W = [0 13 6 10 0 0 0;
+	 W = [0 13 6 10 0 0 0;
 		 0 0  0  9 5 7 0;
 		 0 0  0  8 0 0 0;
 		 0 0  0  0 3 0 12;
@@ -883,6 +935,23 @@ begin
 			 0 0    0    0   0   0   1.8;
 			 0 0    0    0   0   0   0;
 	];
+end
+
+# ╔═╡ 1ce53091-c8ae-4d61-ba6d-8cf9c0d52504
+let
+	model = Model(GLPK.Optimizer)
+	@variable(model, FLOW[1:7,1:7] >= 0, Int)
+	@constraint(model,  FLOW .<= W)
+	for k in 2:6
+	    @constraint(model, sum(FLOW[i, k] for i in 1:7) == sum(FLOW[k, j] for j in 1:7))
+	end
+	@objective(model, Max, sum(FLOW[1, j] for j in 1:7))
+	optimize!(model)
+	
+	println("Termination status: ", termination_status(model))
+	println("Maximum flow value: ", objective_value(model))
+	println("Flow matrix:")
+	println(round.(value.(FLOW), digits=2))
 end
 
 # ╔═╡ 1b2ff048-e4a5-4fc6-a7cb-f18430a18ce1
@@ -997,12 +1066,16 @@ This Julia script models and solves the Capacitated Vehicle Routing Problem (CVR
 # ╠═841fcd56-1fee-495c-ae4e-47a3ad36b953
 # ╠═2a1e165c-b26a-4962-b243-184d83fa00da
 # ╟─eac72e64-8584-4588-8b0e-03ddb04956f8
+# ╠═eb85e2d9-68f6-4d84-b804-7ef462a4d913
+# ╠═a562aff8-a810-4535-8580-21695ae4bdae
 # ╠═128d37f1-f4b0-44f8-8a47-5c75e0c44875
-# ╠═8da27e06-3798-423d-b882-b8c98eb36f6a
+# ╟─8da27e06-3798-423d-b882-b8c98eb36f6a
 # ╟─8e3a7568-ae6c-459d-9d95-4f80ca79accf
 # ╟─580b7d3b-78c3-4eee-889a-884fc732515a
 # ╠═117d36ab-a6ba-40e0-b5fc-c0209acbfbfd
 # ╟─ffa3233d-a17c-4600-8fa1-8001e07fe600
+# ╠═e3665a99-84a9-4ff4-8e81-8f484ea3c9f5
+# ╟─e3cd63dc-0c80-41bb-8eb0-ed170474e32e
 # ╠═f7478cd0-7558-4c71-8933-2003863eb1bd
 # ╟─fea692ef-2192-40a5-91ad-c3aad9a12676
 # ╟─c76417ca-f3ba-49bd-a16e-6246c396d458
@@ -1023,6 +1096,7 @@ This Julia script models and solves the Capacitated Vehicle Routing Problem (CVR
 # ╟─fc31d991-4683-4d49-bb83-69db0cb4fb76
 # ╟─376b3f70-013a-4931-9284-fda3ceb88683
 # ╠═1ac40672-daf3-49e2-b4a4-bf4b9960dcb1
+# ╠═1ce53091-c8ae-4d61-ba6d-8cf9c0d52504
 # ╟─1b2ff048-e4a5-4fc6-a7cb-f18430a18ce1
 # ╠═a9e7cff7-0ca2-4b4a-824b-17af4065c610
 # ╟─43ba9db1-a10a-4bf8-b2ad-30e97da6cc46

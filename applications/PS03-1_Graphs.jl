@@ -20,6 +20,7 @@ end
 # ╔═╡ ea86ea4b-4c53-4103-a4cc-18c6a99659ce
 # Dependencies
 begin
+	using GraphPlot
 	using Graphs
 	using SimpleWeightedGraphs
 	using GraphPlot
@@ -80,31 +81,80 @@ One of the simplest graph models is the Erdös-Rényi random graph model, denote
 The Erdös-Rényi random graph  exhibits a phase transition. Let us consider the size (i.e., number of nodes) of the largest connected component in the network as a function of the mean degree ⟨k⟩. When ⟨k⟩ = 0, the network is trivially composed of N disconnected nodes. In the other extreme of ⟨k⟩ = N − 1, each node pair is adjacent such that the network is trivially connected. Between the two extremes, the network does not change smoothly in terms of the largest component size. Instead, a giant component, i.e., a component whose size is the largest and proportional to N, suddenly appears as ⟨k⟩ increases, marking a phase transition. The goal of this application is to determine this value by simulation.
 
 ## Problem solution
-Resolve the problem and find the phase transition. You can do this by implementing all characteristics yourself (as the largest connected component and the mean degree can be easily computed) or by using the [Graphs.jl](https://juliagraphs.org/Graphs.jl/v1.5/) package.
+Resolve the problem and find the phase transition.
 !!! tip "Subproblems"
-	1. Generating a random graph.
-		* Create a network of `N` nodes.
-		* For each pair of distinct nodes `(i,j)`, add an unirected edge with probability `p`.
-		* Ensure no self-loops are present.
-		* Store the graph efficiently as an adjacency matrix.
-	2. Determine the average degree
-		* Compute the degree `k_i` for each node.
-		* Compute the average degree.
-	3. Identifying the size of the largest connected component.
-		* Find all connected components in the graph using an algorithm such as breadth-first search (BFS) or depth-first search (DFS).
-		* For each component, count the number of nodes it contains.
-		* Identify the largest connected component and record its size.
-	4. Visualising the result.
-		* Plot the size of the largest connected component as a function of ⟨k⟩.
-		* Use multiple simulations per value of `p` to ease out the stochastic effects.
-		* Visualize the emergence of the giant component and the phase transition.
-	5. Determine the critical value
-		* From the plot, identify the critical average degree `⟨k⟩_c` where the largest component rapidly grows from very small to a size comparable to `N`.
+	* generating a random graph
+	* determine the average degree
+	* identifying the size of the largest connected component
+	* visualising the result
+	* determine the critical value
 
 """
+
+# ╔═╡ b4e3bf0f-3c08-4146-94de-4d5ea5d69070
+function average_degree(g)
+    return mean(degree(g, v) for v in vertices(g))
+end
+
+# ╔═╡ 8015a009-c9f9-44f4-a043-2d7624805baa
+function largest_component_size(g)
+    comps = connected_components(g) 
+    return maximum(length.(comps))
+end
+
+# ╔═╡ b7852b1a-3ffe-47ae-8e8d-b1e05329ae98
+begin	
+	function simulate(N::Int; ps=0.0:0.02:0.2, trials=20)
+	    avg_ks = Float64[]
+	    largest_fracs = Float64[]
+	    
+	    for p in ps
+	        ks = Float64[]
+	        lcs = Float64[]
+	        for _ in 1:trials
+	            g = erdos_renyi(N, p)
+	            push!(ks, average_degree(g))
+	            push!(lcs, largest_component_size(g)/N)
+	        end
+	        push!(avg_ks, mean(ks))
+	        push!(largest_fracs, mean(lcs))
+	    end
+	    
+	    return avg_ks, largest_fracs
+	end
+	
+	N = 500
+	ps = 0.0:0.0001:0.015
+	avg_ks, largest_fracs = simulate(N; ps=ps, trials=10)
+	
+	plot(avg_ks, largest_fracs,
+	     xlabel="⟨k⟩ (average degree)",
+	     ylabel="Largest component size / N",
+	     lw=2, marker=:o,
+	     title="Emergence of the Giant Component")
+	
+end
+
+# ╔═╡ a56e62ff-500d-4d3a-9ece-270fabf33870
+begin
+	"Estimate critical ⟨k⟩ as the point of steepest growth."
+	function estimate_kc(avg_ks, largest_fracs)
+	    diffs = diff(largest_fracs)
+	    idx = argmax(diffs)
+	    return avg_ks[idx]
+	end
+	
+	kc_est = estimate_kc(avg_ks, largest_fracs)
+	println("Estimated critical ⟨k⟩ ≈ ", kc_est)
+	
+end
 
 # ╔═╡ Cell order:
 # ╟─16a75573-704e-4d5f-864b-5d5533c056d4
 # ╟─08173290-6242-11f0-004a-97a043c49b5d
 # ╠═ea86ea4b-4c53-4103-a4cc-18c6a99659ce
 # ╟─8fc1c404-1b58-43e6-b5d2-01e831c16952
+# ╠═b4e3bf0f-3c08-4146-94de-4d5ea5d69070
+# ╠═8015a009-c9f9-44f4-a043-2d7624805baa
+# ╠═b7852b1a-3ffe-47ae-8e8d-b1e05329ae98
+# ╟─a56e62ff-500d-4d3a-9ece-270fabf33870

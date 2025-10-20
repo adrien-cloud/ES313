@@ -24,6 +24,7 @@ begin
 	using DataFrames
 	using CairoMakie
 	using OSMMakie
+	using LightOSM
 end
 
 # ╔═╡ 5840a5de-1619-403a-be7f-464b2ccbfb9f
@@ -172,6 +173,81 @@ Given this framework, implement following scenario:
 	Now reinstall the packages using Pkg.add('Makie'), ... and (if necessary) Pkg.build('Makie')
 """
 
+# ╔═╡ f5eec9ab-1d49-4d38-a17e-cda4df8b1508
+LightOSM.download_osm_network(:bbox,minlat=50.82751,minlon=4.36123,maxlon=4.42371,maxlat=50.85603,save_to_file_location="./map.json")
+
+# ╔═╡ f9d659b5-d61b-4fbc-9612-4f184ca7f864
+@agent struct Zombie(OSMAgent)
+    infected::Bool
+    speed::Float64
+end
+
+# ╔═╡ f420b991-9368-472a-a922-60610af1bbac
+function zombie_step!(agent, model)
+    # Each agent will progress along their route
+    # Keep track of distance left to move this step, in case the agent reaches its
+    # destination early
+    distance_left = move_along_route!(agent, model, agent.speed * model.dt)
+
+    if is_stationary(agent, model) && rand(abmrng(model)) < 0.1
+        # When stationary, give the agent a 10% chance of going somewhere else
+        OSM.plan_random_route!(agent, model; limit = 50)
+        # Start on new route, moving the remaining distance
+        move_along_route!(agent, model, distance_left)
+    end
+
+    if agent.infected
+        # Agents will be infected if they get too close (within 10m) to a zombie.
+        map(i -> model[i].infected = true, nearby_ids(agent, model, 0.01))
+    end
+    return
+end
+
+# ╔═╡ 4ac75e26-cb25-4c52-ad67-2d828026c5b5
+function initialise_zombies(; seed = 1234)
+    map_path = "./map.json"
+    properties = Dict(:dt => 1 / 60)
+    model = StandardABM(
+        Zombie,
+        OpenStreetMapSpace(map_path);
+        agent_step! = zombie_step!,
+        properties = properties,
+        rng = Random.MersenneTwister(seed)
+    )
+
+    for id in 1:100
+        start = random_position(model) # At an intersection
+        speed = rand(abmrng(model)) * 5.0 + 2.0 # Random speed from 2-7kmph
+        human = add_agent!(start, Zombie, model, false, speed)
+        OSM.plan_random_route!(human, model; limit = 50) # try 50 times to find a random route
+    end
+    # We'll add patient zero at a specific (longitude, latitude)
+    start = OSM.nearest_road((9.9351811, 51.5328328), model)
+    finish = OSM.nearest_node((9.945125635913511, 51.530876112711745), model)
+
+    speed = rand(abmrng(model)) * 5.0 + 2.0 # Random speed from 2-7kmph
+    zombie = add_agent!(start, model, true, speed)
+    plan_route!(zombie, finish, model)
+    # This function call creates & adds an agent, see `add_agent!`
+    return model
+end
+
+# ╔═╡ 5f5a1b06-9d15-4bde-a29a-a9ec31e5c70f
+begin
+	zombie_color(agent) = agent.infected ? :green : :black
+	zombie_size(agent) = agent.infected ? 10 : 8
+	zombies = initialise_zombies()
+	
+	
+end
+
+# ╔═╡ 6f6203ff-88ef-42ca-8236-44d9b62a17ac
+begin
+	zombie_step!(Zombie, zombies)
+	fig, ax, abmobs =abmplot(zombies; agent_color = zombie_color, agent_size = zombie_size)
+	fig
+end
+
 # ╔═╡ Cell order:
 # ╟─55810ad4-430c-4a01-823c-13fec55dba0f
 # ╟─f85fbaa0-661c-11f0-3381-7f4e2e5abf87
@@ -179,3 +255,9 @@ Given this framework, implement following scenario:
 # ╟─9a8f734d-5225-4dda-a44e-96960418ac73
 # ╠═5840a5de-1619-403a-be7f-464b2ccbfb9f
 # ╟─618fa988-f5d0-4cf0-8068-82d4b6cc920a
+# ╠═f5eec9ab-1d49-4d38-a17e-cda4df8b1508
+# ╠═f9d659b5-d61b-4fbc-9612-4f184ca7f864
+# ╠═4ac75e26-cb25-4c52-ad67-2d828026c5b5
+# ╠═f420b991-9368-472a-a922-60610af1bbac
+# ╠═5f5a1b06-9d15-4bde-a29a-a9ec31e5c70f
+# ╠═6f6203ff-88ef-42ca-8236-44d9b62a17ac

@@ -37,6 +37,9 @@ using Plots    # for random related activities
 using Printf   # for fancy text rendering
 end
 
+# ╔═╡ 00354af8-4b7a-4173-a01c-bc5febbb3b5c
+
+
 # ╔═╡ a62f8ca0-4680-4a73-8333-8c56b385839f
 html"""
  <! -- this adapts the width of the cells to display its being used on -->
@@ -1164,7 +1167,8 @@ begin
 end
 
 # ╔═╡ Cell order:
-# ╠═1d6260d4-f663-11ea-03da-efe9ed63f9bd
+# ╟─00354af8-4b7a-4173-a01c-bc5febbb3b5c
+# ╟─1d6260d4-f663-11ea-03da-efe9ed63f9bd
 # ╟─a62f8ca0-4680-4a73-8333-8c56b385839f
 # ╠═f231418d-4bbc-46a1-bb65-5b1d14141b31
 # ╟─e6ff0e98-f662-11ea-03a7-e3d09e6272a6
