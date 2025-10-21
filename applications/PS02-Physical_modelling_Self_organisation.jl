@@ -321,10 +321,11 @@ end
 let 
 G = (128,128)
 f = 125
-N = 10^8
+N = 10^7
 	forest,fires=Forest_fire(G,f,N)
-	heatmap(forest)
-	histogram(fires)
+	fig1=heatmap(forest)
+	fig2=histogram(fires)
+	plot(fig1, fig2, layout=(1, 2), size=(1200, 400))
 end
 
 # ╔═╡ Cell order:
