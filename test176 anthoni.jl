@@ -110,11 +110,28 @@ md"""
 
 
 
+# ╔═╡ 9ba5aee9-553c-49ad-a1ac-453bd95dd176
+# ╠═╡ disabled = true
+#=╠═╡
+
+begin
+col = ceil(Int, node_number / rows)
+row = node_number - (col - 1) * rows
+end 
+
+  ╠═╡ =#
+
 # ╔═╡ 9f17f60f-b6ee-45af-a679-a94d7345fd73
 md"""
 ### van rij en kolom nummer naar node nummer
 """
 
+
+# ╔═╡ 0ace9b4d-cf09-4d9b-8467-7a520a6eb8a0
+# ╠═╡ disabled = true
+#=╠═╡
+node_number = (col - 1) * rows + row
+  ╠═╡ =#
 
 # ╔═╡ 48bb44ce-21a9-498d-b217-6ed58b0457ae
 md"""
@@ -195,122 +212,38 @@ function prey_neighbors(world::World, row, col)
     [c for c in coords if world.grid[c...] isa Prey]
 end
 
-# ╔═╡ 6cdc7e72-37ca-4c30-9bdf-0060240bf313
+# ╔═╡ afdd4306-11a8-444e-a640-5b886fce5ee2
 # ╠═╡ disabled = true
 #=╠═╡
-function step!(world::World,x::Int,y::Int;energy_loss=1.0, energy_gain=5.0)
-	nrows, ncols = world.nrows, world.ncols
+function move_prey!(world::World)
+    nrows, ncols = world.nrows, world.ncols
+    newgrid = copy(world.grid)
 
-	prey_neigh = [c for c in prey_neighbors(world, y, x)]
-	free_neigh = [c for c in empty_neighbors(world, y, x)]
-
-	if world.grid[y,x] isa Predator
-
-		if !isempty(prey_neigh)
-			
-		
-    	animal = world.grid[y, x]::Predator
-        p = Predator(animal.age + 1, animal.reproduce_time, animal.energy- energy_loss)
-
-		
-
-		
-		
-	
-
-  ╠═╡ =#
-
-# ╔═╡ 14935a53-8b19-468e-9909-054dd179b2b0
-function world_to_matrix(world::World)
-    mat = zeros(Int, world.nrows, world.ncols)
-    for i in 1:world.nrows, j in 1:world.ncols
-        if world.grid[i,j] isa Prey
-            mat[i,j] = 1
-        elseif world.grid[i,j] isa Predator
-            mat[i,j] = 2
-        end
+    for y in 1:nrows, x in 1:ncols
+        animal = world.grid[y, x]
+        if animal isa Prey # isa gebruiken om type van het object te controlleren
+            a = animal::Prey
+            a = Prey(a.age + 1, a.reproduce_time)
+            free = empty_neighbors(world, y, x)
+           
+			if !isempty(free)
+			    newpos = rand(free)
+			    if a.age >= a.reproduce_time
+			        # voortplanting
+			        newgrid[newpos...] = Prey(0, a.reproduce_time)
+			        newgrid[y, x] = Prey(0, a.reproduce_time)
+			    else
+			        newgrid[newpos...] = a
+			        newgrid[y, x] = nothing
+			    end
+			else
+			    newgrid[y, x] = a  # blijf staan
+			end
+		end 
     end
-    return mat
+    world.grid[:,:] = newgrid[:,:]
+	#return world.grid
 end
-
-
-# ╔═╡ 2e289d81-7698-429b-85cf-37631ca6fc8b
-#=╠═╡
-function simulate!(world::World, nsteps::Int)
-	
-	nrows, ncols = world.nrows, world.ncols
-	geschiedenis = zeros(Int,nsteps+1, nrows, ncols)
-
-	geschiedenis[1,:,:] = world_to_matrix(world)
-	
-    for step in 2:nsteps+1
-        move_predator!(world)
-        move_prey!(world)
-		geschiedenis[step,:,:] = world_to_matrix(world)
-    end
-
-	return geschiedenis
-end
-
-  ╠═╡ =#
-
-# ╔═╡ 90a58c5a-6523-41a0-9485-987486276feb
-world_test = create_world(10,10;prey_density=0.2, predator_density=0.05)
-
-# ╔═╡ 7eadfc48-eb65-4132-b70b-72eb43a82786
-#=╠═╡
-geschiedenis1 = simulate!(world_test, 50);
-  ╠═╡ =#
-
-# ╔═╡ 42f4538f-b72f-4c7a-b5af-0d9a148027b6
-@bind tijd_balkje Slider(1:51, show_value=true)
-
-# ╔═╡ 838a74e1-aa98-4efc-8982-566cc7bb6de5
-#=╠═╡
-heatmap(
-        reverse(geschiedenis1[tijd_balkje,:,:],dims=1),
-        c = [:white, :brown, :black],  # 0=leeg, 1=boom, 2=brand
-        clims = (0, 2),              # kleurenschaal fixeren
-        title = "Lotka Volterra",
-        size = (500,500),
-        axis = nothing,              # geen assen
-        aspect_ratio = 1,            # vierkant beeld
-        framestyle = :none,          # geen randlijnen
-        legend = false  )             # geen kleurenbalk
-
-  ╠═╡ =#
-
-# ╔═╡ ef03fc3d-ce9c-4d0b-971d-4d4fdd2abce9
-#=╠═╡
-function plot_aantal(nrows, ncols, nsteps::Int)
-
-	world_test = create_world(nrows,ncols;prey_density=0.1, predator_density=0.05)
-	geschiedenis = simulate!(world_test, nsteps)
-
-	
-	prooi = zeros(nsteps+1)
-	jager = zeros(nsteps+1)
-
-	for i in 1:nsteps+1
-
-		prooi[i] = sum(geschiedenis[i,:,:].== 1)
-		jager[i] = sum(geschiedenis[i,:,:].==2)
-
-	end 
-
-	tijd = 1:nsteps+1;
-
-	plot(tijd, prooi, label="prooi", lw=2, color=:brown)
-	plot!(tijd, jager, label="jager", lw=2, color=:black)
-	xlabel!("jaren")
-	ylabel!("Aantal dieren")
-	title!("Lotka-Volterra")
-end 
-  ╠═╡ =#
-
-# ╔═╡ 53e9ba61-4c74-4558-ad99-99cd8135a5a3
-#=╠═╡
-plot_aantal(10,10,50)
   ╠═╡ =#
 
 # ╔═╡ 5bf31c14-28dc-4edd-892b-e5c4fb9d14c9
@@ -373,53 +306,7 @@ end
 
   ╠═╡ =#
 
-# ╔═╡ 9ba5aee9-553c-49ad-a1ac-453bd95dd176
-# ╠═╡ disabled = true
-#=╠═╡
-
-begin
-col = ceil(Int, node_number / rows)
-row = node_number - (col - 1) * rows
-end 
-
-  ╠═╡ =#
-
-# ╔═╡ afdd4306-11a8-444e-a640-5b886fce5ee2
-# ╠═╡ disabled = true
-#=╠═╡
-function move_prey!(world::World)
-    nrows, ncols = world.nrows, world.ncols
-    newgrid = copy(world.grid)
-
-    for y in 1:nrows, x in 1:ncols
-        animal = world.grid[y, x]
-        if animal isa Prey # isa gebruiken om type van het object te controlleren
-            a = animal::Prey
-            a = Prey(a.age + 1, a.reproduce_time)
-            free = empty_neighbors(world, y, x)
-           
-			if !isempty(free)
-			    newpos = rand(free)
-			    if a.age >= a.reproduce_time
-			        # voortplanting
-			        newgrid[newpos...] = Prey(0, a.reproduce_time)
-			        newgrid[y, x] = Prey(0, a.reproduce_time)
-			    else
-			        newgrid[newpos...] = a
-			        newgrid[y, x] = nothing
-			    end
-			else
-			    newgrid[y, x] = a  # blijf staan
-			end
-		end 
-    end
-    world.grid[:,:] = newgrid[:,:]
-	#return world.grid
-end
-  ╠═╡ =#
-
 # ╔═╡ 66cdb728-98ac-48c8-b820-027d7b212992
-#=╠═╡
 function move_prey!(world::World)
     nrows, ncols = world.nrows, world.ncols
     newgrid = copy(world.grid)
@@ -465,10 +352,8 @@ function move_prey!(world::World)
     world.grid[:,:] = newgrid[:,:]
 end
 
-  ╠═╡ =#
 
 # ╔═╡ 1c1caf15-80d6-41b9-8c2e-78363e4af578
-#=╠═╡
 function move_predator!(world::World; energy_loss=1.0, energy_gain=3.0)
     nrows, ncols = world.nrows, world.ncols
     newgrid = copy(world.grid)
@@ -550,13 +435,114 @@ function move_predator!(world::World; energy_loss=1.0, energy_gain=3.0)
     world.grid[:,:] = newgrid[:,:]
 end
 
-  ╠═╡ =#
 
-# ╔═╡ 0ace9b4d-cf09-4d9b-8467-7a520a6eb8a0
+# ╔═╡ 6cdc7e72-37ca-4c30-9bdf-0060240bf313
 # ╠═╡ disabled = true
 #=╠═╡
-node_number = (col - 1) * rows + row
+function step!(world::World,x::Int,y::Int;energy_loss=1.0, energy_gain=5.0)
+	nrows, ncols = world.nrows, world.ncols
+
+	prey_neigh = [c for c in prey_neighbors(world, y, x)]
+	free_neigh = [c for c in empty_neighbors(world, y, x)]
+
+	if world.grid[y,x] isa Predator
+
+		if !isempty(prey_neigh)
+			
+		
+    	animal = world.grid[y, x]::Predator
+        p = Predator(animal.age + 1, animal.reproduce_time, animal.energy- energy_loss)
+
+		
+
+		
+		
+	
+
   ╠═╡ =#
+
+# ╔═╡ 14935a53-8b19-468e-9909-054dd179b2b0
+function world_to_matrix(world::World)
+    mat = zeros(Int, world.nrows, world.ncols)
+    for i in 1:world.nrows, j in 1:world.ncols
+        if world.grid[i,j] isa Prey
+            mat[i,j] = 1
+        elseif world.grid[i,j] isa Predator
+            mat[i,j] = 2
+        end
+    end
+    return mat
+end
+
+
+# ╔═╡ 2e289d81-7698-429b-85cf-37631ca6fc8b
+function simulate!(world::World, nsteps::Int)
+	
+	nrows, ncols = world.nrows, world.ncols
+	geschiedenis = zeros(Int,nsteps+1, nrows, ncols)
+
+	geschiedenis[1,:,:] = world_to_matrix(world)
+	
+    for step in 2:nsteps+1
+        move_predator!(world)
+        move_prey!(world)
+		geschiedenis[step,:,:] = world_to_matrix(world)
+    end
+
+	return geschiedenis
+end
+
+
+# ╔═╡ 90a58c5a-6523-41a0-9485-987486276feb
+world_test = create_world(10,10;prey_density=0.2, predator_density=0.05)
+
+# ╔═╡ 7eadfc48-eb65-4132-b70b-72eb43a82786
+geschiedenis1 = simulate!(world_test, 50);
+
+# ╔═╡ 42f4538f-b72f-4c7a-b5af-0d9a148027b6
+@bind tijd_balkje Slider(1:51, show_value=true)
+
+# ╔═╡ 838a74e1-aa98-4efc-8982-566cc7bb6de5
+heatmap(
+        reverse(geschiedenis1[tijd_balkje,:,:],dims=1),
+        c = [:white, :brown, :black],  # 0=leeg, 1=boom, 2=brand
+        clims = (0, 2),              # kleurenschaal fixeren
+        title = "Lotka Volterra",
+        size = (500,500),
+        axis = nothing,              # geen assen
+        aspect_ratio = 1,            # vierkant beeld
+        framestyle = :none,          # geen randlijnen
+        legend = false  )             # geen kleurenbalk
+
+
+# ╔═╡ ef03fc3d-ce9c-4d0b-971d-4d4fdd2abce9
+function plot_aantal(nrows, ncols, nsteps::Int)
+
+	world_test = create_world(nrows,ncols;prey_density=0.1, predator_density=0.05)
+	geschiedenis = simulate!(world_test, nsteps)
+
+	
+	prooi = zeros(nsteps+1)
+	jager = zeros(nsteps+1)
+
+	for i in 1:nsteps+1
+
+		prooi[i] = sum(geschiedenis[i,:,:].== 1)
+		jager[i] = sum(geschiedenis[i,:,:].==2)
+
+	end 
+
+	tijd = 1:nsteps+1;
+
+	plot(tijd, prooi, label="prooi", lw=2, color=:brown)
+	plot!(tijd, jager, label="jager", lw=2, color=:black)
+	xlabel!("jaren")
+	ylabel!("Aantal dieren")
+	title!("Lotka-Volterra")
+end 
+
+# ╔═╡ 53e9ba61-4c74-4558-ad99-99cd8135a5a3
+plot_aantal(10,10,50)
 
 # ╔═╡ Cell order:
 # ╠═ce733b10-ace2-11f0-1826-b7bb8196149a
