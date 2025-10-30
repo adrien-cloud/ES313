@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.20.13
+# v0.20.19
 
 using Markdown
 using InteractiveUtils
@@ -393,6 +393,9 @@ begin
 	const DURATION = 1000.0
 end;
 
+# ╔═╡ fcc03330-6c49-4a29-95d7-39ddf5a96e7e
+Threads.nthreads()
+
 # ╔═╡ 5b9c83fd-8031-450a-8217-d8c6d1f884a6
 md"""
 We can try to retrieve the analytical descriptives using simulation
@@ -533,6 +536,7 @@ The regenerative approach helps address the issue of autocorrelation in simulati
 # ╟─70143d09-77ec-4bd5-b621-ec638fbfb000
 # ╟─5500645f-67f0-486d-834b-a6aebbf74880
 # ╠═9b3ec442-df47-4dce-8dc0-373d8737252b
+# ╠═fcc03330-6c49-4a29-95d7-39ddf5a96e7e
 # ╟─5b9c83fd-8031-450a-8217-d8c6d1f884a6
 # ╟─bfd5a133-004d-4889-b541-f40e05b51e54
 # ╟─8e02afc1-1471-4d03-9a37-2d82526e0e80

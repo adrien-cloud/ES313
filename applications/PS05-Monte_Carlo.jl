@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.20.13
+# v0.20.19
 
 using Markdown
 using InteractiveUtils
@@ -761,6 +761,28 @@ let
 	plot(plt, size=(1000,800))
 end
 
+# ╔═╡ b509df48-fcb4-4793-86b4-79a9b606f4e4
+md"""
+## Pi
+"""
+
+# ╔═╡ ba5f3e45-4e6e-4e5e-bdc5-165c69dce3dd
+begin
+	n=10000
+	sample=Vector{Bool}(undef,n)
+
+	for i in eachindex(sample)
+		sample[i]=sum((rand(2).-0.5).^2)<0.25
+	end
+
+	print("Pi = $(count(sample)/n*4)")
+	estimate=Vector{Float64}()
+	for i in eachindex(sample)
+		push!(estimate,count(sample[1:i])/i*4)
+	end
+	plot(abs.(estimate.-pi),yaxis=:log,title="Estimating Pi",xlabel="Number of Samples",ylabel="Error")
+end
+
 # ╔═╡ Cell order:
 # ╟─ce6d0508-8283-11f0-2bcb-9b53de934eb4
 # ╟─bb35ea5b-7629-4831-9c21-0658d0979cee
@@ -791,3 +813,5 @@ end
 # ╠═10ede4a2-1703-4c27-801d-c7502a88997d
 # ╠═20856d2f-b26e-4c7e-a283-8dbb53af7b9c
 # ╠═9cedbe14-a962-46fd-b271-e6ca78930e38
+# ╟─b509df48-fcb4-4793-86b4-79a9b606f4e4
+# ╠═ba5f3e45-4e6e-4e5e-bdc5-165c69dce3dd

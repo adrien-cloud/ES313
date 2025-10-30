@@ -1,0 +1,44 @@
+begin 
+
+using Distributions
+
+@resumable function get_candy(sim::Simulation, c::Container)
+	while true
+        @yield timeout(sim, rand(Distributions.Exponential(1),1)...)
+        @info "$(now(sim)) - Filed a request for 2 candies"
+        @yield get(c,2)
+        @info "$(now(sim)) - Got my 2 pieces of candy"
+    end
+end
+
+@resumable function monitor_candy(sim::Simulation, c::Container)
+	while true
+        @info "$(now(sim)) - current candy level: $(c.level)/$(c.capacity)"
+        @yield timeout(sim, 1)
+		if (c.level)/(c.capacity) <= 0.5
+			@process fill_candy(sim, c)
+		end
+	end
+end
+
+@resumable function fill_candy(sim::Simulation, c::Container)
+	@yield put(c, (c.capacity-c.level))
+	@info "$(now(sim)) - Filled vending machine up"
+end
+
+
+function candy()
+	# setup the simulation
+	@info "\n$("-"^70)\n vending machine \n$("-"^70)\n"
+	sim = Simulation()
+	c = Container(sim,50)
+	
+	@process fill_candy(sim,c)
+	@process monitor_candy(sim,c)
+	@process get_candy(sim,c)
+	run(sim,30)
+end
+
+candy()
+
+end

@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.20.13
+# v0.20.19
 
 using Markdown
 using InteractiveUtils
@@ -136,6 +136,23 @@ md"""
 ### Understanding the rules
 """
 
+# ╔═╡ eab8e8f9-8528-460c-bdee-94fcbbc49d8e
+"""
+	rules(p::String)
+
+Obtain the rules that are applicable for our problem. We read the entire file and for each line we obtain the current state, the neighbors and the future state. We also account for all the possible circular permutations that can occurs. 
+
+The function returns a nested dictionary: [current state] => Dict([neigbors] => [future state])
+"""
+function rules(p::String; debug=false)
+		d = Dict()
+		for rule in readlines(p)
+			addrule!(d, rule; debug)
+		end
+
+		return d
+end
+
 # ╔═╡ b1d05970-3660-434a-b4a6-38cf867a9a99
 """
 	addrule!(d::Dict, rule::String; debug=false)
@@ -158,23 +175,6 @@ function addrule!(d::Dict, rule::String; debug=false)
 	end
 
 	return (current_state, neighbors, next_state)
-end
-
-# ╔═╡ eab8e8f9-8528-460c-bdee-94fcbbc49d8e
-"""
-	rules(p::String)
-
-Obtain the rules that are applicable for our problem. We read the entire file and for each line we obtain the current state, the neighbors and the future state. We also account for all the possible circular permutations that can occurs. 
-
-The function returns a nested dictionary: [current state] => Dict([neigbors] => [future state])
-"""
-function rules(p::String; debug=false)
-		d = Dict()
-		for rule in readlines(p)
-			addrule!(d, rule; debug)
-		end
-
-		return d
 end
 
 # ╔═╡ 1a0c018d-63bf-4ef3-a13b-49c02af54a2e
@@ -346,8 +346,6 @@ else
 end
 
 # ╔═╡ f2b803fd-bd73-4bef-a6b1-a24e02bd545b
-# ╠═╡ disabled = true
-#=╠═╡
 # make an animation (can take some time)
 if !isfile("./applications/img/mylangton.gif")
 	begin
@@ -364,7 +362,6 @@ if !isfile("./applications/img/mylangton.gif")
 		gif(anim, "./applications/img/mylangton.gif", fps=300)
 	end
 end
-  ╠═╡ =#
 
 # ╔═╡ ef2d1c82-f61b-41f0-b999-a693682e9d64
 md"""

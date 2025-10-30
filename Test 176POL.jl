@@ -117,10 +117,10 @@ end
 let 
 	iter=1000
 	state = Dict{Int64, NamedTuple{(:pred, :E, :age), Tuple{Bool, Int64, Int64}}}()
-	parameters=(t_prey=1,t_hunter=10,E_start=10,E_iter=1,E_food=5)
-	state[1]=(pred=true,E=parameters.E_start,age=0)
-	state[8]=(pred=false,E=parameters.E_start,age=0)
-	W=generate_world(10,10)
+	parameters=(t_prey=5,t_hunter=20,E_start=15,E_iter=1,E_food=5)
+	for _ in 1:35  state[rand(1:10000)]=(pred=true,E=parameters.E_start,age=0) end
+	for _ in 1:20  state[rand(1:10000)]=(pred=false,E=parameters.E_start,age=0) end
+	W=generate_world(100,100)
 	hunters=Vector{Int64}()
 	preys=Vector{Int64}()
 
