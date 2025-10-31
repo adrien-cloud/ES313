@@ -1,6 +1,8 @@
-begin 
-
 using Distributions
+using Plots
+
+const refill_times = Float64[]
+
 
 @resumable function get_candy(sim::Simulation, c::Container)
 	while true
@@ -15,13 +17,15 @@ end
 	while true
         @info "$(now(sim)) - current candy level: $(c.level)/$(c.capacity)"
         @yield timeout(sim, 1)
-		if (c.level)/(c.capacity) <= 0.5
+		if (c.level)/(c.capacity) <= 0.178
+            @info "$(now(sim)) - Candy level low, requesting refill"
 			@process fill_candy(sim, c)
 		end
 	end
 end
 
 @resumable function fill_candy(sim::Simulation, c::Container)
+    push!(refill_times, now(sim))
 	@yield put(c, (c.capacity-c.level))
 	@info "$(now(sim)) - Filled vending machine up"
 end
@@ -31,14 +35,21 @@ function candy()
 	# setup the simulation
 	@info "\n$("-"^70)\n vending machine \n$("-"^70)\n"
 	sim = Simulation()
-	c = Container(sim,50)
+	c = Container(sim,100)
 	
 	@process fill_candy(sim,c)
 	@process monitor_candy(sim,c)
 	@process get_candy(sim,c)
-	run(sim,30)
+	run(sim,30000)
+
+    if length(refill_times) > 1
+    intervals = diff(refill_times)
+    mean_interval = mean(intervals)
+    @info "Mean time between refills: $mean_interval"
+    else
+        @info "Not enough refill events."
+    end
+    histogram(intervals, xlabel="Time between refills", ylabel="Frequency", title="Histogram of Time Between Candy Refills")
 end
 
 candy()
-
-end
